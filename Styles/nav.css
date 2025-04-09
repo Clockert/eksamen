@@ -1,0 +1,53 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background-color: var(--primary-background);
+  position: relative;
+  border-bottom: 1px solid var(--primary-text);
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.hamburger-icon {
+  width: 21px; /* Adjust size as needed */
+  height: 16.5px;
+  object-fit: contain;
+}
+
+/* Center logo */
+.logo-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* Green button */
+.green-btn {
+  background-color: var(--button-green);
+  color: var(--primary-text);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  height: 36px;
+  min-width: 47px;
+  padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 16px;
+  }
+}

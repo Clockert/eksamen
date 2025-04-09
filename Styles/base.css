@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Frank+Ruhl+Libre:wght@300&display=swap");
+/* Basic CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Colors */
+  --primary-background: #f7f2de;
+  --primary-text: #0b0a08;
+  --red: #dc4131;
+  --hoover-red: #ae2e21;
+  --green: #008f51;
+  --button-green: #28bd6d;
+  --truewhite: #ffffff;
+  --blue: #e1eaf0;
+
+  /* Font Families */
+  --font-primary: "Arimo", sans-serif;
+  --font-secondary: "Frank Ruhl Libre", serif;
+
+  /* Font Weights */
+  --font-light: 300;
+  --font-regular: 400;
+
+  /* Desktop Typography */
+  --header-desktop: 36px;
+  --subheader-desktop: 20px;
+  --logo-desktop: 200px;
+  --accent-desktop: 20px;
+  --body-desktop: 16px;
+  --body-large-desktop: 20px;
+
+  /* Mobile Typography */
+  --header-mobile: 24px;
+  --subheader-mobile: 18px;
+  --logo-mobile: 75px;
+  --accent-mobile: 16px;
+  --body-mobile: 16px;
+  --body-large-mobile: 18px;
+}
+
+.red-button {
+  background-color: var(--red);
+  color: var(--truewhite);
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: var(--body-desktop);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.red-button:hover {
+  background-color: var(--hoover-red);
+}
+
+.text-button {
+  font-family: var(--font-primary);
+  font-size: var(--header-desktop);
+  font-weight: var(--font-regular);
+  line-height: 36px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: text-decoration 0.3s ease;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+}
+
+.logo {
+  font-family: var(--font-secondary);
+  font-size: var(--logo-desktop);
+  font-weight: var(--font-light);
+  color: var(--primary-text);
+  text-transform: uppercase;
+}
+
+header .logo {
+  font-size: 32px;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    font-size: var(--logo-mobile);
+  }
+}

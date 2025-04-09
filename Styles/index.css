@@ -1,0 +1,31 @@
+.hero {
+  background-image: url("../assets/hero_img.webp");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  height: 850px;
+  align-items: center;
+  justify-content: center;
+  gap: 54px;
+  position: relative;
+}
+
+.hero .logo {
+  position: relative;
+  font-size: 200px;
+  text-align: center;
+  line-height: 150px;
+}
+
+.hero .hero-txt {
+  position: relative;
+  width: 416px;
+  font-size: 36px;
+}
+
+.hero .svg-container {
+  position: relative;
+  width: 2px;
+  height: 208px;
+}

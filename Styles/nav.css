@@ -14,6 +14,9 @@
   position: relative;
   border-bottom: 1px solid var(--primary-text);
 }
+.navbar .logo {
+  color: var(--primary-text);
+}
 
 .hamburger {
   background: none;

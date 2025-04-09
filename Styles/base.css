@@ -77,7 +77,15 @@
   font-family: var(--font-secondary);
   font-size: var(--logo-desktop);
   font-weight: var(--font-light);
-  color: var(--primary-text);
+  color: var(--truewhite);
+  text-transform: uppercase;
+}
+
+.hero-txt {
+  font-family: var(--font-primary);
+  font-size: var(--header-desktop);
+  font-weight: var(--font-regular);
+  color: var(--truewhite);
   text-transform: uppercase;
 }
 
@@ -88,5 +96,9 @@ header .logo {
 @media (max-width: 768px) {
   .logo {
     font-size: var(--logo-mobile);
+  }
+
+  .hero-txt {
+    font-size: var(--header-mobile);
   }
 }

@@ -2,7 +2,7 @@ function loadNavbar() {
   const navbarHTML = `
     <header>
       <nav class="navbar">
-        <!-- Font Awesome Hamburger -->
+        <!-- Hamburger menu -->
         <button class="hamburger">
           <img src="assets/bars.png" alt="Menu" class="hamburger-icon" />
         </button>

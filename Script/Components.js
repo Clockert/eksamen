@@ -3,7 +3,7 @@ function loadNavbar() {
     <header>
       <nav class="navbar">
         <!-- Hamburger menu -->
-        <button class="hamburger">
+        <button class="hamburger" id="open-menu" aria-label="Open menu">
           <img src="assets/bars.png" alt="Menu" class="hamburger-icon" />
         </button>
 
@@ -14,9 +14,46 @@ function loadNavbar() {
         <button class="green-btn">0</button>
       </nav>
     </header>
+
+    <!-- Menu overlay -->
+    <div id="menu-overlay" class="menu-overlay menu-hidden">
+      <div class="menu-header">
+        <button id="close-menu" class="close-button" aria-label="Close menu">
+          ✕
+        </button>
+      </div>
+
+      <div class="menu-content">
+        <nav>
+          <ul class="menu-nav">
+            <li class="menu-nav-item">
+              <a href="#products" class="menu-nav-link">Products</a>
+            </li>
+            <li class="menu-nav-item">
+              <a href="#chat" class="menu-nav-link">Chat</a>
+            </li>
+          </ul>
+        </nav>
+        <a href="#checkout" class="checkout-link">Checkout</a>
+      </div>
+    </div>
   `;
 
+  // Insert navbar and menu overlay
   document.body.insertAdjacentHTML("afterbegin", navbarHTML);
+
+  // Setup event listeners once elements exist in the DOM
+  const openMenuBtn = document.getElementById("open-menu");
+  const closeMenuBtn = document.getElementById("close-menu");
+  const menuOverlay = document.getElementById("menu-overlay");
+
+  openMenuBtn.addEventListener("click", () => {
+    menuOverlay.classList.remove("menu-hidden");
+  });
+
+  closeMenuBtn.addEventListener("click", () => {
+    menuOverlay.classList.add("menu-hidden");
+  });
 }
 
 function loadFooter() {
@@ -24,7 +61,6 @@ function loadFooter() {
     <footer>
       <div class="logo">Fram</div>
 
-      <!-- Using hr instead of SVG for better semantics -->
       <hr class="footer-divider" aria-hidden="true" />
 
       <div class="footer-content">
@@ -42,9 +78,9 @@ function loadFooter() {
           method="post"
           aria-labelledby="newsletter-heading"
         >
-          <span id="newsletter-heading" class="visually-hidden"
-            >Newsletter Signup</span
-          >
+          <span id="newsletter-heading" class="visually-hidden">
+            Newsletter Signup
+          </span>
 
           <label for="first-name" class="visually-hidden">First Name</label>
           <input
@@ -70,11 +106,12 @@ function loadFooter() {
     </footer>
   `;
 
+  // Insert footer at end of body
   document.body.insertAdjacentHTML("beforeend", footerHTML);
 }
 
-// Call the function to load the navbar
-loadNavbar();
-
-// Call the function to load the footer
-loadFooter();
+// Load navbar and footer when page is ready
+document.addEventListener("DOMContentLoaded", () => {
+  loadNavbar();
+  loadFooter();
+});

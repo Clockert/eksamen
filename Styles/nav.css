@@ -13,6 +13,7 @@
   background-color: var(--primary-background);
   position: relative;
   border-bottom: 1px solid var(--primary-text);
+  height: 68px;
 }
 
 header .logo {

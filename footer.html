@@ -1,26 +1,14 @@
-function loadNavbar() {
-  const navbarHTML = `
-    <header>
-      <nav class="navbar">
-        <!-- Hamburger menu -->
-        <button class="hamburger">
-          <img src="assets/bars.png" alt="Menu" class="hamburger-icon" />
-        </button>
-
-        <!-- Center Logo -->
-        <div class="logo">Fram</div>
-
-        <!-- Right Green Button -->
-        <button class="green-btn">0</button>
-      </nav>
-    </header>
-  `;
-
-  document.body.insertAdjacentHTML("afterbegin", navbarHTML);
-}
-
-function loadFooter() {
-  const footerHTML = `
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="Styles/base.css" />
+    <link rel="stylesheet" href="Styles/nav.css" />
+    <link rel="stylesheet" href="Styles/footer.css" />
+  </head>
+  <body>
     <footer>
       <div class="logo">Fram</div>
 
@@ -68,13 +56,5 @@ function loadFooter() {
         </form>
       </div>
     </footer>
-  `;
-
-  document.body.insertAdjacentHTML("beforeend", footerHTML);
-}
-
-// Call the function to load the navbar
-loadNavbar();
-
-// Call the function to load the footer
-loadFooter();
+  </body>
+</html>

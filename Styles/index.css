@@ -24,8 +24,11 @@
   font-size: 36px;
 }
 
-.hero .svg-container {
-  position: relative;
+.vertical-divider {
   width: 2px;
   height: 208px;
+  background-color: white;
+  border: none;
+  margin: 0;
+  display: inline-block;
 }

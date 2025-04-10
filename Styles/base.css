@@ -81,18 +81,6 @@
   text-transform: uppercase;
 }
 
-.hero-txt {
-  font-family: var(--font-primary);
-  font-size: var(--header-desktop);
-  font-weight: var(--font-regular);
-  color: var(--truewhite);
-  text-transform: uppercase;
-}
-
-header .logo {
-  font-size: 32px;
-}
-
 @media (max-width: 768px) {
   .logo {
     font-size: var(--logo-mobile);

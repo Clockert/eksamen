@@ -21,10 +21,10 @@
   font-weight: var(--weight-regular);
   font-size: var(--header-desktop);
 }
-/*
+
 .menu-hidden {
   transform: translateX(-100%);
-} */
+}
 
 .menu-header {
   height: 68px;

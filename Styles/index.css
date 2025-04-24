@@ -25,6 +25,7 @@
   width: 416px;
   font-size: var(--header-desktop);
   font-family: var(--font-primary);
+  color: var(--truewhite);
   text-transform: uppercase;
   text-align: center;
   line-height: 40px;

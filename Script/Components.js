@@ -16,28 +16,28 @@ function loadNavbar() {
   </header>
 
   <!-- Menu overlay -->
-<div id="menu-overlay" class="menu-overlay menu-hidden">
-  <div class="menu-header">
-    <button id="close-menu" class="close-button" aria-label="Close menu">
-      ✕
-    </button>
-    <div class="menu-logo">Fram</div>
-  </div>
+  <div id="menu-overlay" class="menu-overlay menu-hidden">
+    <div class="menu-header">
+      <button id="close-menu" class="close-button" aria-label="Close menu">
+        ✕
+      </button>
+      <div class="menu-logo">Fram</div>
+    </div>
 
-  <div class="menu-content">
-    <nav>
-      <ul class="menu-nav">
-        <li class="menu-nav-item">
-          <a href="#products" class="menu-nav-link">Products</a>
-        </li>
-        <li class="menu-nav-item">
-          <a href="#chat" class="menu-nav-link">Chat</a>
-        </li>
-      </ul>
-    </nav>
-    <a href="#checkout" class="checkout-link">Checkout</a>
+    <div class="menu-content">
+      <nav>
+        <ul class="menu-nav">
+          <li class="menu-nav-item">
+            <a href="#products" class="menu-nav-link">Products</a>
+          </li>
+          <li class="menu-nav-item">
+            <a href="#chat" class="menu-nav-link">Chat</a>
+          </li>
+        </ul>
+      </nav>
+      <a href="#checkout" class="checkout-link">Checkout</a>
+    </div>
   </div>
-</div>
 `;
 
   // Insert navbar and menu overlay

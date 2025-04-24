@@ -3,16 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FRAM</title>
+    <title>FRAM - Our Produce</title>
     <link rel="stylesheet" href="Styles/base.css" />
     <link rel="stylesheet" href="Styles/nav.css" />
-    <link rel="stylesheet" href="Styles/index.css" />
     <link rel="stylesheet" href="Styles/footer.css" />
     <link rel="stylesheet" href="Styles/popmenu.css" />
-    <link rel="stylesheet" href="Styles/howitworks.css" />
+    <link rel="stylesheet" href="Styles/produce.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
   <body>
-    <!-- The navbar will be dynamically injected here -->
+    <!-- Navbar injected by Components.js -->
     <script src="Script/Components.js" defer></script>
+
+    <main class="products-container">
+      <div class="products-header">
+        <h1>Produce</h1>
+        <p class="products-description">
+          Explore our selection of seasonal produce, sourced directly from local
+          farms to ensure peak freshness and quality. Every item is chosen with
+          care, supporting sustainable practices and bringing the best of the
+          harvest to your table.
+        </p>
+      </div>
+
+      <!-- Product grid populated by JavaScript -->
+      <div id="products-container" class="products-grid"></div>
+
+      <!-- Footer injected by Components.js -->
+    </main>
+
+    <script src="Script/produce.js"></script>
   </body>
 </html>

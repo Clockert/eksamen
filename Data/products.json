@@ -12,7 +12,7 @@
       "name": "Red onions",
       "price": "45 kr / kg",
       "quantity": "1kg",
-      "image": "assets/produce/red-onions.webp"
+      "image": "assets/produce/red_onions.webp"
     },
     {
       "id": 3,

@@ -5,35 +5,40 @@
       "name": "Oats",
       "price": "16 kr / kg",
       "quantity": "1kg",
-      "image": "assets/produce/oats.webp"
+      "image": "assets/produce/oats.webp",
+      "popular": true
     },
     {
       "id": 2,
       "name": "Red onions",
       "price": "45 kr / kg",
       "quantity": "1kg",
-      "image": "assets/produce/red_onions.webp"
+      "image": "assets/produce/red_onions.webp",
+      "popular": true
     },
     {
       "id": 3,
       "name": "Garlic",
       "price": "38 kr",
       "quantity": "0.2kg",
-      "image": "assets/produce/garlic.webp"
+      "image": "assets/produce/garlic.webp",
+      "popular": true
     },
     {
       "id": 4,
       "name": "Potato",
       "price": "32 kr / kg",
       "quantity": "1kg",
-      "image": "assets/produce/potatoes.png"
+      "image": "assets/produce/potatoes.png",
+      "popular": false
     },
     {
       "id": 5,
       "name": "Carrots",
       "price": "48 kr / kg",
       "quantity": "1kg",
-      "image": "assets/produce/carrots.png"
+      "image": "assets/produce/carrots.png",
+      "popular": false
     }
   ]
 }

@@ -181,3 +181,78 @@ main.products-container {
     height: 300px;
   }
 }
+
+/* Map section styling with full edge-to-edge borders */
+.farm-map-section {
+  display: flex;
+  border-top: 1px solid var(--primary-text);
+  width: 100vw;
+  max-width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.farm-map-title {
+  width: 33.33%;
+  padding: 90px 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  border-right: 1px solid var(--primary-text);
+}
+
+.farm-map-title h1 {
+  width: 320px;
+  text-align: center;
+  font-family: var(--font-primary);
+  font-weight: var(--font-regular);
+  font-size: var(--header-desktop);
+  text-transform: uppercase;
+  line-height: 36px;
+  margin: 0;
+}
+
+.farm-map-container {
+  width: 66.67%;
+  padding: 96px;
+  position: relative;
+}
+
+/* Map iframe styling */
+.map-frame {
+  width: 100%;
+  height: 478px;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: block;
+}
+
+/* Media query for mobile */
+@media (max-width: 768px) {
+  .farm-map-section {
+    flex-direction: column;
+  }
+
+  .farm-map-title {
+    width: 100%;
+    border-right: none;
+    padding: 48px 0;
+    border-bottom: 1px solid var(--primary-text);
+  }
+
+  .farm-map-title h1 {
+    font-size: var(--header-mobile);
+    width: 240px;
+  }
+
+  .farm-map-container {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .map-frame {
+    height: 350px;
+  }
+}

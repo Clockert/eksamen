@@ -8,7 +8,7 @@
   height: 850px;
   align-items: center;
   justify-content: center;
-  gap: 54px;
+  gap: 58px;
   position: relative;
 }
 
@@ -16,6 +16,8 @@
   position: relative;
   text-align: center;
   line-height: 150px;
+  font-size: var(--logo-desktop);
+  width: 509px;
 }
 
 .hero .hero-txt {
@@ -25,6 +27,7 @@
   font-family: var(--font-primary);
   text-transform: uppercase;
   text-align: center;
+  line-height: 40px;
 }
 
 .vertical-divider {
@@ -34,12 +37,43 @@
   border: none;
   margin: 0;
   display: inline-block;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 579px;
+    gap: 0;
+  }
+
+  .hero .logo {
+    font-size: var(--logo-mobile);
+    width: auto;
+    line-height: normal;
+    margin-bottom: 0px;
+  }
+
+  .vertical-divider {
+    height: 239.5px;
+    width: 1px;
+    margin-bottom: 40px;
+  }
+
+  .hero .hero-txt {
+    width: 240px;
+    font-size: var(--header-mobile);
+    line-height: normal;
+    text-transform: none;
+    margin-top: 0;
+  }
 }
 
 /* ---- Promo Section styling ---- */
 
 .promo-section {
   display: flex;
+  background-color: var(--truewhite);
+  border-bottom: solid 1px var(--primary-text);
 }
 
 .promo-divider {

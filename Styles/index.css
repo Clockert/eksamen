@@ -1,3 +1,4 @@
+/* ---- Hero styling ---- */
 .hero {
   background-image: url("../assets/hero_img.webp");
   background-size: cover;
@@ -13,7 +14,6 @@
 
 .hero .logo {
   position: relative;
-  font-size: 200px;
   text-align: center;
   line-height: 150px;
 }
@@ -21,7 +21,10 @@
 .hero .hero-txt {
   position: relative;
   width: 416px;
-  font-size: 36px;
+  font-size: var(--header-desktop);
+  font-family: var(--font-primary);
+  text-transform: uppercase;
+  text-align: center;
 }
 
 .vertical-divider {
@@ -31,4 +34,122 @@
   border: none;
   margin: 0;
   display: inline-block;
+}
+
+/* ---- Promo Section styling ---- */
+
+.promo-section {
+  display: flex;
+}
+
+.promo-divider {
+  width: 1px;
+  height: auto;
+  background-color: var(--primary-text);
+  border: none;
+  margin: 0;
+  display: inline-block;
+}
+
+.promo-card {
+  flex: 1;
+  padding: 90px 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+}
+
+.promo-title {
+  text-transform: uppercase;
+  font-family: var(--font-primary);
+  font-weight: var(--font-regular);
+  font-size: var(--header-desktop);
+}
+
+.promo-subheader {
+  font-family: var(--font-secondary);
+  font-size: var(--subheader-desktop);
+  font-weight: var(--font-light);
+  color: var(--primary-text);
+}
+
+.promo-header {
+  font-family: var(--font-secondary);
+  font-size: var(--body-desktop);
+  font-weight: var(--font-light);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 456px;
+}
+
+.promo-image {
+  width: 448px;
+  height: 327px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.promo-text {
+  width: 407px;
+  font-family: var(--font-secondary);
+  font-size: var(--body-desktop);
+  font-weight: var(--font-light);
+}
+
+.promo-section .red-button {
+  width: 320px;
+  height: 44px;
+  font-family: var(--font-primary);
+  font-weight: var(--font-regular);
+  font-size: var(--body-desktop);
+}
+
+@media (max-width: 768px) {
+  .logo {
+    font-size: var(--logo-mobile);
+  }
+
+  .hero .hero-txt {
+    font-size: var(--header-mobile);
+    width: 248px;
+  }
+
+  .promo-section {
+    flex-direction: column;
+    padding: 0 16px;
+  }
+
+  .promo-divider {
+    width: auto;
+    height: 1px;
+    background-color: var(--primary-text);
+    border: none;
+  }
+
+  .promo-header {
+    width: 285px;
+    font-size: var(--body-mobile);
+  }
+
+  .promo-image {
+    height: 250px;
+  }
+
+  .promo-title {
+    font-size: var(--header-mobile);
+    width: auto; /* Use auto width for better alignment */
+    text-align: center; /* Center-align the text for consistency */
+  }
+
+  .promo-subheader {
+    font-size: var(--subheader-mobile);
+  }
+
+  .promo-section .red-button,
+  .promo-text {
+    width: 320px;
+  }
 }

@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  max-width: 100vw;
 }
 /* Pop-over menu */
 .menu-overlay {
@@ -71,4 +72,10 @@
   color: var(--primary-text);
   text-decoration: none;
   text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .menu-overlay {
+    width: 100%;
+  }
 }

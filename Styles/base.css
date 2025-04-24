@@ -50,6 +50,8 @@
   border-radius: 8px;
   font-size: var(--body-desktop);
   cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
   transition: background-color 0.3s ease;
 }
 

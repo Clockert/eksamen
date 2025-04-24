@@ -1,94 +1,86 @@
-/* Basic reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 /* Footer styles */
 footer {
   background-color: var(--red);
-  color: var(--primary-text);
-  padding: 20px 0 20px 20px;
-  text-align: Left;
+  color: var(--truewhite);
+  padding: 0;
+  text-align: left;
   overflow: hidden;
+  position: relative;
 }
 
 footer .logo {
   font-size: 48px;
   font-family: var(--font-secondary);
   color: var(--truewhite);
-  margin-top: 40px;
-  margin-left: 44px;
+  margin: 41px 0 24px 45px;
+  text-align: left;
 }
 
-/* Divider styling to match original SVG */
+/* Divider styling to match Figma Vector1000 */
 .footer-divider {
   border: none;
   height: 1px;
   background-color: white;
   width: 100%;
-  margin: 20px 28px;
+  margin: 0 0 36px 28px;
+  opacity: 1;
 }
 
 footer h2 {
   font-size: 36px;
   color: var(--truewhite);
-  margin-top: 20px;
   font-family: var(--font-primary);
   font-weight: var(--font-regular);
   text-transform: uppercase;
-  margin-top: 62px;
+  line-height: 36px;
+  margin: 0 0 27px 0;
 }
 
 footer p {
   font-size: 24px;
   color: var(--truewhite);
-  margin-top: 10px;
   font-family: var(--font-secondary);
   width: 407px;
+  line-height: 28px;
+  font-weight: var(--font-light);
+  margin: 0;
 }
 
 .footer-content {
   display: flex;
   flex-direction: column;
-  align-items: left;
-  justify-content: center;
   gap: 36px;
-  margin-left: 54px;
+  margin-left: 57px;
   margin-bottom: 92px;
+  max-width: 460px;
 }
 
 footer .footer-text {
   display: flex;
   flex-direction: column;
-  gap: 23px;
+  gap: 27px;
 }
 
 footer .subscribeform {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 16px;
-  margin-top: 20px;
-  width: 436px;
+  width: 460px;
 }
 
 footer input {
   width: 100%;
   height: 44px;
-  padding: 10px;
+  padding: 10px 16px;
   border: none;
   border-radius: 4px;
   font-size: var(--body-desktop);
   background-color: var(--truewhite);
-  padding: 16px;
   font-family: "Helvetica Neue", sans-serif;
 }
 
 footer input::placeholder {
-  color: var(--primary-text);
-  opacity: 0.6;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 footer button {
@@ -101,7 +93,8 @@ footer button {
   height: 44px;
   width: 100%;
   padding: 10px 16px;
-  margin-top: 8px;
+  margin-top: 28px;
+  font-family: var(--font-primary);
 }
 
 /* Utility class for screen reader text */
@@ -118,30 +111,45 @@ footer button {
 }
 
 @media (max-width: 768px) {
-  footer {
-    padding: 15px;
-    width: 100%;
-    overflow-x: hidden;
+  footer .logo {
+    font-size: 48px;
+    margin: 30px 0 30px 29px;
+  }
+
+  .footer-divider {
+    width: calc(100% - 30px);
+    margin: 0 0 15px 15px;
+  }
+
+  footer h2 {
+    font-size: 24px;
+    line-height: 36px;
+    margin: 0 0 20px 0;
   }
 
   footer p {
-    width: 100%;
-    max-width: 407px;
+    font-size: 16px;
+    width: 288px;
+    line-height: normal;
+  }
+
+  .footer-content {
+    margin: 0 29px 30px 29px;
+    gap: 30px;
+    max-width: 320px;
   }
 
   footer .subscribeform {
     width: 100%;
-    max-width: 436px;
+    max-width: 320px;
+    gap: 12px;
   }
 
-  .footer-divider {
-    margin: 15px 15px;
-    width: auto;
+  footer input {
+    padding: 10px;
   }
 
-  .footer-content {
-    margin-left: 15px;
-    margin-right: 15px;
-    margin-bottom: 63px;
+  footer button {
+    margin-top: 12px;
   }
 }

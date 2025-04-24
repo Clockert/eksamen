@@ -28,6 +28,7 @@
   border-bottom: solid 1px var(--primary-text);
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .close-button {
@@ -43,6 +44,18 @@
   justify-content: center;
   height: 24px;
   padding: 0;
+}
+
+.menu-logo {
+  display: none;
+  font-family: var(--font-secondary);
+  font-size: 32px;
+  font-weight: var(--font-light);
+  color: var(--primary-text);
+  text-transform: uppercase;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .menu-content {
@@ -97,15 +110,10 @@
 
   .menu-header {
     padding: 16px;
-    position: relative;
   }
 
-  .menu-header .logo {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 32px;
-    color: var(--primary-text);
+  .menu-logo {
+    display: block;
   }
 
   .menu-nav-link {

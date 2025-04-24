@@ -1,43 +1,44 @@
 function loadNavbar() {
   const navbarHTML = `
-    <header>
-      <nav class="navbar">
-        <!-- Hamburger menu -->
-        <button class="hamburger" id="open-menu" aria-label="Open menu">
-          <img src="assets/bars.png" alt="Menu" class="hamburger-icon" />
-        </button>
+  <header>
+    <nav class="navbar">
+      <!-- Hamburger menu -->
+      <button class="hamburger" id="open-menu" aria-label="Open menu">
+        <img src="assets/bars.png" alt="Menu" class="hamburger-icon" />
+      </button>
 
-        <!-- Center Logo -->
-        <div class="logo">Fram</div>
+      <!-- Center Logo -->
+      <div class="logo">Fram</div>
 
-        <!-- Right Green Button -->
-        <button class="green-btn">0</button>
-      </nav>
-    </header>
+      <!-- Right Green Button -->
+      <button class="green-btn">0</button>
+    </nav>
+  </header>
 
-    <!-- Menu overlay -->
-    <div id="menu-overlay" class="menu-overlay menu-hidden">
-      <div class="menu-header">
-        <button id="close-menu" class="close-button" aria-label="Close menu">
-          ✕
-        </button>
-      </div>
+  <!-- Menu overlay -->
+<div id="menu-overlay" class="menu-overlay menu-hidden">
+  <div class="menu-header">
+    <button id="close-menu" class="close-button" aria-label="Close menu">
+      ✕
+    </button>
+    <div class="menu-logo">Fram</div>
+  </div>
 
-      <div class="menu-content">
-        <nav>
-          <ul class="menu-nav">
-            <li class="menu-nav-item">
-              <a href="#products" class="menu-nav-link">Products</a>
-            </li>
-            <li class="menu-nav-item">
-              <a href="#chat" class="menu-nav-link">Chat</a>
-            </li>
-          </ul>
-        </nav>
-        <a href="#checkout" class="checkout-link">Checkout</a>
-      </div>
-    </div>
-  `;
+  <div class="menu-content">
+    <nav>
+      <ul class="menu-nav">
+        <li class="menu-nav-item">
+          <a href="#products" class="menu-nav-link">Products</a>
+        </li>
+        <li class="menu-nav-item">
+          <a href="#chat" class="menu-nav-link">Chat</a>
+        </li>
+      </ul>
+    </nav>
+    <a href="#checkout" class="checkout-link">Checkout</a>
+  </div>
+</div>
+`;
 
   // Insert navbar and menu overlay
   document.body.insertAdjacentHTML("afterbegin", navbarHTML);

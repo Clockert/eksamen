@@ -120,12 +120,28 @@ footer button {
 @media (max-width: 768px) {
   footer {
     padding: 15px;
+    width: 100%;
+    overflow-x: hidden;
   }
+
+  footer p {
+    width: 100%;
+    max-width: 407px;
+  }
+
+  footer .subscribeform {
+    width: 100%;
+    max-width: 436px;
+  }
+
   .footer-divider {
     margin: 15px 15px;
     width: auto;
   }
+
   .footer-content {
+    margin-left: 15px;
+    margin-right: 15px;
     margin-bottom: 63px;
   }
 }

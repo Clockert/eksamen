@@ -120,6 +120,8 @@
   .promo-section {
     flex-direction: column;
     padding: 0 16px;
+    width: 100%;
+    overflow-x: hidden;
   }
 
   .promo-divider {
@@ -130,11 +132,14 @@
   }
 
   .promo-header {
-    width: 285px;
+    width: 100%;
+    max-width: 320px;
     font-size: var(--body-mobile);
   }
 
   .promo-image {
+    width: 100%;
+    max-width: 448px;
     height: 250px;
   }
 
@@ -148,8 +153,13 @@
     font-size: var(--subheader-mobile);
   }
 
-  .promo-section .red-button,
   .promo-text {
-    width: 320px;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .promo-section .red-button {
+    width: 100%;
+    max-width: 320px;
   }
 }

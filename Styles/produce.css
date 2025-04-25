@@ -160,7 +160,7 @@ main.products-container {
 /* Mobile view - one item per row */
 @media (max-width: 768px) {
   main.products-container {
-    padding: 16px;
+    padding: 89px 25px 45px 25px;
   }
 
   .products-header h1 {
@@ -175,6 +175,7 @@ main.products-container {
   .product-card {
     width: 100%;
     max-width: 100%;
+    margin-bottom: 29px;
   }
 
   .product-image-container {
@@ -244,15 +245,15 @@ main.products-container {
 
   .farm-map-title h1 {
     font-size: var(--header-mobile);
-    width: 240px;
+    width: 280px;
   }
 
   .farm-map-container {
     width: 100%;
-    padding: 16px;
+    padding: 45px 25px;
   }
 
   .map-frame {
-    height: 350px;
+    height: 459px;
   }
 }

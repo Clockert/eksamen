@@ -20,6 +20,7 @@
   font-weight: var(--font-light);
   color: var(--primary-text);
   text-transform: uppercase;
+  text-decoration: none;
 }
 
 .hamburger {

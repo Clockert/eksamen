@@ -1,3 +1,4 @@
+// Components.js - Modular component loader
 function loadNavbar() {
   const navbarHTML = `
   <header>
@@ -8,7 +9,7 @@ function loadNavbar() {
       </button>
 
       <!-- Center Logo -->
-      <div class="logo">Fram</div>
+      <a href="index.html" class="logo">Fram</a>
 
       <!-- Right Green Button -->
       <button class="green-btn">0</button>
@@ -21,17 +22,17 @@ function loadNavbar() {
       <button id="close-menu" class="close-button" aria-label="Close menu">
         ✕
       </button>
-      <div class="menu-logo">Fram</div>
+      <a href="index.html" class="menu-logo">Fram</a>
     </div>
 
     <div class="menu-content">
       <nav>
         <ul class="menu-nav">
           <li class="menu-nav-item">
-            <a href="#products" class="menu-nav-link">Products</a>
+            <a href="produce.html" class="menu-nav-link">Products</a>
           </li>
           <li class="menu-nav-item">
-            <a href="#chat" class="menu-nav-link">Chat</a>
+            <a href="chatbot.html" class="menu-nav-link">Chat</a>
           </li>
         </ul>
       </nav>
@@ -60,7 +61,7 @@ function loadNavbar() {
 function loadFooter() {
   const footerHTML = `
     <footer>
-      <div class="logo">Fram</div>
+      <a href="index.html" class="logo">Fram</a>
 
       <hr class="footer-divider" aria-hidden="true" />
 
@@ -111,8 +112,21 @@ function loadFooter() {
   document.body.insertAdjacentHTML("beforeend", footerHTML);
 }
 
-// Load navbar and footer when page is ready
+// Load components based on data attributes in the HTML
 document.addEventListener("DOMContentLoaded", () => {
-  loadNavbar();
-  loadFooter();
+  // Get page configuration from html tag
+  const htmlElement = document.documentElement;
+  const pageConfig = {
+    navbar: htmlElement.getAttribute("data-load-navbar") !== "false", // Default to true
+    footer: htmlElement.getAttribute("data-load-footer") !== "false", // Default to true
+  };
+
+  // Load components according to configuration
+  if (pageConfig.navbar) {
+    loadNavbar();
+  }
+
+  if (pageConfig.footer) {
+    loadFooter();
+  }
 });

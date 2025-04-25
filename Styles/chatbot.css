@@ -1,11 +1,220 @@
+/* Chatbot window styling with background image */
 .chatbot-window {
   background-image: url("../assets/hero_img.webp");
   background-size: cover;
   background-position: center;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - 68px);
   align-items: center;
   justify-content: center;
   position: relative;
+}
+
+/* Chatbot container */
+.chatbot-container {
+  background-color: var(--truewhite);
+  border-radius: 16px;
+  overflow: hidden;
+  height: 78vh;
+  width: 100%;
+  max-width: 508px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chatbox - the messages area */
+.chatbox {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: scroll;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  height: calc(100% - 70px);
+}
+
+/* Make sure there's vertical space for messages to scroll up */
+.chatbox-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto;
+}
+
+/* Generic chat message styling */
+.chat {
+  display: flex;
+  max-width: 70%;
+  margin-bottom: 16px;
+  position: relative;
+  border-radius: 16px;
+}
+
+/* Incoming (bot) message styling */
+.chat.incoming {
+  align-self: flex-start;
+  flex-direction: row;
+  align-items: center;
+}
+
+.chat.incoming p {
+  background-color: var(--primary-background);
+  color: var(--primary-text);
+  margin: 0;
+  font-family: var(--font-primary);
+  font-size: var(--body-desktop);
+  line-height: 1.5;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+/* Logo styling for bot messages */
+.chat.incoming .logo {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.chat.incoming .logo p {
+  font-family: var(--font-secondary);
+  font-size: 16px;
+  font-weight: var(--font-light);
+  color: var(--primary-text);
+  text-transform: uppercase;
+  background-color: transparent;
+  padding: 0;
+  margin: 8px 8px 0 0;
+}
+
+/* Outgoing (user) message styling */
+.chat.outgoing {
+  align-self: flex-end;
+  justify-content: flex-end;
+}
+
+.chat.outgoing p {
+  background-color: var(--blue);
+  color: var(--primary-text);
+  margin: 0;
+  font-family: var(--font-primary);
+  font-size: var(--body-desktop);
+  line-height: 1.5;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+/* Input area */
+.chat-input {
+  display: flex;
+  padding: 0 11px 17px 16px;
+  background-color: var(--truewhite);
+  align-items: end;
+}
+
+.chat-input textarea {
+  flex: 1;
+  background-color: var(--blue);
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-family: var(--font-primary);
+  font-size: var(--body-desktop);
+  outline: none;
+  border: none;
+  resize: none;
+  max-height: 100px;
+  min-height: 88px;
+  width: 288px;
+}
+
+.chat-input textarea:focus {
+  border-color: var(--green);
+}
+
+.send-button {
+  background-color: var(--red);
+  color: var(--truewhite);
+  border: none;
+  border-radius: 16px;
+  margin-left: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  font-size: 16px;
+  padding: 14px 28px;
+  max-height: 44px;
+  max-width: 60px;
+}
+
+.send-button:hover {
+  background-color: var(--hoover-red);
+}
+
+/* Button state styles */
+.send-button {
+  background-color: var(--red);
+  color: var(--truewhite);
+  border: none;
+  border-radius: 16px;
+  margin-left: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  padding: 14px 28px;
+}
+
+.send-button:hover {
+  background-color: var(--hoover-red);
+}
+
+/* Loading state */
+.send-button.loading {
+  background-color: #888;
+  cursor: not-allowed;
+}
+
+.send-button.loading:hover {
+  background-color: #666;
+}
+
+/* Disconnected state */
+.send-button.disconnected {
+  background-color: var(--hoover-red);
+}
+
+.send-button.disconnected:hover {
+  background-color: var(--red);
+}
+
+/* Button icon animation */
+#button-icon {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.send-button:not(.loading):not(.disconnected):hover #button-icon {
+  transform: translateY(-2px);
+}
+
+.send-button.loading #button-icon,
+.send-button.disconnected #button-icon {
+  transform: rotate(45deg);
+}
+
+/* Media query for mobile */
+@media (max-width: 768px) {
+  .chatbot-container {
+    height: 100vh;
+    width: 100vw;
+    border-radius: 0px;
+  }
 }

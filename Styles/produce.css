@@ -182,27 +182,27 @@ main.products-container {
   }
 }
 
-/* Map section styling with full edge-to-edge borders */
+/* Map section  */
 .farm-map-section {
   display: flex;
   border-top: 1px solid var(--primary-text);
-  width: 100vw;
+  width: 100%;
   max-width: 100%;
   margin: 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .farm-map-title {
   width: 33.33%;
-  padding: 90px 0;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   border-right: 1px solid var(--primary-text);
 }
 
 .farm-map-title h1 {
-  width: 320px;
+  width: 380px;
   text-align: center;
   font-family: var(--font-primary);
   font-weight: var(--font-regular);

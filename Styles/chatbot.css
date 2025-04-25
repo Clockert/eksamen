@@ -27,8 +27,7 @@
 .chatbox {
   flex: 1;
   overflow-y: auto;
-  overflow-x: scroll;
-  padding: 24px;
+  padding: 0 20px 0 16px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -44,6 +43,7 @@
   flex-direction: column;
   gap: 16px;
   margin-top: auto;
+  overflow: scroll;
 }
 
 /* Generic chat message styling */
@@ -68,8 +68,7 @@
   margin: 0;
   font-family: var(--font-primary);
   font-size: var(--body-desktop);
-  line-height: 1.5;
-  padding: 16px;
+  padding: 10px;
   border-radius: 16px;
 }
 
@@ -103,8 +102,7 @@
   margin: 0;
   font-family: var(--font-primary);
   font-size: var(--body-desktop);
-  line-height: 1.5;
-  padding: 16px;
+  padding: 10px;
   border-radius: 16px;
 }
 
@@ -145,7 +143,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
   font-size: 16px;
   padding: 14px 28px;
   max-height: 44px;
@@ -167,7 +164,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
   font-size: 16px;
   padding: 14px 28px;
 }
@@ -175,39 +171,45 @@
 .send-button:hover {
   background-color: var(--hoover-red);
 }
-
-/* Loading state */
-.send-button.loading {
-  background-color: #888;
-  cursor: not-allowed;
+/* Style the loading message */
+.loading-message {
+  display: flex;
+  align-items: flex-start;
 }
 
-.send-button.loading:hover {
-  background-color: #666;
+/* Style the dots container */
+.dots-container {
+  background-color: #f2efe0;
+  border-radius: 20px;
+  padding: 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 34px;
+  width: 69px;
 }
 
-/* Disconnected state */
-.send-button.disconnected {
-  background-color: var(--hoover-red);
-}
-
-.send-button.disconnected:hover {
-  background-color: var(--red);
-}
-
-/* Button icon animation */
-#button-icon {
+/* Individual dot */
+.dot {
   display: inline-block;
-  transition: transform 0.2s ease;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #000;
 }
 
-.send-button:not(.loading):not(.disconnected):hover #button-icon {
-  transform: translateY(-2px);
-}
-
-.send-button.loading #button-icon,
-.send-button.disconnected #button-icon {
-  transform: rotate(45deg);
+/* Style for connection error message */
+.connection-error {
+  color: var(--red);
+  border: 1px solid var(--red);
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+  width: 100%;
+  font-family: var(--font-primary);
+  font-size: 14px;
 }
 
 /* Media query for mobile */

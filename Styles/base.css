@@ -87,6 +87,8 @@ body {
   font-weight: var(--font-light);
   color: var(--truewhite);
   text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
 }
 
 @media (max-width: 768px) {

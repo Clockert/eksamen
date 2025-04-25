@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" data-load-footer="false">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FRAM - Chat with Us</title>
+    <link rel="stylesheet" href="Styles/base.css" />
+    <link rel="stylesheet" href="Styles/nav.css" />
+    <link rel="stylesheet" href="Styles/chatbot.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Components.js will only load the navbar now -->
+    <script src="Script/Components.js" defer></script>
+  </head>
+  <body>
+    <!-- Chatbot Section -->
+    <main class="chatbot-window">
+      <div class="chatbot-container">
+        <ul class="chatbox">
+          <div class="chatbox-inner">
+            <!-- Chat messages will be dynamically inserted here by JavaScript -->
+          </div>
+        </ul>
+
+        <div class="chat-input">
+          <textarea placeholder="Enter message..." id="user-input"></textarea>
+          <button
+            type="submit"
+            class="send-button"
+            id="send-button"
+            aria-label="Send message"
+          >
+            <span id="button-icon"><i class="fas fa-arrow-up"></i></span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- JS for chat functionality -->
+    <script src="Script/chatbot.js" defer></script>
+  </body>
+</html>

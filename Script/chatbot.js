@@ -66,17 +66,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
-   * Gets bot response (placeholder for future AI API integration)
+   * Gets response from OpenAI API
    * @param {string} userMessage - The message from the user
    * @returns {Promise<string>} Bot's response
    */
-  function fetchBotResponse(userMessage) {
-    return new Promise((resolve) => {
-      // Simple delay to simulate API call (will be replaced with actual API)
-      setTimeout(() => {
-        resolve("This is a placeholder response. AI integration coming soon!");
-      }, 1000);
-    });
+  async function fetchBotResponse(userMessage) {
+    try {
+      // Call our server endpoint instead of OpenAI directly
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userMessage,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices[0].message.content.trim();
+    } catch (error) {
+      console.error("Error calling API:", error);
+      throw new Error("Failed to get a response. Please try again later.");
+    }
   }
 
   // UI FUNCTIONS

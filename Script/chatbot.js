@@ -72,61 +72,27 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   async function fetchBotResponse(userMessage) {
     try {
-      // Get API key
-      const apiKey = "YOUR_OPENAI_API_KEY_HERE";
+      // Call our server endpoint instead of OpenAI directly
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userMessage,
+        }),
+      });
 
-      // Check if we have an API key
-      if (!apiKey || apiKey === "YOUR_OPENAI_API_KEY_HERE") {
-        return "API key not configured. Please set up the OpenAI API key to enable AI responses.";
-      }
-
-      // Make request to OpenAI API
-      const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
-          },
-          body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [
-              {
-                role: "system",
-                content:
-                  "You are a helpful assistant for a sustainable food delivery service called Fram in Norway. Yo want other farms to Partner up with FRAM. You know about local farming practices, seasonal produce, sustainable agriculture, and Fram's services. Keep responses concise (under 50 words when possible), friendly, and focused on sustainability.",
-              },
-              {
-                role: "user",
-                content: userMessage,
-              },
-            ],
-            max_tokens: 150,
-            temperature: 0.7,
-          }),
-        }
-      );
-
-      // Check if the response was successful
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        const errorMessage =
-          errorData?.error?.message ||
-          `API request failed with status ${response.status}`;
-        throw new Error(errorMessage);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
-      // Parse the JSON response
       const data = await response.json();
-
-      // Extract the AI's message from the response
       return data.choices[0].message.content.trim();
     } catch (error) {
-      console.error("Error calling OpenAI API:", error);
-      throw new Error(
-        "Failed to get a response from our AI. Please try again later."
-      );
+      console.error("Error calling API:", error);
+      throw new Error("Failed to get a response. Please try again later.");
     }
   }
 

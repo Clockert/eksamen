@@ -219,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </h3>
           <div class="product-price">${product.price}</div>
         </div>
-        <p class="package-size">Package size: ${product.quantity}</p>
+        <p class="product-quantity">${product.quantity}</p>
       </div>
     `;
 

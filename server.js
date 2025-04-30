@@ -90,8 +90,8 @@ app.get("/api/nutrition/:query", async (req, res) => {
     // We're using the search endpoint to find foods matching our query
     // The dataType parameter filters for standard reference and foundation foods
     const apiUrl = `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${apiKey}&query=${encodeURIComponent(
-      query
-    )}&dataType=Foundation,SR%20Legacy`;
+      query + " raw"
+    )}&dataType=Foundation&pageSize=5`;
 
     console.log(`Fetching nutrition data for: ${query}`);
 

@@ -69,6 +69,64 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
+// This endpoint will be used to get nutrition information for products
+app.get("/api/nutrition/:query", async (req, res) => {
+  try {
+    // Extract the food query parameter from the URL
+    const { query } = req.params;
+
+    // Get API key from environment variable - never expose API keys in client-side code
+    const apiKey = process.env.FDC_API_KEY;
+
+    // Check if API key exists
+    if (!apiKey) {
+      return res.status(500).json({
+        error:
+          "Food Data Central API key not configured. Please add FDC_API_KEY to your .env file.",
+      });
+    }
+
+    // Create the URL for the Food Data Central API request
+    // We're using the search endpoint to find foods matching our query
+    // The dataType parameter filters for standard reference and foundation foods
+    const apiUrl = `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${apiKey}&query=${encodeURIComponent(
+      query
+    )}&dataType=Foundation&pageSize=1&sortBy=dataType.keyword&sortOrder=asc`;
+
+    console.log(`Fetching nutrition data for: ${query}`);
+
+    // Make request to Food Data Central API
+    const response = await fetch(apiUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    // Check if the response was successful
+    if (!response.ok) {
+      throw new Error(
+        `Food Data Central API responded with status: ${response.status}`
+      );
+    }
+
+    // Parse the JSON response
+    const data = await response.json();
+
+    // Send the nutrition data back to the client
+    res.json(data);
+  } catch (error) {
+    // Log the error for server-side debugging
+    console.error("Error fetching nutrition data:", error);
+
+    // Send an error response to the client
+    // We don't expose the exact error details to the client for security
+    res.status(500).json({
+      error: "Failed to fetch nutrition data. Please try again later.",
+    });
+  }
+});
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

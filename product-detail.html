@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="Styles/base.css" />
     <link rel="stylesheet" href="Styles/nav.css" />
     <link rel="stylesheet" href="Styles/footer.css" />
-    <link rel="stylesheet" href="Styles/popmenu.css" />
     <link rel="stylesheet" href="Styles/produce.css" />
     <link rel="stylesheet" href="Styles/product-detail.css" />
     <link rel="stylesheet" href="Styles/index.css" />
@@ -30,11 +29,13 @@
         </ol>
       </nav>
 
-      <!-- Product details section -->
+      <!-- Product details section with updated structure -->
       <div class="product-detail-content">
         <div class="product-image-detail">
           <img id="product-image" src="" alt="" class="detail-image" />
         </div>
+
+        <!-- Nutrition section will be dynamically inserted here by JavaScript -->
 
         <div class="product-info-detail">
           <h1 id="product-name" class="product-title"></h1>
@@ -54,6 +55,9 @@
             <p><strong>Farm:</strong> Braastad Gaard, Hamar</p>
             <p><strong>Cultivation:</strong> Organic</p>
             <p id="product-price" class="product-price"></p>
+            <p id="detail-package-size" class="detail-package-size">
+              Package size: <span id="package-size-value"></span>
+            </p>
           </div>
 
           <div class="quantity-section">
@@ -98,7 +102,7 @@
     <!-- Popular Produce Section -->
     <section class="popular-produce" aria-labelledby="popular-produce-title">
       <div class="products-header">
-        <h2 id="popular-produce-title">Popular Produce</h2>
+        <h1 id="popular-produce-title">Popular Produce</h1>
       </div>
 
       <!-- Popular products grid populated by JavaScript -->

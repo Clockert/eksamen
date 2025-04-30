@@ -85,12 +85,16 @@
   font-size: 30px;
   font-weight: var(--font-regular);
   color: var(--primary-text);
-  margin: 0;
+  margin: 16px 0;
+  padding: 0;
+  display: block;
+  position: relative;
 }
 
-a .product-link {
-  text-decoration: none;
-  color: red;
+.product-farm .product-price {
+  border-top: 0.5px solid var(--primary-text);
+  padding-top: 16px;
+  margin-top: 12px;
 }
 
 .product-base-quantity {
@@ -225,6 +229,10 @@ a .product-link {
   .product-price {
     font-size: 24px;
   }
+  .product-farm .product-price {
+    padding-top: 12px;
+    margin-top: 8px;
+  }
 
   .product-description,
   .product-farm,
@@ -234,5 +242,142 @@ a .product-link {
 
   .add-to-cart-detail {
     width: 100%;
+  }
+}
+
+/* Product detail layout - modified to include nutrition section */
+.product-detail-container {
+  max-width: 1421px;
+  margin: 0 auto;
+  padding: 32px;
+  background-color: var(--primary-background);
+}
+
+/* Modified layout to have 3 sections in a row */
+.product-detail-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "image info"
+    "nutrition info";
+  gap: 32px;
+  margin-bottom: 60px;
+}
+
+.product-image-detail {
+  grid-area: image;
+}
+
+.nutrition-section {
+  grid-area: nutrition;
+  margin-top: 32px;
+  border-top: 1px solid rgba(11, 10, 8, 0.1);
+  padding-top: 24px;
+}
+
+.product-info-detail {
+  grid-area: info;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Nutrition table styles */
+.nutrition-section h2 {
+  font-family: var(--font-primary);
+  font-size: 24px;
+  font-weight: var(--font-regular);
+  margin-bottom: 16px;
+  color: var(--primary-text);
+}
+
+.nutrition-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-primary);
+  font-size: var(--body-desktop);
+  margin-bottom: 16px;
+}
+
+.nutrition-table th,
+.nutrition-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(11, 10, 8, 0.1);
+}
+
+.nutrition-table th {
+  font-weight: var(--font-regular);
+  background-color: rgba(11, 10, 8, 0.05);
+}
+
+.nutrition-table tr:hover {
+  background-color: rgba(11, 10, 8, 0.02);
+}
+
+.nutrition-source {
+  font-size: 14px;
+  color: rgba(11, 10, 8, 0.6);
+  font-style: italic;
+  text-align: right;
+}
+
+/* Loading and error states */
+.loading-text {
+  color: rgba(11, 10, 8, 0.6);
+  font-style: italic;
+}
+
+.nutrition-error {
+  color: var(--red);
+  font-style: italic;
+}
+
+/* Responsive design for tablets and mobile */
+@media (max-width: 1024px) {
+  .product-detail-content {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "image"
+      "info"
+      "nutrition";
+  }
+
+  .nutrition-section {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-detail-container {
+    padding: 16px;
+  }
+
+  .nutrition-table {
+    font-size: var(--body-mobile);
+  }
+
+  .nutrition-table th,
+  .nutrition-table td {
+    padding: 6px 8px;
+  }
+
+  .nutrition-section h2 {
+    font-size: 20px;
+  }
+}
+
+.detail-package-size {
+  font-family: var(--font-primary);
+  font-size: var(--body-desktop);
+  color: rgba(11, 10, 8, 0.7);
+  margin: 4px 0 0 0;
+  padding: 0;
+  font-weight: var(--font-light);
+}
+
+@media (max-width: 768px) {
+  .detail-package-size {
+    font-size: var(--body-mobile);
   }
 }

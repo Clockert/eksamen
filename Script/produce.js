@@ -43,6 +43,115 @@ document.addEventListener("DOMContentLoaded", () => {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   updateCartCount(cart.length);
 
+  // Fetch nutrition data from our server API
+  async function fetchNutritionData(productName) {
+    console.log("Fetching nutrition data for:", productName);
+
+    try {
+      // Use the full URL with the correct port (3000)
+      const response = await fetch(
+        `http://localhost:3000/api/nutrition/${encodeURIComponent(productName)}`
+      );
+
+      // Check if the request was successful
+      if (!response.ok) {
+        console.error("Nutrition API error:", response.status);
+        throw new Error(
+          `Nutrition API responded with status: ${response.status}`
+        );
+      }
+
+      // Parse the JSON response
+      const data = await response.json();
+
+      // Log the received data to verify content
+      console.log("Nutrition data received:", data);
+      console.log("Total foods found:", data.foods?.length || 0);
+
+      // Return the data for further processing
+      return data;
+    } catch (error) {
+      console.error("Error fetching nutrition data:", error.message);
+      return null;
+    }
+  }
+
+  // Display nutrition information in the UI
+  function displayNutritionInfo(foodItem) {
+    const nutritionData = document.querySelector(".nutrition-data");
+    if (!nutritionData) return;
+
+    // Clear loading message
+    nutritionData.innerHTML = "";
+
+    // Create a table for the nutrition information
+    const table = document.createElement("table");
+    table.className = "nutrition-table";
+
+    // Add table header
+    const headerRow = document.createElement("tr");
+    headerRow.innerHTML = "<th>Nutrient</th><th>Amount</th>";
+    table.appendChild(headerRow);
+
+    // Define the nutrients we want to display (in order of importance)
+    const keyNutrients = [
+      { name: "Energy", ids: [1008, 2048], unit: "kcal" },
+      { name: "Protein", ids: [1003], unit: "g" },
+      { name: "Carbohydrates", ids: [1005, 2000], unit: "g" },
+      { name: "Fat", ids: [1004], unit: "g" },
+      { name: "Fiber", ids: [1079, 2033], unit: "g" },
+      { name: "Sugar", ids: [2000, 1082], unit: "g" },
+      { name: "Sodium", ids: [1093, 1090], unit: "mg" },
+    ];
+
+    // Get all nutrients from the food item
+    const nutrients = foodItem.foodNutrients || [];
+
+    // For each key nutrient, try to find it in the API response
+    let nutrientsFound = 0;
+
+    keyNutrients.forEach((keyNutrient) => {
+      // Find the nutrient in the API response
+      const foundNutrient = nutrients.find((apiNutrient) => {
+        // Different API responses have different structures
+        const nutrientId = apiNutrient.nutrientId || apiNutrient.nutrient?.id;
+        return keyNutrient.ids.includes(nutrientId);
+      });
+
+      // If we found the nutrient, add it to the table
+      if (foundNutrient) {
+        nutrientsFound++;
+
+        // Extract the value and unit
+        const value = foundNutrient.value || foundNutrient.amount || 0;
+        const unit =
+          foundNutrient.unitName ||
+          foundNutrient.nutrient?.unitName ||
+          keyNutrient.unit;
+
+        // Create a row for this nutrient
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${keyNutrient.name}</td><td>${value} ${unit}</td>`;
+        table.appendChild(row);
+      }
+    });
+
+    // Display the table if we found any nutrients
+    if (nutrientsFound > 0) {
+      nutritionData.appendChild(table);
+
+      // Add source information
+      const source = document.createElement("p");
+      source.className = "nutrition-source";
+      source.textContent = "Source: USDA Food Data Central";
+      nutritionData.appendChild(source);
+    } else {
+      // No nutrients found
+      nutritionData.innerHTML =
+        '<p class="nutrition-error">Detailed nutrition information not available for this product.</p>';
+    }
+  }
+
   // Fetch products from JSON file
   fetch("data/products.json")
     .then((response) => response.json())
@@ -132,6 +241,63 @@ document.addEventListener("DOMContentLoaded", () => {
     if (breadcrumbProductName) {
       breadcrumbProductName.textContent = product.name;
     }
+
+    // Create a placeholder for nutrition information with loading state
+    const productInfoDetail = document.querySelector(".product-info-detail");
+    if (productInfoDetail) {
+      // Check if a nutrition section already exists
+      let nutritionSection = document.querySelector(".nutrition-section");
+      if (!nutritionSection) {
+        nutritionSection = document.createElement("div");
+        nutritionSection.className = "nutrition-section";
+        nutritionSection.innerHTML = `
+          <h2>Nutrition Information</h2>
+          <div class="nutrition-data">
+            <p class="loading-text">Loading nutrition data...</p>
+          </div>
+        `;
+
+        // Insert nutrition section before the quantity section
+        const quantitySection = document.querySelector(".quantity-section");
+        if (quantitySection) {
+          productInfoDetail.insertBefore(nutritionSection, quantitySection);
+        } else {
+          productInfoDetail.appendChild(nutritionSection);
+        }
+      }
+    }
+
+    // Fetch nutrition data for this product
+    console.log("Starting nutrition data fetch process for:", product.name);
+    fetchNutritionData(product.name)
+      .then((data) => {
+        console.log("Processing nutrition data for display");
+        if (data && data.foods && data.foods.length > 0) {
+          console.log("First food item:", data.foods[0].description);
+          console.log(
+            "Number of nutrients:",
+            data.foods[0].foodNutrients?.length || 0
+          );
+
+          // Display nutrition data in the UI
+          displayNutritionInfo(data.foods[0]);
+        } else {
+          console.log("No nutrition data found for this product");
+          const nutritionData = document.querySelector(".nutrition-data");
+          if (nutritionData) {
+            nutritionData.innerHTML =
+              '<p class="nutrition-error">No nutrition information found for this product.</p>';
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to process nutrition data:", error);
+        const nutritionData = document.querySelector(".nutrition-data");
+        if (nutritionData) {
+          nutritionData.innerHTML =
+            '<p class="nutrition-error">Failed to load nutrition information. Please try again later.</p>';
+        }
+      });
   }
 
   // Set up quantity input controls

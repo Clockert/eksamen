@@ -88,6 +88,11 @@
   margin: 0;
 }
 
+a .product-link {
+  text-decoration: none;
+  color: red;
+}
+
 .product-base-quantity {
   font-family: var(--font-primary);
   font-size: var(--body-large-desktop);

@@ -75,8 +75,14 @@ main.products-container {
   z-index: 1;
 }
 
+.product-link {
+  text-decoration: none;
+  color: var(--primary-text);
+}
+
 /* Add to basket button */
-.add-to-cart {
+a.add-to-cart {
+  text-decoration: none;
   position: relative;
   z-index: 2;
   background-color: var(--primary-text);

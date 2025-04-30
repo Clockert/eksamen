@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FRAM - Product Details</title>
+    <link rel="stylesheet" href="Styles/base.css" />
+    <link rel="stylesheet" href="Styles/nav.css" />
+    <link rel="stylesheet" href="Styles/footer.css" />
+    <link rel="stylesheet" href="Styles/popmenu.css" />
+    <link rel="stylesheet" href="Styles/produce.css" />
+    <link rel="stylesheet" href="Styles/product-detail.css" />
+    <link rel="stylesheet" href="Styles/index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navbar injected by Components.js -->
+    <script src="Script/Components.js" defer></script>
+
+    <main class="product-detail-container">
+      <!-- Breadcrumb navigation -->
+      <nav aria-label="breadcrumb" class="breadcrumb">
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="produce.html">Produce</a></li>
+          <li aria-current="page" id="breadcrumb-product-name">Product Name</li>
+        </ol>
+      </nav>
+
+      <!-- Product details section -->
+      <div class="product-detail-content">
+        <div class="product-image-detail">
+          <img id="product-image" src="" alt="" class="detail-image" />
+        </div>
+
+        <div class="product-info-detail">
+          <h1 id="product-name" class="product-title"></h1>
+
+          <p id="product-quantity" class="product-base-quantity"></p>
+
+          <div class="product-description">
+            <p>
+              Our selection of seasonal produce is sourced directly from local
+              farms to ensure peak freshness and quality. We support sustainable
+              farming practices that benefit both the environment and the
+              community.
+            </p>
+          </div>
+
+          <div class="product-farm">
+            <p><strong>Farm:</strong> Braastad Gaard, Hamar</p>
+            <p><strong>Cultivation:</strong> Organic</p>
+            <p id="product-price" class="product-price"></p>
+          </div>
+
+          <div class="quantity-section">
+            <label for="quantity" class="quantity-label">Quantity:</label>
+            <div class="quantity-controls">
+              <button
+                type="button"
+                class="quantity-btn"
+                id="decrease-quantity"
+                aria-label="Decrease quantity"
+              >
+                <i class="fas fa-minus"></i>
+              </button>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                value="1"
+                class="quantity-input"
+                aria-label="Product quantity"
+              />
+              <button
+                type="button"
+                class="quantity-btn"
+                id="increase-quantity"
+                aria-label="Increase quantity"
+              >
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <button id="add-to-cart-detail" class="add-to-cart-detail" data-id="">
+            Add to basket
+            <span class="arrow-up-icon"><i class="fas fa-arrow-up"></i></span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Popular Produce Section -->
+    <section class="popular-produce" aria-labelledby="popular-produce-title">
+      <div class="products-header">
+        <h2 id="popular-produce-title">Popular Produce</h2>
+      </div>
+
+      <!-- Popular products grid populated by JavaScript -->
+      <div
+        id="popular-products-container"
+        class="products-grid"
+        aria-label="Popular products carousel"
+      ></div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="Script/produce.js"></script>
+  </body>
+</html>

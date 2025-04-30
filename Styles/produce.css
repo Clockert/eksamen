@@ -263,3 +263,76 @@ a.add-to-cart {
     height: 459px;
   }
 }
+
+/* Nutrition section styles - Add to product-detail.css */
+.nutrition-section {
+  margin-top: 24px;
+  border-top: 1px solid rgba(11, 10, 8, 0.1);
+  padding-top: 24px;
+}
+
+.nutrition-section h2 {
+  font-family: var(--font-primary);
+  font-size: 24px;
+  font-weight: var(--font-regular);
+  margin-bottom: 16px;
+  color: var(--primary-text);
+}
+
+.nutrition-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-primary);
+  font-size: var(--body-desktop);
+  margin-bottom: 16px;
+}
+
+.nutrition-table th,
+.nutrition-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(11, 10, 8, 0.1);
+}
+
+.nutrition-table th {
+  font-weight: var(--font-regular);
+  background-color: rgba(11, 10, 8, 0.05);
+}
+
+.nutrition-table tr:hover {
+  background-color: rgba(11, 10, 8, 0.02);
+}
+
+.nutrition-source {
+  font-size: 14px;
+  color: rgba(11, 10, 8, 0.6);
+  font-style: italic;
+  text-align: right;
+}
+
+/* Loading and error states */
+.loading-text {
+  color: rgba(11, 10, 8, 0.6);
+  font-style: italic;
+}
+
+.nutrition-error {
+  color: var(--red);
+  font-style: italic;
+}
+
+/* Responsive styles for nutrition table */
+@media (max-width: 768px) {
+  .nutrition-table {
+    font-size: var(--body-mobile);
+  }
+
+  .nutrition-table th,
+  .nutrition-table td {
+    padding: 6px 8px;
+  }
+
+  .nutrition-section h2 {
+    font-size: 20px;
+  }
+}

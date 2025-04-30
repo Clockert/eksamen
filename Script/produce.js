@@ -243,27 +243,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Create a placeholder for nutrition information with loading state
-    const productInfoDetail = document.querySelector(".product-info-detail");
-    if (productInfoDetail) {
-      // Check if a nutrition section already exists
-      let nutritionSection = document.querySelector(".nutrition-section");
-      if (!nutritionSection) {
-        nutritionSection = document.createElement("div");
-        nutritionSection.className = "nutrition-section";
-        nutritionSection.innerHTML = `
-          <h2>Nutrition Information</h2>
-          <div class="nutrition-data">
-            <p class="loading-text">Loading nutrition data...</p>
-          </div>
-        `;
+    // Check if a nutrition section already exists
+    let nutritionSection = document.querySelector(".nutrition-section");
+    if (!nutritionSection) {
+      nutritionSection = document.createElement("div");
+      nutritionSection.className = "nutrition-section";
+      nutritionSection.innerHTML = `
+    <h2>Nutrition Information</h2>
+    <div class="nutrition-data">
+      <p class="loading-text">Loading nutrition data...</p>
+    </div>
+  `;
 
-        // Insert nutrition section before the quantity section
-        const quantitySection = document.querySelector(".quantity-section");
-        if (quantitySection) {
-          productInfoDetail.insertBefore(nutritionSection, quantitySection);
-        } else {
-          productInfoDetail.appendChild(nutritionSection);
-        }
+      // Insert nutrition section after the product image container
+      const productImageContainer = document.querySelector(
+        ".product-image-detail"
+      );
+      if (productImageContainer) {
+        productImageContainer.insertAdjacentElement(
+          "afterend",
+          nutritionSection
+        );
       }
     }
 

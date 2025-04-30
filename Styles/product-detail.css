@@ -366,3 +366,18 @@
     font-size: 20px;
   }
 }
+
+.detail-package-size {
+  font-family: var(--font-primary);
+  font-size: var(--body-desktop);
+  color: rgba(11, 10, 8, 0.7);
+  margin: 4px 0 0 0;
+  padding: 0;
+  font-weight: var(--font-light);
+}
+
+@media (max-width: 768px) {
+  .detail-package-size {
+    font-size: var(--body-mobile);
+  }
+}

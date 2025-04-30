@@ -203,25 +203,25 @@ document.addEventListener("DOMContentLoaded", () => {
       productCard.className = "product-card";
 
       productCard.innerHTML = `
-        <div class="product-image-container">
-          <a href="product-detail.html?id=${product.id}" class="product-link">
-            <img src="${product.image}" alt="${product.name}" class="product-image">
-          </a>
-          <a href="product-detail.html?id=${product.id}" class="add-to-cart" aria-label="View details of ${product.name}">
-            Add to basket
-            <span class="arrow-up-icon"><i class="fas fa-arrow-up"></i></span>
-          </a>
+      <div class="product-image-container">
+        <a href="product-detail.html?id=${product.id}" class="product-link">
+          <img src="${product.image}" alt="${product.name}" class="product-image">
+        </a>
+        <a href="product-detail.html?id=${product.id}" class="add-to-cart" aria-label="View details of ${product.name}">
+          Add to basket
+          <span class="arrow-up-icon"><i class="fas fa-arrow-up"></i></span>
+        </a>
+      </div>
+      <div class="product-info">
+        <div class="product-header">
+          <h3 class="product-name">
+            <a href="product-detail.html?id=${product.id}" class="product-link">${product.name}</a>
+          </h3>
+          <div class="product-price">${product.price}</div>
         </div>
-        <div class="product-info">
-          <div class="product-header">
-            <h3 class="product-name">
-              <a href="product-detail.html?id=${product.id}" class="product-link">${product.name}</a>
-            </h3>
-            <div class="product-price">${product.price}</div>
-          </div>
-          <p class="product-quantity">${product.quantity}</p>
-        </div>
-      `;
+        <p class="package-size">Package size: ${product.quantity}</p>
+      </div>
+    `;
 
       container.appendChild(productCard);
     });
@@ -236,11 +236,18 @@ document.addEventListener("DOMContentLoaded", () => {
     productImageElement.src = product.image;
     productImageElement.alt = product.name;
     productPriceElement.textContent = product.price;
-    productQuantityElement.textContent = product.quantity;
+
+    // Update package size
+    const packageSizeValue = document.getElementById("package-size-value");
+    if (packageSizeValue) {
+      packageSizeValue.textContent = product.quantity;
+    }
 
     if (breadcrumbProductName) {
       breadcrumbProductName.textContent = product.name;
     }
+
+    // Rest of the function remains the same...
 
     // Create a placeholder for nutrition information with loading state
     // Check if a nutrition section already exists
@@ -249,11 +256,11 @@ document.addEventListener("DOMContentLoaded", () => {
       nutritionSection = document.createElement("div");
       nutritionSection.className = "nutrition-section";
       nutritionSection.innerHTML = `
-    <h2>Nutrition Information</h2>
-    <div class="nutrition-data">
-      <p class="loading-text">Loading nutrition data...</p>
-    </div>
-  `;
+      <h2>Nutrition Information</h2>
+      <div class="nutrition-data">
+        <p class="loading-text">Loading nutrition data...</p>
+      </div>
+    `;
 
       // Insert nutrition section after the product image container
       const productImageContainer = document.querySelector(

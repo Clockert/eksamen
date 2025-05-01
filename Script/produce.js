@@ -203,23 +203,23 @@ document.addEventListener("DOMContentLoaded", () => {
       productCard.className = "product-card";
 
       productCard.innerHTML = `
-      <div class="product-image-container">
-        <a href="product-detail.html?id=${product.id}" class="product-link">
-          <img src="${product.image}" alt="${product.name}" class="product-image">
+      <div class="product-card__image-container">
+        <a href="product-detail.html?id=${product.id}" class="product-card__link">
+          <img src="${product.image}" alt="${product.name}" class="product-card__image">
         </a>
-        <a href="product-detail.html?id=${product.id}" class="add-to-cart" aria-label="View details of ${product.name}">
+        <a href="product-detail.html?id=${product.id}" class="product-card__add-button" aria-label="View details of ${product.name}">
           Add to basket
-          <span class="arrow-up-icon"><i class="fas fa-arrow-up"></i></span>
+          <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
         </a>
       </div>
-      <div class="product-info">
-        <div class="product-header">
-          <h3 class="product-name">
-            <a href="product-detail.html?id=${product.id}" class="product-link">${product.name}</a>
+      <div class="product-card__info">
+        <div class="product-card__header">
+          <h3 class="product-card__name">
+            <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
           </h3>
-          <div class="product-price">${product.price}</div>
+          <div class="product-card__price">${product.price}</div>
         </div>
-        <p class="product-quantity">${product.quantity}</p>
+        <p class="product-card__quantity">${product.quantity}</p>
       </div>
     `;
 
@@ -376,18 +376,18 @@ document.addEventListener("DOMContentLoaded", () => {
   function showErrorMessage() {
     if (productsGrid) {
       productsGrid.innerHTML = `
-        <div class="error-message">
-          <p>Sorry, we couldn't load the products. Please try again later.</p>
-        </div>
-      `;
+      <div class="error-message">
+        <p>Sorry, we couldn't load the products. Please try again later.</p>
+      </div>
+    `;
     }
 
     if (popularProductsGrid) {
       popularProductsGrid.innerHTML = `
-        <div class="error-message">
-          <p>Sorry, we couldn't load the popular products. Please try again later.</p>
-        </div>
-      `;
+      <div class="error-message">
+        <p>Sorry, we couldn't load the popular products. Please try again later.</p>
+      </div>
+    `;
     }
 
     if (isProductDetailPage && productNameElement) {

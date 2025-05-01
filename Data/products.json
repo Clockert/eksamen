@@ -39,6 +39,38 @@
       "quantity": "1kg",
       "image": "assets/produce/carrots.png",
       "popular": false
+    },
+    {
+      "id": 6,
+      "name": "Apples",
+      "price": "35 kr / kg",
+      "quantity": "1kg",
+      "image": "assets/produce/apples.webp",
+      "popular": false
+    },
+    {
+      "id": 7,
+      "name": "Lemons",
+      "price": "35 kr / kg",
+      "quantity": "1 kg",
+      "image": "assets/produce/lemmons.webp",
+      "popular": false
+    },
+    {
+      "id": 8,
+      "name": "Strawberries",
+      "price": "90 kr / kg",
+      "quantity": "400g",
+      "image": "assets/produce/strawberries.webp",
+      "popular": false
+    },
+    {
+      "id": 9,
+      "name": "Yellow Onions",
+      "price": "38 kr / kg",
+      "quantity": "1kg",
+      "image": "assets/produce/yellow-oniens.webp",
+      "popular": false
     }
   ]
 }

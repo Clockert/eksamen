@@ -41,7 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize cart
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  updateCartCount(cart.length);
+
+  // Note: We no longer need to update cart count here as it's handled by Components.js
 
   // Fetch nutrition data from our server API
   async function fetchNutritionData(productName) {
@@ -194,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showErrorMessage();
     });
 
-  // Display product cards with links to detail page
+  // Display product cards with BEM class names
   function displayProducts(products, container) {
     container.innerHTML = "";
 
@@ -246,8 +247,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (breadcrumbProductName) {
       breadcrumbProductName.textContent = product.name;
     }
-
-    // Rest of the function remains the same...
 
     // Create a placeholder for nutrition information with loading state
     // Check if a nutrition section already exists
@@ -340,11 +339,14 @@ document.addEventListener("DOMContentLoaded", () => {
       cart.push(product);
     }
 
-    // Save cart to localStorage
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    // Update cart count
-    updateCartCount(cart.length);
+    // Use the global updateCart function from Components.js
+    if (window.updateCart) {
+      window.updateCart(cart);
+    } else {
+      // Fallback if updateCart function isn't available
+      localStorage.setItem("cart", JSON.stringify(cart));
+      console.warn("window.updateCart function not found");
+    }
 
     // Show feedback
     showAddedToCartFeedback(quantity);
@@ -353,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Show feedback when products are added to cart
   function showAddedToCartFeedback(quantity) {
     const originalText = addToCartDetailButton.innerHTML;
-    addToCartDetailButton.innerHTML = `Added ${quantity}! <span class="arrow-up-icon"><i class="fas fa-check"></i></span>`;
+    addToCartDetailButton.innerHTML = `Added ${quantity}! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
     addToCartDetailButton.disabled = true;
     addToCartDetailButton.style.backgroundColor = "#28bd6d";
 
@@ -364,30 +366,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1500);
   }
 
-  // Update cart counter in navbar
-  function updateCartCount(count) {
-    const cartButton = document.querySelector(".green-btn");
-    if (cartButton) {
-      cartButton.textContent = count;
-    }
-  }
-
   // Show error messages when products can't be loaded
   function showErrorMessage() {
     if (productsGrid) {
       productsGrid.innerHTML = `
-      <div class="error-message">
-        <p>Sorry, we couldn't load the products. Please try again later.</p>
-      </div>
-    `;
+        <div class="error-message">
+          <p>Sorry, we couldn't load the products. Please try again later.</p>
+        </div>
+      `;
     }
 
     if (popularProductsGrid) {
       popularProductsGrid.innerHTML = `
-      <div class="error-message">
-        <p>Sorry, we couldn't load the popular products. Please try again later.</p>
-      </div>
-    `;
+        <div class="error-message">
+          <p>Sorry, we couldn't load the popular products. Please try again later.</p>
+        </div>
+      `;
     }
 
     if (isProductDetailPage && productNameElement) {

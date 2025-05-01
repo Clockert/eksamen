@@ -1,0 +1,100 @@
+/* ===== POPULAR PRODUCE COMPONENT ===== */
+.popular-produce {
+  /* Box model */
+  padding: 60px 32px;
+  max-width: 1421px;
+  margin: 0 auto;
+
+  /* Visual */
+  background-color: var(--primary-background);
+  border-top: 1px solid var(--primary-text);
+}
+
+.popular-produce__header {
+  /* Box model */
+  max-width: 718px;
+  margin-bottom: 48px;
+}
+
+.popular-produce__title {
+  /* Typography */
+  font-family: var(--font-primary);
+  font-size: var(--header-desktop);
+  font-weight: var(--font-regular);
+  text-transform: uppercase;
+  line-height: 40px;
+  color: var(--primary-text);
+  margin: 0;
+}
+
+.popular-produce__grid {
+  /* Box model */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 28px;
+  margin-top: 48px;
+}
+
+/* Ensure product cards display properly in the grid */
+.popular-produce__grid .product-card {
+  width: calc((100% - 56px) / 3);
+  max-width: 454px;
+  min-width: 300px;
+  margin-bottom: 28px;
+}
+
+/* ===== MEDIA QUERIES ===== */
+@media (max-width: 1200px) and (min-width: 769px) {
+  .popular-produce__grid .product-card {
+    width: calc((100% - 28px) / 2);
+  }
+}
+
+@media (max-width: 768px) {
+  .popular-produce {
+    padding: 40px 16px;
+  }
+
+  .popular-produce__title {
+    font-size: var(--header-mobile);
+  }
+
+  .popular-produce__grid {
+    /* Mobile carousel style */
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    scroll-snap-type: x mandatory;
+  }
+
+  /* Product card adjustments when in popular produce section */
+  .popular-produce__grid .product-card {
+    flex: 0 0 250px;
+    width: 250px;
+    margin-right: 16px;
+    margin-bottom: 0;
+    scroll-snap-align: start;
+  }
+
+  .popular-produce__grid .product-card:last-child {
+    margin-right: 0;
+  }
+
+  .popular-produce__grid .product-card__image-container {
+    height: 321px;
+  }
+
+  /* Hide scrollbar but maintain functionality */
+  .popular-produce__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .popular-produce__grid {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

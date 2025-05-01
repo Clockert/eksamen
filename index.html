@@ -122,19 +122,20 @@
       </div>
     </section>
 
-    <!-- Popular Produce Section -->
-    <section class="popular-produce" aria-labelledby="popular-produce-title">
-      <div class="products-header">
-        <h1 id="popular-produce-title">Popular Produce</h1>
-      </div>
+    <!-- Popular Produce Component Container -->
+    <div id="popular-produce-container"></div>
 
-      <!-- Popular products grid populated by JavaScript -->
-      <div
-        id="popular-products-container"
-        class="products-grid"
-        aria-label="Popular products carousel"
-      ></div>
-    </section>
+    <!-- The script to load the component -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Check if the function is available before calling it
+        if (typeof window.loadPopularProduce === "function") {
+          window.loadPopularProduce("popular-produce-container");
+        } else {
+          console.error("loadPopularProduce function not found");
+        }
+      });
+    </script>
     <script src="Script/produce.js" defer></script>
   </body>
 </html>

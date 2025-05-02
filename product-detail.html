@@ -14,7 +14,7 @@
     <!-- Navbar injected by Components.js -->
     <script src="Script/Components.js" defer></script>
 
-    <main class="product-detail-container">
+    <main class="product-detail">
       <!-- Breadcrumb navigation -->
       <nav aria-label="breadcrumb" class="breadcrumb">
         <ol>
@@ -25,19 +25,19 @@
       </nav>
 
       <!-- Product details section with updated structure -->
-      <div class="product-detail-content">
-        <div class="product-image-detail">
-          <img id="product-image" src="" alt="" class="detail-image" />
+      <div class="product-detail__content">
+        <div class="product-detail__image-container">
+          <img id="product-image" src="" alt="" class="product-detail__image" />
         </div>
 
         <!-- Nutrition section will be dynamically inserted here by JavaScript -->
 
-        <div class="product-info-detail">
-          <h1 id="product-name" class="product-title"></h1>
+        <div class="product-detail__info">
+          <h1 id="product-name" class="product-detail__title"></h1>
 
-          <p id="product-quantity" class="product-base-quantity"></p>
+          <p id="product-quantity" class="product-detail__base-quantity"></p>
 
-          <div class="product-description">
+          <div class="product-detail__description">
             <p>
               Our selection of seasonal produce is sourced directly from local
               farms to ensure peak freshness and quality. We support sustainable
@@ -46,21 +46,23 @@
             </p>
           </div>
 
-          <div class="product-farm">
+          <div class="product-detail__farm">
             <p><strong>Farm:</strong> Braastad Gaard, Hamar</p>
             <p><strong>Cultivation:</strong> Organic</p>
-            <p id="product-price" class="product-price"></p>
-            <p id="detail-package-size" class="detail-package-size">
+            <p id="product-price" class="product-detail__price"></p>
+            <p id="detail-package-size" class="product-detail__package-size">
               Package size: <span id="package-size-value"></span>
             </p>
           </div>
 
-          <div class="quantity-section">
-            <label for="quantity" class="quantity-label">Quantity:</label>
-            <div class="quantity-controls">
+          <div class="product-detail__quantity-section">
+            <label for="quantity" class="product-detail__quantity-label"
+              >Quantity:</label
+            >
+            <div class="product-detail__quantity-controls">
               <button
                 type="button"
-                class="quantity-btn"
+                class="product-detail__quantity-btn"
                 id="decrease-quantity"
                 aria-label="Decrease quantity"
               >
@@ -72,12 +74,12 @@
                 name="quantity"
                 min="1"
                 value="1"
-                class="quantity-input"
+                class="product-detail__quantity-input"
                 aria-label="Product quantity"
               />
               <button
                 type="button"
-                class="quantity-btn"
+                class="product-detail__quantity-btn"
                 id="increase-quantity"
                 aria-label="Increase quantity"
               >
@@ -86,9 +88,15 @@
             </div>
           </div>
 
-          <button id="add-to-cart-detail" class="add-to-cart-detail" data-id="">
+          <button
+            id="add-to-cart-detail"
+            class="product-detail__add-to-cart"
+            data-id=""
+          >
             Add to basket
-            <span class="arrow-up-icon"><i class="fas fa-arrow-up"></i></span>
+            <span class="product-detail__arrow-up-icon"
+              ><i class="fas fa-arrow-up"></i
+            ></span>
           </button>
         </div>
       </div>

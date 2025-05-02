@@ -250,10 +250,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create a placeholder for nutrition information with loading state
     // Check if a nutrition section already exists
-    let nutritionSection = document.querySelector(".nutrition-section");
+    let nutritionSection = document.querySelector(".product-detail__nutrition");
     if (!nutritionSection) {
       nutritionSection = document.createElement("div");
-      nutritionSection.className = "nutrition-section";
+      nutritionSection.className = "product-detail__nutrition";
       nutritionSection.innerHTML = `
       <h2>Nutrition Information</h2>
       <div class="nutrition-data">
@@ -263,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Insert nutrition section after the product image container
       const productImageContainer = document.querySelector(
-        ".product-image-detail"
+        ".product-detail__image-container"
       );
       if (productImageContainer) {
         productImageContainer.insertAdjacentElement(

@@ -13,12 +13,14 @@
 }
 
 .hero__logo {
-  position: relative;
-  text-align: center;
-  line-height: 150px;
+  font-family: var(--font-secondary);
   font-size: var(--logo-desktop);
-  width: 509px;
+  font-weight: var(--font-light);
   color: var(--truewhite);
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 150px;
 }
 
 .hero__text {
@@ -270,7 +272,7 @@
 }
 
 .how-it-works__step-link {
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   font-size: var(--body-desktop);
   color: rgba(0, 0, 0, 0.7);
   text-decoration: underline;
@@ -313,60 +315,5 @@
 
   .how-it-works__step-content {
     width: 100%;
-  }
-}
-
-/* Popular Produce Section */
-.popular-produce {
-  padding: 60px 32px;
-  background-color: var(--primary-background);
-  border-top: 1px solid var(--primary-text);
-  max-width: 1421px;
-  margin: 0 auto;
-}
-
-.popular-produce .products-grid {
-  justify-content: flex-start;
-  margin-top: 48px;
-}
-
-@media (max-width: 768px) {
-  .popular-produce {
-    padding: 40px 16px;
-  }
-
-  .popular-produce .products-grid {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 12px;
-    margin-bottom: 20px;
-    scroll-snap-type: x mandatory;
-  }
-
-  .popular-produce .product-card {
-    flex: 0 0 250px;
-    width: 250px;
-    margin-right: 16px;
-    margin-bottom: 0;
-    scroll-snap-align: start;
-  }
-
-  .popular-produce .product-image-container {
-    height: 321px;
-  }
-
-  .popular-produce .product-card:last-child {
-    margin-right: 0;
-  }
-
-  .popular-produce .products-grid::-webkit-scrollbar {
-    display: none;
-  }
-
-  .popular-produce .products-grid {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
   }
 }

@@ -217,7 +217,7 @@
   color: var(--primary-text);
 }
 
-.nutrition-table {
+.product-detail__nutrition-table {
   width: 100%;
   border-collapse: collapse;
   font-family: var(--font-primary);
@@ -225,23 +225,23 @@
   margin-bottom: 16px;
 }
 
-.nutrition-table th,
-.nutrition-table td {
+.product-detail__nutrition-table th,
+.product-detail__nutrition-table td {
   padding: 8px 12px;
   text-align: left;
   border-bottom: 1px solid rgba(11, 10, 8, 0.1);
 }
 
-.nutrition-table th {
+.product-detail__nutrition-table th {
   font-weight: var(--font-regular);
   background-color: rgba(11, 10, 8, 0.05);
 }
 
-.nutrition-table tr:hover {
+.product-detail__nutrition-table tr:hover {
   background-color: rgba(11, 10, 8, 0.02);
 }
 
-.nutrition-source {
+.product-detail__nutrition-source {
   font-size: 14px;
   color: rgba(11, 10, 8, 0.6);
   font-style: italic;
@@ -249,12 +249,12 @@
 }
 
 /* Loading and error states */
-.loading-text {
+.product-detail__loading-text {
   color: rgba(11, 10, 8, 0.6);
   font-style: italic;
 }
 
-.nutrition-error {
+.product-detail__nutrition-error {
   color: var(--red);
   font-style: italic;
 }
@@ -314,16 +314,16 @@
     width: 100%;
   }
 
-  .nutrition-table {
+  .product-detail__nutrition-table {
     font-size: var(--body-mobile);
   }
 
-  .nutrition-table th,
-  .nutrition-table td {
+  .product-detail__nutrition-table th,
+  .product-detail__nutrition-table td {
     padding: 6px 8px;
   }
 
-  .nutrition-section h2 {
+  .product-detail__nutrition h2 {
     font-size: 20px;
   }
 }

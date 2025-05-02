@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create a table for the nutrition information
     const table = document.createElement("table");
-    table.className = "nutrition-table";
+    table.className = "product-detail__nutrition-table";
 
     // Add table header
     const headerRow = document.createElement("tr");
@@ -143,13 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Add source information
       const source = document.createElement("p");
-      source.className = "nutrition-source";
+      source.className = "product-detail__nutrition-source";
       source.textContent = "Source: USDA Food Data Central";
       nutritionData.appendChild(source);
     } else {
       // No nutrients found
       nutritionData.innerHTML =
-        '<p class="nutrition-error">Detailed nutrition information not available for this product.</p>';
+        '<p class="product-detail__nutrition-error">Detailed nutrition information not available for this product.</p>';
     }
   }
 
@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
       nutritionSection.innerHTML = `
       <h2>Nutrition Information</h2>
       <div class="nutrition-data">
-        <p class="loading-text">Loading nutrition data...</p>
+        <p class="product-detail__loading-text">Loading nutrition data...</p>
       </div>
     `;
 
@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const nutritionData = document.querySelector(".nutrition-data");
           if (nutritionData) {
             nutritionData.innerHTML =
-              '<p class="nutrition-error">No nutrition information found for this product.</p>';
+              '<p class="product-detail__nutrition-error">No nutrition information found for this product.</p>';
           }
         }
       })
@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const nutritionData = document.querySelector(".nutrition-data");
         if (nutritionData) {
           nutritionData.innerHTML =
-            '<p class="nutrition-error">Failed to load nutrition information. Please try again later.</p>';
+            '<p class="product-detail__nutrition-error">Failed to load nutrition information. Please try again later.</p>';
         }
       });
   }

@@ -1,42 +1,57 @@
-// Components.js - Modular component loader
+/**
+ * Components.js
+ *
+ * This module provides reusable UI components for the Fram website.
+ * It handles dynamic component loading, navigation, cart management,
+ * and other shared UI elements across pages.
+ *
+ * @author Your Name
+ * @version 1.0
+ */
+
+/**
+ * Loads the navbar component and initializes its functionality
+ * The navbar includes the main navigation, logo, and cart button
+ */
 function loadNavbar() {
+  // Define navbar HTML structure with BEM class naming
   const navbarHTML = `
   <header>
     <nav class="navbar">
       <!-- Hamburger menu -->
-      <button class="hamburger" id="open-menu" aria-label="Open menu">
-        <img src="assets/bars.png" alt="Menu" class="hamburger-icon" />
+      <button class="navbar__hamburger" id="open-menu" aria-label="Open menu">
+        <img src="assets/bars.png" alt="Menu" class="navbar__hamburger-icon" />
       </button>
 
       <!-- Center Logo -->
-      <a href="index.html" class="logo">Fram</a>
+      <a href="index.html" class="navbar__logo">Fram</a>
 
-      <!-- Right Green Button -->
-      <button class="green-btn">0</button>
+      <!-- Cart Button -->
+      <button class="navbar__cart">0</button>
     </nav>
   </header>
 
   <!-- Menu overlay -->
-  <div id="menu-overlay" class="menu-overlay menu-hidden">
-    <div class="menu-header">
-      <button id="close-menu" class="close-button" aria-label="Close menu">
+  <div id="menu-overlay" class="menu menu--hidden">
+    <div class="menu__header">
+      <button id="close-menu" class="menu__close-button" aria-label="Close menu">
         ✕
       </button>
-      <a href="index.html" class="menu-logo">Fram</a>
+      <a href="index.html" class="menu__logo">Fram</a>
     </div>
 
-    <div class="menu-content">
+    <div class="menu__content">
       <nav>
-        <ul class="menu-nav">
-          <li class="menu-nav-item">
-            <a href="produce.html" class="menu-nav-link">Products</a>
+        <ul class="menu__nav">
+          <li class="menu__item">
+            <a href="produce.html" class="menu__link">Products</a>
           </li>
-          <li class="menu-nav-item">
-            <a href="chatbot.html" class="menu-nav-link">Chat</a>
+          <li class="menu__item">
+            <a href="chatbot.html" class="menu__link">Chat</a>
           </li>
         </ul>
       </nav>
-      <a href="#checkout" class="checkout-link">Checkout</a>
+      <a href="#checkout" class="menu__checkout">Checkout</a>
     </div>
   </div>
 `;
@@ -49,33 +64,43 @@ function loadNavbar() {
   const closeMenuBtn = document.getElementById("close-menu");
   const menuOverlay = document.getElementById("menu-overlay");
 
+  // Open menu event handler
   openMenuBtn.addEventListener("click", () => {
-    menuOverlay.classList.remove("menu-hidden");
+    menuOverlay.classList.remove("menu--hidden");
   });
 
+  // Close menu event handler
   closeMenuBtn.addEventListener("click", () => {
-    menuOverlay.classList.add("menu-hidden");
+    menuOverlay.classList.add("menu--hidden");
   });
+
+  // Initialize cart count from localStorage
+  initializeCartCount();
 }
 
+/**
+ * Loads the footer component
+ * The footer includes logo, divider, newsletter signup, and legal information
+ */
 function loadFooter() {
+  // Define footer HTML structure with BEM class naming
   const footerHTML = `
-    <footer>
-      <a href="index.html" class="logo">Fram</a>
+    <footer class="footer">
+      <a href="index.html" class="footer__logo">Fram</a>
 
-      <hr class="footer-divider" aria-hidden="true" />
+      <hr class="footer__divider" aria-hidden="true" />
 
-      <div class="footer-content">
-        <div class="footer-text">
-          <h2>Stay updated</h2>
-          <p>
+      <div class="footer__content">
+        <div class="footer__text">
+          <h2 class="footer__heading">Stay updated</h2>
+          <p class="footer__description">
             Sign up for our newsletter to be the first to know about new produce
             or other exciting news!
           </p>
         </div>
 
         <form
-          class="subscribeform"
+          class="footer__form"
           action="/subscribe"
           method="post"
           aria-labelledby="newsletter-heading"
@@ -91,6 +116,7 @@ function loadFooter() {
             name="first-name"
             placeholder="First name"
             required
+            class="footer__input"
           />
 
           <label for="email" class="visually-hidden">Email Address</label>
@@ -100,9 +126,10 @@ function loadFooter() {
             name="email"
             placeholder="E-mail address"
             required
+            class="footer__input"
           />
 
-          <button type="submit">Send</button>
+          <button type="submit" class="footer__button">Send</button>
         </form>
       </div>
     </footer>
@@ -112,7 +139,164 @@ function loadFooter() {
   document.body.insertAdjacentHTML("beforeend", footerHTML);
 }
 
-// Load components based on data attributes in the HTML
+/**
+ * Loads the Popular Produce component and populates it with products
+ * This component displays a selection of featured products in a grid layout
+ * that turns into a horizontal scrollable carousel on mobile devices
+ *
+ * @param {string} containerId - ID of the container to place the component
+ */
+function loadPopularProduce(containerId) {
+  // Create the component HTML structure
+  const popularProduceHTML = `
+    <section class="popular-produce">
+      <div class="popular-produce__header">
+        <h2 id="popular-produce-title" class="popular-produce__title">Popular Produce</h2>
+      </div>
+      <div id="popular-products-grid" class="popular-produce__grid" aria-label="Popular products carousel"></div>
+    </section>
+  `;
+
+  // Get the container element where the component will be placed
+  const container = document.getElementById(containerId);
+  if (!container) {
+    console.error(`Container element with ID '${containerId}' not found`);
+    return;
+  }
+
+  // Insert the component HTML into the container
+  container.innerHTML = popularProduceHTML;
+
+  // Load products data from JSON file and populate the grid
+  fetch("data/products.json")
+    .then((response) => {
+      // Check if the response is ok
+      if (!response.ok) {
+        throw new Error(`Failed to fetch products: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Filter for popular products only
+      const popularProducts = data.products.filter(
+        (product) => product.popular
+      );
+
+      // Display products in the grid
+      displayPopularProducts(popularProducts);
+    })
+    .catch((error) => {
+      // Handle any errors in fetching or displaying products
+      console.error("Error loading popular products:", error);
+      document.getElementById("popular-products-grid").innerHTML = `
+        <div class="error-message">
+          <p>Sorry, we couldn't load the popular products. Please try again later.</p>
+        </div>
+      `;
+    });
+}
+
+/**
+ * Creates and displays product cards for popular products
+ *
+ * @param {Array} products - Array of product objects to display
+ */
+function displayPopularProducts(products) {
+  // Get the grid container
+  const grid = document.getElementById("popular-products-grid");
+  if (!grid) {
+    console.error("Popular products grid element not found");
+    return;
+  }
+
+  // Clear the grid before adding new products
+  grid.innerHTML = "";
+
+  // Create and append a product card for each product
+  products.forEach((product) => {
+    const productCard = document.createElement("div");
+    productCard.className = "product-card";
+
+    // Create inner HTML structure for the product card
+    productCard.innerHTML = `
+      <div class="product-card__image-container">
+        <a href="product-detail.html?id=${product.id}" class="product-card__link">
+          <img src="${product.image}" alt="${product.name}" class="product-card__image">
+        </a>
+        <a href="product-detail.html?id=${product.id}" class="product-card__add-button" aria-label="View details of ${product.name}">
+          Add to basket
+          <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
+        </a>
+      </div>
+      <div class="product-card__info">
+        <div class="product-card__header">
+          <h3 class="product-card__name">
+            <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
+          </h3>
+          <div class="product-card__price">${product.price}</div>
+        </div>
+        <p class="product-card__quantity">${product.quantity}</p>
+      </div>
+    `;
+
+    // Add the product card to the grid
+    grid.appendChild(productCard);
+  });
+}
+
+/**
+ * Updates the cart count in the navbar
+ *
+ * @param {number} count - The number of items in the cart
+ */
+function updateCartCount(count) {
+  const cartButton = document.querySelector(".navbar__cart");
+  if (cartButton) {
+    cartButton.textContent = count;
+  }
+}
+
+/**
+ * Initialize cart count from localStorage when page loads
+ * This ensures the cart counter is always up to date
+ */
+function initializeCartCount() {
+  try {
+    // Get cart from localStorage
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Update cart counter
+    updateCartCount(cart.length);
+  } catch (error) {
+    console.error("Error initializing cart count:", error);
+    updateCartCount(0); // Default to 0 if there's an error
+  }
+}
+
+/**
+ * Updates the cart with new items and persists to localStorage
+ * This function is exposed globally for use by other scripts
+ *
+ * @param {Array} cart - The updated cart array containing product objects
+ */
+window.updateCart = function (cart) {
+  // Save cart to localStorage
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // Update cart counter
+  updateCartCount(cart.length);
+};
+
+/**
+ * Expose the loadPopularProduce function globally
+ * This allows pages to load the component when needed
+ */
+window.loadPopularProduce = loadPopularProduce;
+
+/**
+ * Initialize components based on data attributes in the HTML
+ * This allows pages to control which components to load
+ */
 document.addEventListener("DOMContentLoaded", () => {
   // Get page configuration from html tag
   const htmlElement = document.documentElement;
@@ -129,4 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (pageConfig.footer) {
     loadFooter();
   }
+
+  // Popular produce component is loaded on demand by individual pages
+  // using window.loadPopularProduce(containerId)
 });

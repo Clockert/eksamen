@@ -41,7 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize cart
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  updateCartCount(cart.length);
+
+  // Note: We no longer need to update cart count here as it's handled by Components.js
 
   // Fetch nutrition data from our server API
   async function fetchNutritionData(productName) {
@@ -86,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Create a table for the nutrition information
     const table = document.createElement("table");
-    table.className = "nutrition-table";
+    table.className = "product-detail__nutrition-table";
 
     // Add table header
     const headerRow = document.createElement("tr");
@@ -142,13 +143,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Add source information
       const source = document.createElement("p");
-      source.className = "nutrition-source";
+      source.className = "product-detail__nutrition-source";
       source.textContent = "Source: USDA Food Data Central";
       nutritionData.appendChild(source);
     } else {
       // No nutrients found
       nutritionData.innerHTML =
-        '<p class="nutrition-error">Detailed nutrition information not available for this product.</p>';
+        '<p class="product-detail__nutrition-error">Detailed nutrition information not available for this product.</p>';
     }
   }
 
@@ -194,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showErrorMessage();
     });
 
-  // Display product cards with links to detail page
+  // Display product cards with BEM class names
   function displayProducts(products, container) {
     container.innerHTML = "";
 
@@ -203,23 +204,23 @@ document.addEventListener("DOMContentLoaded", () => {
       productCard.className = "product-card";
 
       productCard.innerHTML = `
-      <div class="product-image-container">
-        <a href="product-detail.html?id=${product.id}" class="product-link">
-          <img src="${product.image}" alt="${product.name}" class="product-image">
+      <div class="product-card__image-container">
+        <a href="product-detail.html?id=${product.id}" class="product-card__link">
+          <img src="${product.image}" alt="${product.name}" class="product-card__image">
         </a>
-        <a href="product-detail.html?id=${product.id}" class="add-to-cart" aria-label="View details of ${product.name}">
+        <a href="product-detail.html?id=${product.id}" class="product-card__add-button" aria-label="View details of ${product.name}">
           Add to basket
-          <span class="arrow-up-icon"><i class="fas fa-arrow-up"></i></span>
+          <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
         </a>
       </div>
-      <div class="product-info">
-        <div class="product-header">
-          <h3 class="product-name">
-            <a href="product-detail.html?id=${product.id}" class="product-link">${product.name}</a>
+      <div class="product-card__info">
+        <div class="product-card__header">
+          <h3 class="product-card__name">
+            <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
           </h3>
-          <div class="product-price">${product.price}</div>
+          <div class="product-card__price">${product.price}</div>
         </div>
-        <p class="product-quantity">${product.quantity}</p>
+        <p class="product-card__quantity">${product.quantity}</p>
       </div>
     `;
 
@@ -247,24 +248,22 @@ document.addEventListener("DOMContentLoaded", () => {
       breadcrumbProductName.textContent = product.name;
     }
 
-    // Rest of the function remains the same...
-
     // Create a placeholder for nutrition information with loading state
     // Check if a nutrition section already exists
-    let nutritionSection = document.querySelector(".nutrition-section");
+    let nutritionSection = document.querySelector(".product-detail__nutrition");
     if (!nutritionSection) {
       nutritionSection = document.createElement("div");
-      nutritionSection.className = "nutrition-section";
+      nutritionSection.className = "product-detail__nutrition";
       nutritionSection.innerHTML = `
       <h2>Nutrition Information</h2>
       <div class="nutrition-data">
-        <p class="loading-text">Loading nutrition data...</p>
+        <p class="product-detail__loading-text">Loading nutrition data...</p>
       </div>
     `;
 
       // Insert nutrition section after the product image container
       const productImageContainer = document.querySelector(
-        ".product-image-detail"
+        ".product-detail__image-container"
       );
       if (productImageContainer) {
         productImageContainer.insertAdjacentElement(
@@ -293,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const nutritionData = document.querySelector(".nutrition-data");
           if (nutritionData) {
             nutritionData.innerHTML =
-              '<p class="nutrition-error">No nutrition information found for this product.</p>';
+              '<p class="product-detail__nutrition-error">No nutrition information found for this product.</p>';
           }
         }
       })
@@ -302,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const nutritionData = document.querySelector(".nutrition-data");
         if (nutritionData) {
           nutritionData.innerHTML =
-            '<p class="nutrition-error">Failed to load nutrition information. Please try again later.</p>';
+            '<p class="product-detail__nutrition-error">Failed to load nutrition information. Please try again later.</p>';
         }
       });
   }
@@ -340,11 +339,14 @@ document.addEventListener("DOMContentLoaded", () => {
       cart.push(product);
     }
 
-    // Save cart to localStorage
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    // Update cart count
-    updateCartCount(cart.length);
+    // Use the global updateCart function from Components.js
+    if (window.updateCart) {
+      window.updateCart(cart);
+    } else {
+      // Fallback if updateCart function isn't available
+      localStorage.setItem("cart", JSON.stringify(cart));
+      console.warn("window.updateCart function not found");
+    }
 
     // Show feedback
     showAddedToCartFeedback(quantity);
@@ -353,7 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Show feedback when products are added to cart
   function showAddedToCartFeedback(quantity) {
     const originalText = addToCartDetailButton.innerHTML;
-    addToCartDetailButton.innerHTML = `Added ${quantity}! <span class="arrow-up-icon"><i class="fas fa-check"></i></span>`;
+    addToCartDetailButton.innerHTML = `Added ${quantity}! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
     addToCartDetailButton.disabled = true;
     addToCartDetailButton.style.backgroundColor = "#28bd6d";
 
@@ -362,14 +364,6 @@ document.addEventListener("DOMContentLoaded", () => {
       addToCartDetailButton.disabled = false;
       addToCartDetailButton.style.backgroundColor = "";
     }, 1500);
-  }
-
-  // Update cart counter in navbar
-  function updateCartCount(count) {
-    const cartButton = document.querySelector(".green-btn");
-    if (cartButton) {
-      cartButton.textContent = count;
-    }
   }
 
   // Show error messages when products can't be loaded

@@ -4,23 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FRAM - Our Produce</title>
-    <link rel="stylesheet" href="Styles/base.css" />
-    <link rel="stylesheet" href="Styles/nav.css" />
-    <link rel="stylesheet" href="Styles/footer.css" />
-    <link rel="stylesheet" href="Styles/produce.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="Styles/main.css" />
   </head>
   <body>
     <!-- Navbar injected by Components.js -->
     <script src="Script/Components.js" defer></script>
 
-    <main class="products-container">
-      <div class="products-header">
-        <h1>Produce</h1>
-        <p class="products-description">
+    <main class="products">
+      <div class="products__header">
+        <h1 class="products__title">Produce</h1>
+        <p class="products__description">
           Explore our selection of seasonal produce, sourced directly from local
           farms to ensure peak freshness and quality. Every item is chosen with
           care, supporting sustainable practices and bringing the best of the
@@ -29,20 +26,20 @@
       </div>
 
       <!-- Product grid populated by JavaScript -->
-      <div id="products-container" class="products-grid"></div>
+      <div id="products-container" class="products__grid"></div>
     </main>
 
     <!-- Farm Map Section - Full width section -->
-    <section class="farm-map-section">
-      <div class="farm-map-title">
-        <h1>See our partnering farms</h1>
+    <section class="farm-map">
+      <div class="farm-map__title-container">
+        <h1 class="farm-map__title">See our partnering farms</h1>
       </div>
 
-      <div class="farm-map-container">
+      <div class="farm-map__container">
         <!-- Google Maps Embed iframe -->
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31625.00880328937!2d10.594623368300118!3d60.30375313264543!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4641a30c3be67c59%3A0x94dbad789ad47bba!2sBraastad%20Gaard!5e0!3m2!1sno!2sno!4v1745560866962!5m2!1sno!2sno"
-          class="map-frame"
+          class="farm-map__iframe"
           allowfullscreen=""
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"

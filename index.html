@@ -4,64 +4,60 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FRAM</title>
-    <link rel="stylesheet" href="Styles/base.css" />
-    <link rel="stylesheet" href="Styles/nav.css" />
-    <link rel="stylesheet" href="Styles/index.css" />
-    <link rel="stylesheet" href="Styles/footer.css" />
-    <link rel="stylesheet" href="Styles/produce.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="Styles/main.css" />
   </head>
   <body>
     <!-- The navbar will be dynamically injected here -->
     <script src="Script/Components.js" defer></script>
 
     <section class="hero">
-      <div class="logo">Fram</div>
-      <hr class="vertical-divider" aria-hidden="true" />
-      <p class="hero-txt">Home delivery from your local farms</p>
+      <div class="hero__logo">Fram</div>
+      <hr class="hero__divider" aria-hidden="true" />
+      <p class="hero__text">Home delivery from your local farms</p>
     </section>
 
     <! -- promo section -- >
 
     <div class="container">
-      <section class="promo-section">
-        <div class="promo-card">
-          <div class="promo-header">
-            <h2 class="promo-title">Shop Our Seasonal Selection</h2>
-            <p class="promo-subtitle">Updated every week</p>
+      <section class="promo">
+        <div class="promo__card">
+          <div class="promo__header">
+            <h2 class="promo__title">Shop Our Seasonal Selection</h2>
+            <p class="promo__subtitle">Updated every week</p>
           </div>
           <img
             src="assets/seasonal-produce.webp"
             alt="Basket of fresh seasonal vegetables"
-            class="promo-image"
+            class="promo__image"
           />
-          <p class="promo-text">
+          <p class="promo__text">
             New produce is added continuously as time goes by and the seasons
             change.
           </p>
-          <a href="#" class="red-button">Browse our selection</a>
+          <a href="#" class="button button--red">Browse our selection</a>
         </div>
 
-        <hr class="promo-divider" aria-hidden="true" />
+        <hr class="promo__divider" aria-hidden="true" />
 
-        <div class="promo-card">
-          <div class="promo-header">
-            <h2 class="promo-title">Ask Us About Anything</h2>
-            <p class="promo-subtitle">All your questions answered</p>
+        <div class="promo__card">
+          <div class="promo__header">
+            <h2 class="promo__title">Ask Us About Anything</h2>
+            <p class="promo__subtitle">All your questions answered</p>
           </div>
           <img
             src="assets/farmer.webp"
             alt="Farmer in the field"
-            class="promo-image"
+            class="promo__image"
           />
-          <p class="promo-text">
+          <p class="promo__text">
             New produce is added continuously as time goes by and the seasons
-            change.
           </p>
-          <a href="#" class="red-button">Go to chat</a>
+          <a href="#" class="button button--red">Go to chat</a>
+        </div>
         </div>
       </section>
     </div>
@@ -69,72 +65,73 @@
     <!-- How it works section-->
 
     <section class="how-it-works">
-      <div class="how-it-works-title">
-        <h2>This is how it works</h2>
+  <div class="how-it-works__header">
+    <h2 class="how-it-works__title">This is how it works</h2>
+  </div>
+
+  <div class="how-it-works__steps">
+    <div class="how-it-works__step">
+      <h3 class="how-it-works__step-title">Order groceries</h3>
+      <div class="how-it-works__step-content">
+        <p class="how-it-works__step-description">
+          Fram is a circular service that ensures your kitchen is always
+          stocked with the essentials you need. Browse our seasonal
+          selection, choose your items, and place your order online.
+        </p>
+        <a href="#" class="how-it-works__step-link">See our stock here</a>
       </div>
+    </div>
 
-      <div class="how-it-works-steps">
-        <div class="step">
-          <h3 class="step-title">Order groceries</h3>
-          <div class="step-content">
-            <p class="step-description">
-              Fram is a circular service that ensures your kitchen is always
-              stocked with the essentials you need. Browse our seasonal
-              selection, choose your items, and place your order online.
-            </p>
-            <a href="#" class="step-link">See our stock here</a>
-          </div>
-        </div>
-
-        <div class="step">
-          <h3 class="step-title">Stock up</h3>
-          <div class="step-content">
-            <p class="step-description">
-              Once your order arrives, unpack the produce and store it however
-              it works best for you. Hold onto the containers—they're yours to
-              keep until your next order.
-            </p>
-          </div>
-        </div>
-
-        <div class="step">
-          <h3 class="step-title">Scan & reorder</h3>
-          <div class="step-content">
-            <p class="step-description">
-              Ready for a refill? Grab the containers from your last order and
-              scan the QR code with our app or your phone's camera. This
-              instantly adds the items back to your cart, making reordering a
-              breeze.
-            </p>
-          </div>
-        </div>
-
-        <div class="step">
-          <h3 class="step-title">Swap & reuse</h3>
-          <div class="step-content">
-            <p class="step-description">
-              When we deliver your new order, simply leave your empty containers
-              outside. We'll pick them up, clean them thoroughly, and reuse them
-              for future deliveries.
-            </p>
-          </div>
-        </div>
+    <div class="how-it-works__step">
+      <h3 class="how-it-works__step-title">Stock up</h3>
+      <div class="how-it-works__step-content">
+        <p class="how-it-works__step-description">
+          Once your order arrives, unpack the produce and store it however
+          it works best for you. Hold onto the containers—they're yours to
+          keep until your next order.
+        </p>
       </div>
-    </section>
+    </div>
 
-    <!-- Popular Produce Section -->
-    <section class="popular-produce" aria-labelledby="popular-produce-title">
-      <div class="products-header">
-        <h1 id="popular-produce-title">Popular Produce</h1>
+    <div class="how-it-works__step">
+      <h3 class="how-it-works__step-title">Scan & reorder</h3>
+      <div class="how-it-works__step-content">
+        <p class="how-it-works__step-description">
+          Ready for a refill? Grab the containers from your last order and
+          scan the QR code with our app or your phone's camera. This
+          instantly adds the items back to your cart, making reordering a
+          breeze.
+        </p>
       </div>
+    </div>
 
-      <!-- Popular products grid populated by JavaScript -->
-      <div
-        id="popular-products-container"
-        class="products-grid"
-        aria-label="Popular products carousel"
-      ></div>
-    </section>
+    <div class="how-it-works__step">
+      <h3 class="how-it-works__step-title">Swap & reuse</h3>
+      <div class="how-it-works__step-content">
+        <p class="how-it-works__step-description">
+          When we deliver your new order, simply leave your empty containers
+          outside. We'll pick them up, clean them thoroughly, and reuse them
+          for future deliveries.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- Popular Produce Component Container -->
+    <div id="popular-produce-container"></div>
+
+    <!-- The script to load the component -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Check if the function is available before calling it
+        if (typeof window.loadPopularProduce === "function") {
+          window.loadPopularProduce("popular-produce-container");
+        } else {
+          console.error("loadPopularProduce function not found");
+        }
+      });
+    </script>
     <script src="Script/produce.js" defer></script>
   </body>
 </html>

@@ -10,11 +10,11 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // DOM elements
-  const chatboxInner = document.querySelector(".chatbox-inner");
+  const chatboxInner = document.querySelector(".chatbot__messages-inner");
   const userInput = document.getElementById("user-input");
   const sendButton = document.getElementById("send-button");
   const buttonIcon = document.getElementById("button-icon");
-  const chatbox = document.querySelector(".chatbox");
+  const chatbox = document.querySelector(".chatbot__messages");
 
   // Chat state - tracks current chat status
   const chatState = {
@@ -119,12 +119,12 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   function addMessage(message, type) {
     const messageElement = document.createElement("li");
-    messageElement.className = `chat ${type}`;
+    messageElement.className = `chatbot__message chatbot__message--${type}`;
 
     // Add FRAM logo for bot messages
     if (type === "incoming") {
       const logo = document.createElement("span");
-      logo.className = "logo";
+      logo.className = "chatbot__logo";
       logo.innerHTML = "<p>Fram</p>";
       messageElement.appendChild(logo);
     }
@@ -147,22 +147,23 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   function addLoadingMessage() {
     const loadingElement = document.createElement("li");
-    loadingElement.className = "chat incoming loading-message";
+    loadingElement.className =
+      "chatbot__message chatbot__message--incoming chatbot__message--loading";
 
     // Add Fram logo
     const logo = document.createElement("span");
-    logo.className = "logo";
+    logo.className = "chatbot__logo";
     logo.innerHTML = "<p>Fram</p>";
     loadingElement.appendChild(logo);
 
     // Create dots container for animation
     const dotsContainer = document.createElement("div");
-    dotsContainer.className = "dots-container";
+    dotsContainer.className = "chatbot__loading-dots";
 
     // Create three animated dots
     for (let i = 0; i < 3; i++) {
       const dot = document.createElement("span");
-      dot.className = "dot";
+      dot.className = "chatbot__loading-dot";
       dotsContainer.appendChild(dot);
     }
 
@@ -179,12 +180,14 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   function addConnectionErrorMessage() {
     // Remove any existing error messages
-    const existingErrors = document.querySelectorAll(".connection-error");
+    const existingErrors = document.querySelectorAll(
+      ".chatbot__connection-error"
+    );
     existingErrors.forEach((error) => chatboxInner.removeChild(error));
 
     // Create error message element
     const errorElement = document.createElement("div");
-    errorElement.className = "connection-error";
+    errorElement.className = "chatbot__connection-error";
     errorElement.textContent = "Failed to connect. Please try again later.";
 
     // Add to chatbox and scroll
@@ -220,7 +223,9 @@ document.addEventListener("DOMContentLoaded", () => {
       updateButtonState();
 
       // Remove loading message if present
-      const loadingMessage = document.querySelector(".loading-message");
+      const loadingMessage = document.querySelector(
+        ".chatbot__message--loading"
+      );
       if (loadingMessage) {
         chatboxInner.removeChild(loadingMessage);
       }

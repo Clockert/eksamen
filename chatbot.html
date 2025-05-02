@@ -14,23 +14,29 @@
   </head>
   <body>
     <!-- Chatbot Section -->
-    <main class="chatbot-window">
-      <div class="chatbot-container">
-        <ul class="chatbox">
-          <div class="chatbox-inner">
+    <main class="chatbot">
+      <div class="chatbot__container">
+        <ul class="chatbot__messages">
+          <div class="chatbot__messages-inner">
             <!-- Chat messages will be dynamically inserted here by JavaScript -->
           </div>
         </ul>
 
-        <div class="chat-input">
-          <textarea placeholder="Enter message..." id="user-input"></textarea>
+        <div class="chatbot__input-area">
+          <textarea
+            placeholder="Enter message..."
+            id="user-input"
+            class="chatbot__textarea"
+          ></textarea>
           <button
             type="submit"
-            class="send-button"
+            class="chatbot__send-button"
             id="send-button"
             aria-label="Send message"
           >
-            <span id="button-icon"><i class="fas fa-arrow-up"></i></span>
+            <span id="button-icon" class="chatbot__button-icon"
+              ><i class="fas fa-arrow-up"></i
+            ></span>
           </button>
         </div>
       </div>

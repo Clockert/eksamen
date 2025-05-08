@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const productDetailContent = document.querySelector(
     ".product-detail__content"
   );
+  // New: Add loading indicator references
+  const productsLoadingIndicator = document.getElementById("products-loading");
+  const productLoadingIndicator = document.getElementById("product-loading");
+  const productErrorElement = document.getElementById("product-error");
 
   // Product detail page elements
   const productNameElement = document.getElementById("product-name");
@@ -43,19 +47,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Fetch products from JSON file
   fetch("data/products.json")
-    .then((response) => response.json())
+    .then((response) => {
+      // Check if the response is ok
+      if (!response.ok) {
+        throw new Error(`Failed to fetch products: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
       // For product listing page
       if (productsGrid) {
+        // Hide loading indicator when products are ready to display
+        if (productsLoadingIndicator) {
+          productsLoadingIndicator.style.display = "none";
+        }
+
         displayProducts(data.products, productsGrid);
       }
 
       // For product detail page
       if (isProductDetailPage && productId) {
+        // Hide the product loading indicator on detail page
+        if (productLoadingIndicator) {
+          productLoadingIndicator.style.display = "none";
+        }
+
         currentProduct = data.products.find((p) => p.id === productId);
 
         if (!currentProduct) {
-          window.location.href = "produce.html";
+          // Show error if product not found
+          if (productErrorElement) {
+            productErrorElement.style.display = "block";
+          }
+
+          // Hide product content
+          if (productDetailContent) {
+            productDetailContent.style.display = "none";
+          }
+
+          // Update breadcrumb
+          if (breadcrumbProductName) {
+            breadcrumbProductName.textContent = "Product not found";
+          }
+
           return;
         }
 
@@ -89,10 +123,29 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch((error) => {
       console.error("Error loading products:", error);
+
+      // Show error message and hide loading indicators
+      if (productsLoadingIndicator) {
+        productsLoadingIndicator.style.display = "none";
+      }
+
+      if (productLoadingIndicator) {
+        productLoadingIndicator.style.display = "none";
+      }
+
+      if (isProductDetailPage && productErrorElement) {
+        productErrorElement.style.display = "block";
+
+        // Hide product content
+        if (productDetailContent) {
+          productDetailContent.style.display = "none";
+        }
+      }
+
       showErrorMessage();
     });
 
-  // Display product cards with BEM class names
+  // Display product cards
   function displayProducts(products, container) {
     container.innerHTML = "";
 

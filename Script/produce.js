@@ -149,6 +149,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (packageSizeElement) packageSizeElement.textContent = product.quantity;
     if (breadcrumbProductName) breadcrumbProductName.textContent = product.name;
 
+    // Populate description, farm, and cultivation
+    const productDescriptionElement = document.getElementById(
+      "product-description"
+    );
+    const productFarmElement = document.getElementById("product-farm");
+    const productCultivationElement = document.getElementById(
+      "product-cultivation"
+    );
+
+    if (productDescriptionElement)
+      productDescriptionElement.textContent = product.description;
+    if (productFarmElement) productFarmElement.textContent = product.farm;
+    if (productCultivationElement)
+      productCultivationElement.textContent = product.cultivation;
+
     // Create nutrition section if it doesn't exist
     createNutritionSection(product);
   }

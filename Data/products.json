@@ -6,7 +6,10 @@
       "price": "16 kr / kg",
       "quantity": "1kg",
       "image": "assets/produce/oats.webp",
-      "popular": true
+      "popular": true,
+      "description": "Our organic oats are grown in the fertile fields of central Norway without pesticides or chemical fertilizers. Rich in fiber and nutrients, these oats make the perfect foundation for a healthy breakfast or can be used in baking. Harvested at peak ripeness and minimally processed to preserve their natural goodness.",
+      "farm": "Braastad Gaard, Hamar",
+      "cultivation": "Organic, Pesticide-free"
     },
     {
       "id": 2,
@@ -14,7 +17,10 @@
       "price": "45 kr / kg",
       "quantity": "1kg",
       "image": "assets/produce/red_onions.webp",
-      "popular": true
+      "popular": true,
+      "description": "These vibrant red onions are cultivated using traditional methods by our partner farms in southern Norway. Known for their slightly sweet flavor and beautiful color, they're perfect for salads, grilling, or adding a pop of color to your dishes. Each onion is carefully harvested by hand to ensure quality.",
+      "farm": "Solbakken Farm, Vestfold",
+      "cultivation": "Low-intervention farming"
     },
     {
       "id": 3,
@@ -22,7 +28,10 @@
       "price": "38 kr",
       "quantity": "0.2kg",
       "image": "assets/produce/garlic.webp",
-      "popular": true
+      "popular": true,
+      "description": "Our garlic is grown with care in the mineral-rich soil of eastern Norway. With its robust flavor and aromatic properties, this garlic adds depth to any dish. Each bulb is hand-selected for size and quality, ensuring you receive the very best for your kitchen. Perfect for everything from simple garlic bread to complex sauces.",
+      "farm": "Østgård Eco Farm, Hedmark",
+      "cultivation": "Organic, Soil regeneration practices"
     },
     {
       "id": 4,
@@ -30,7 +39,10 @@
       "price": "32 kr / kg",
       "quantity": "1kg",
       "image": "assets/produce/potatoes.png",
-      "popular": false
+      "popular": false,
+      "description": "These versatile Norwegian potatoes are a staple in any kitchen. Grown in the cool climate and rich soil of central Norway, they develop the perfect balance of starchiness and flavor. Whether you're making traditional Norwegian lefse, crispy roasted potatoes, or a hearty soup, these potatoes deliver consistent results and authentic taste.",
+      "farm": "Braastad Gaard, Hamar",
+      "cultivation": "Integrated pest management, Low-impact farming"
     },
     {
       "id": 5,
@@ -38,7 +50,10 @@
       "price": "48 kr / kg",
       "quantity": "1kg",
       "image": "assets/produce/carrots.png",
-      "popular": false
+      "popular": false,
+      "description": "Sweet, crisp, and vibrantly orange, our carrots are harvested from the nutrient-rich fields of our partner farms. Grown with sustainable practices that maintain soil health, these carrots develop exceptional flavor and nutritional value. Perfect for snacking, cooking, or juicing, they bring natural sweetness and vibrant color to your meals.",
+      "farm": "Grønndal Organic Farm, Trøndelag",
+      "cultivation": "Organic, Crop rotation"
     },
     {
       "id": 6,
@@ -46,7 +61,10 @@
       "price": "35 kr / kg",
       "quantity": "1kg",
       "image": "assets/produce/apples.webp",
-      "popular": false
+      "popular": false,
+      "description": "These crisp and juicy Norwegian apples are grown in orchards along the fjords, where the unique microclimate creates the perfect balance of sweetness and tartness. Our farmers use integrated pest management to minimize chemical use while ensuring beautiful, blemish-free fruit. These versatile apples are excellent for eating fresh, baking, or making traditional Norwegian apple desserts.",
+      "farm": "Fruktgården, Hardanger",
+      "cultivation": "Integrated pest management, Pollinator-friendly practices"
     },
     {
       "id": 7,
@@ -54,7 +72,10 @@
       "price": "35 kr / kg",
       "quantity": "1 kg",
       "image": "assets/produce/lemmons.webp",
-      "popular": false
+      "popular": false,
+      "description": "Our lemons are sourced from our Mediterranean partner farms that practice sustainable agriculture. Bright yellow and bursting with tangy flavor, these lemons are perfect for adding zest to both sweet and savory dishes. Use them for fresh lemonade, baking, or as an accent in your favorite fish dishes. Though not grown in Norway, we partner with farms that share our commitment to sustainable practices.",
+      "farm": "Eco-Mediterranean Partners, Spain",
+      "cultivation": "Low-water agriculture, Organic practices"
     },
     {
       "id": 8,
@@ -62,7 +83,10 @@
       "price": "90 kr / kg",
       "quantity": "400g",
       "image": "assets/produce/strawberries.webp",
-      "popular": false
+      "popular": false,
+      "description": "Our Norwegian strawberries are a true seasonal delight, grown in the long daylight hours of the Norwegian summer which gives them exceptional sweetness and aroma. These vibrant red berries are harvested at the peak of ripeness and delivered to you within 24 hours, ensuring maximum freshness and flavor. Perfect for desserts, smoothies, or simply enjoying with a touch of cream.",
+      "farm": "Bærgården, Vestfold",
+      "cultivation": "Pesticide-minimal, Bee-friendly practices"
     },
     {
       "id": 9,
@@ -70,7 +94,10 @@
       "price": "38 kr / kg",
       "quantity": "1kg",
       "image": "assets/produce/yellow-oniens.webp",
-      "popular": false
+      "popular": false,
+      "description": "These versatile yellow onions are an essential ingredient in countless dishes. Grown using sustainable farming methods by our partner farms, they develop the perfect balance of flavor and storage quality. With their robust flavor that mellows and sweetens when cooked, these onions form the foundation of soups, stews, and sauces, or can be caramelized for a sweet and savory addition to many dishes.",
+      "farm": "Solbakken Farm, Vestfold",
+      "cultivation": "Low-intervention farming, Natural pest management"
     }
   ]
 }

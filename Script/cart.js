@@ -86,70 +86,74 @@ window.framCart = {
     }
 
     // Use event delegation for dynamically added "Add to basket" buttons
-    document.addEventListener("click", (event) => {
-      // Skip if the click is already being handled
-      if (this.clickHandled) return;
+    // IMPORTANT FIX: Check if the produce.js event handler is already active
+    // Only add this event listener if we don't detect the other handler
+    if (!window.produceHandlerActive) {
+      document.addEventListener("click", (event) => {
+        // Skip if the click is already being handled
+        if (this.clickHandled) return;
 
-      // Find the closest button or its child elements
-      const addButton = event.target.closest(
-        ".product-card__add-button, .product-detail__add-to-cart"
-      );
+        // Find the closest button or its child elements
+        const addButton = event.target.closest(
+          ".product-card__add-button, .product-detail__add-to-cart"
+        );
 
-      if (addButton) {
-        this.clickHandled = true;
+        if (addButton) {
+          this.clickHandled = true;
 
-        // Prevent default action if it's a link
-        event.preventDefault();
+          // Prevent default action if it's a link
+          event.preventDefault();
 
-        // Find the product data
-        const productCard = addButton.closest(".product-card");
-        let product;
+          // Find the product data
+          const productCard = addButton.closest(".product-card");
+          let product;
 
-        if (productCard) {
-          // Get product data from the card's data attributes
-          product = {
-            id: productCard.dataset.id || addButton.dataset.id,
-            name: productCard.dataset.name || addButton.dataset.name,
-            price: productCard.dataset.price || addButton.dataset.price,
-            image:
-              productCard.dataset.image ||
-              addButton.dataset.image ||
-              productCard.querySelector("img")?.src,
-          };
+          if (productCard) {
+            // Get product data from the card's data attributes
+            product = {
+              id: productCard.dataset.id || addButton.dataset.id,
+              name: productCard.dataset.name || addButton.dataset.name,
+              price: productCard.dataset.price || addButton.dataset.price,
+              image:
+                productCard.dataset.image ||
+                addButton.dataset.image ||
+                productCard.querySelector("img")?.src,
+            };
 
-          // Add to cart
-          this.addToCart(product, 1, true);
+            // Add to cart
+            this.addToCart(product, 1, true);
 
-          // Show feedback
-          this.showAddedToCartFeedback(addButton, 1);
-        } else if (
-          addButton.classList.contains("product-detail__add-to-cart")
-        ) {
-          // Handle product detail page add button
-          const quantityInput = document.getElementById("quantity");
-          const quantity = quantityInput
-            ? parseInt(quantityInput.value) || 1
-            : 1;
+            // Show feedback
+            this.showAddedToCartFeedback(addButton, 1);
+          } else if (
+            addButton.classList.contains("product-detail__add-to-cart")
+          ) {
+            // Handle product detail page add button
+            const quantityInput = document.getElementById("quantity");
+            const quantity = quantityInput
+              ? parseInt(quantityInput.value) || 1
+              : 1;
 
-          product = {
-            id: addButton.dataset.id,
-            name: document.getElementById("product-name")?.textContent,
-            price: document.getElementById("product-price")?.textContent,
-            image: document.getElementById("product-image")?.src,
-          };
+            product = {
+              id: addButton.dataset.id,
+              name: document.getElementById("product-name")?.textContent,
+              price: document.getElementById("product-price")?.textContent,
+              image: document.getElementById("product-image")?.src,
+            };
 
-          this.addToCart(product, quantity, true);
+            this.addToCart(product, quantity, true);
 
-          // Show feedback
-          this.showAddedToCartFeedback(addButton, quantity);
+            // Show feedback
+            this.showAddedToCartFeedback(addButton, quantity);
+          }
+
+          // Reset click handled flag after a delay
+          setTimeout(() => {
+            this.clickHandled = false;
+          }, 100);
         }
-
-        // Reset click handled flag after a delay
-        setTimeout(() => {
-          this.clickHandled = false;
-        }, 100);
-      }
-    });
+      });
+    }
   },
 
   /**

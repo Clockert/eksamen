@@ -363,6 +363,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// Set a flag to indicate that we have the produce event handler active
+// This will help cart.js know not to add duplicate handlers
+window.produceHandlerActive = true;
+
 // Event delegation for dynamically created product cards
 document.addEventListener("click", (event) => {
   // This event handler is kept for backward compatibility

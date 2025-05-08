@@ -291,8 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("No nutrition data found for this product");
           const nutritionData = document.querySelector(".nutrition-data");
           if (nutritionData) {
-            nutritionData.innerHTML =
-              '<p class="product-detail__nutrition-error">No nutrition information found for this product.</p>';
+            ('<p class="product-detail__nutrition-error">No nutrition information found for this product.</p>');
           }
         }
       })
@@ -340,19 +339,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Use the global updateCart function from Components.js
-    if (window.updateCart) {
-      window.updateCart(cart);
-    } else {
-      // Fallback if updateCart function isn't available
-      localStorage.setItem("cart", JSON.stringify(cart));
-      console.warn("window.updateCart function not found");
-    }
-
+    // Update localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
     // Show feedback
+    // Re-render the cart UI immediately
+    renderCart();
+
     showAddedToCartFeedback(quantity);
   }
 
   // Show feedback when products are added to cart
+  // Function to render the cart UI
+  function renderCart() {
+    const cartOverlay = document.getElementById("cart-overlay");
+    const cartItemsContainer = document.getElementById("cart-items");
+
+    // Clear existing cart items
+    cartItemsContainer.innerHTML = "";
+
+    // Populate cart items
+    cart.forEach((item) => {
+      const cartItem = document.createElement("div");
+      cartItem.className = "cart-item";
+      cartItem.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" class="cart-item__image">
+        <div class="cart-item__details">
+          <h3 class="cart-item__name">${item.name}</h3>
+          <p class="cart-item__price">${item.price}</p>
+        </div>
+      `;
+      cartItemsContainer.appendChild(cartItem);
+    });
+
+    // Show cart overlay
+    cartOverlay.classList.remove("cart--hidden");
+  }
+
   function showAddedToCartFeedback(quantity) {
     const originalText = addToCartDetailButton.innerHTML;
     addToCartDetailButton.innerHTML = `Added ${quantity}! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
@@ -390,5 +412,23 @@ document.addEventListener("DOMContentLoaded", () => {
       if (productPriceElement) productPriceElement.textContent = "";
       if (productQuantityElement) productQuantityElement.textContent = "";
     }
+  }
+});
+
+// Event delegation for dynamically created product cards
+document.addEventListener("click", (event) => {
+  if (
+    event.target.matches(
+      ".product-card__add-button, .product-card__add-button *"
+    )
+  ) {
+    const productCard = event.target.closest(".product-card");
+    const product = {
+      id: productCard.dataset.id,
+      name: productCard.dataset.name,
+      price: productCard.dataset.price,
+      image: productCard.querySelector("img").src,
+    };
+    addToCart(product, 1); // Default quantity to 1
   }
 });

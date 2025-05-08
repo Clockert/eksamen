@@ -6,11 +6,18 @@
 // Create a global cart object to manage cart functionality
 window.framCart = {
   items: [], // Cart items
+  clickHandled: false, // Track if click is already being handled
 
   /**
    * Initialize the cart system
    */
   init: function () {
+    // Only initialize once
+    if (this._initialized) return;
+    this._initialized = true;
+
+    console.log("Initializing framCart");
+
     // Load cart from localStorage
     this.loadCart();
 
@@ -80,21 +87,27 @@ window.framCart = {
 
     // Use event delegation for dynamically added "Add to basket" buttons
     document.addEventListener("click", (event) => {
+      // Skip if the click is already being handled
+      if (this.clickHandled) return;
+
       // Find the closest button or its child elements
       const addButton = event.target.closest(
         ".product-card__add-button, .product-detail__add-to-cart"
       );
 
       if (addButton) {
+        this.clickHandled = true;
+
         // Prevent default action if it's a link
         event.preventDefault();
 
         // Find the product data
         const productCard = addButton.closest(".product-card");
+        let product;
 
         if (productCard) {
           // Get product data from the card's data attributes
-          const product = {
+          product = {
             id: productCard.dataset.id || addButton.dataset.id,
             name: productCard.dataset.name || addButton.dataset.name,
             price: productCard.dataset.price || addButton.dataset.price,
@@ -106,6 +119,9 @@ window.framCart = {
 
           // Add to cart
           this.addToCart(product, 1, true);
+
+          // Show feedback
+          this.showAddedToCartFeedback(addButton, 1);
         } else if (
           addButton.classList.contains("product-detail__add-to-cart")
         ) {
@@ -115,7 +131,7 @@ window.framCart = {
             ? parseInt(quantityInput.value) || 1
             : 1;
 
-          const product = {
+          product = {
             id: addButton.dataset.id,
             name: document.getElementById("product-name")?.textContent,
             price: document.getElementById("product-price")?.textContent,
@@ -127,6 +143,11 @@ window.framCart = {
           // Show feedback
           this.showAddedToCartFeedback(addButton, quantity);
         }
+
+        // Reset click handled flag after a delay
+        setTimeout(() => {
+          this.clickHandled = false;
+        }, 100);
       }
     });
   },
@@ -459,5 +480,11 @@ window.framCart = {
 
 // Initialize cart when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-  window.framCart.init();
+  // Use a short timeout to ensure we initialize only once,
+  // and to let any other scripts load first
+  setTimeout(() => {
+    if (window.framCart && !window.framCart._initialized) {
+      window.framCart.init();
+    }
+  }, 50);
 });

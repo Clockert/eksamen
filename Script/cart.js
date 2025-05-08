@@ -1,12 +1,16 @@
 /**
- * cart.js - Cart management functionality for Fram website
- * Handles cart operations, display, and persistence
+ * cart.js - Handles cart management functionality for FRAM website
+ * Responsible for:
+ * - Cart data structure management
+ * - Cart persistence with localStorage
+ * - Cart UI rendering
+ * - Cart-specific event listeners
  */
 
 // Create a global cart object to manage cart functionality
 window.framCart = {
   items: [], // Cart items
-  clickHandled: false, // Track if click is already being handled
+  _initialized: false, // Track initialization state
 
   /**
    * Initialize the cart system
@@ -21,11 +25,18 @@ window.framCart = {
     // Load cart from localStorage
     this.loadCart();
 
-    // Initialize event listeners
-    this.initEventListeners();
+    // Initialize cart-specific event listeners
+    this.initCartEventListeners();
 
     // Render cart items
     this.renderCart();
+
+    // Signal that cart is ready
+    document.dispatchEvent(
+      new CustomEvent("cart:ready", {
+        detail: { itemCount: this.items.length },
+      })
+    );
   },
 
   /**
@@ -51,6 +62,17 @@ window.framCart = {
 
     // Update cart count in navbar
     this.updateCartCount();
+
+    // Dispatch global event for cart updates
+    document.dispatchEvent(
+      new CustomEvent("cart:updated", {
+        detail: {
+          items: this.items,
+          itemCount: this.items.length,
+          total: this.calculateTotal(),
+        },
+      })
+    );
   },
 
   /**
@@ -64,116 +86,53 @@ window.framCart = {
   },
 
   /**
-   * Initialize event listeners for cart functionality
+   * Initialize event listeners for cart overlay functionality
+   * (Only includes cart UI events, not product buttons)
    */
-  initEventListeners: function () {
+  initCartEventListeners: function () {
     // Cart overlay elements
     const cartOverlay = document.getElementById("cart-overlay");
     const closeCartBtn = document.getElementById("close-cart");
     const openCartBtn = document.querySelector(".navbar__cart");
 
-    if (openCartBtn) {
+    if (cartOverlay && openCartBtn) {
       openCartBtn.addEventListener("click", () => {
         cartOverlay.classList.remove("cart--hidden");
         this.renderCart(); // Re-render cart when opened
       });
     }
 
-    if (closeCartBtn) {
+    if (cartOverlay && closeCartBtn) {
       closeCartBtn.addEventListener("click", () => {
         cartOverlay.classList.add("cart--hidden");
       });
     }
 
-    // Use event delegation for dynamically added "Add to basket" buttons
-    // IMPORTANT FIX: Check if the produce.js event handler is already active
-    // Only add this event listener if we don't detect the other handler
-    if (!window.produceHandlerActive) {
-      document.addEventListener("click", (event) => {
-        // Skip if the click is already being handled
-        if (this.clickHandled) return;
+    // Event delegation for cart item quantity and remove buttons
+    const cartItemsContainer = document.getElementById("cart-items");
+    if (cartItemsContainer) {
+      cartItemsContainer.addEventListener("click", (event) => {
+        const target = event.target;
 
-        // Find the closest button or its child elements
-        const addButton = event.target.closest(
-          ".product-card__add-button, .product-detail__add-to-cart"
-        );
+        // Handle decrease quantity button
+        if (target.closest(".decrease-btn")) {
+          const productId = target.closest(".decrease-btn").dataset.id;
+          this.updateQuantity(productId, -1);
+        }
 
-        if (addButton) {
-          this.clickHandled = true;
+        // Handle increase quantity button
+        else if (target.closest(".increase-btn")) {
+          const productId = target.closest(".increase-btn").dataset.id;
+          this.updateQuantity(productId, 1);
+        }
 
-          // Prevent default action if it's a link
-          event.preventDefault();
-
-          // Find the product data
-          const productCard = addButton.closest(".product-card");
-          let product;
-
-          if (productCard) {
-            // Get product data from the card's data attributes
-            product = {
-              id: productCard.dataset.id || addButton.dataset.id,
-              name: productCard.dataset.name || addButton.dataset.name,
-              price: productCard.dataset.price || addButton.dataset.price,
-              image:
-                productCard.dataset.image ||
-                addButton.dataset.image ||
-                productCard.querySelector("img")?.src,
-            };
-
-            // Add to cart
-            this.addToCart(product, 1, true);
-
-            // Show feedback
-            this.showAddedToCartFeedback(addButton, 1);
-          } else if (
-            addButton.classList.contains("product-detail__add-to-cart")
-          ) {
-            // Handle product detail page add button
-            const quantityInput = document.getElementById("quantity");
-            const quantity = quantityInput
-              ? parseInt(quantityInput.value) || 1
-              : 1;
-
-            product = {
-              id: addButton.dataset.id,
-              name: document.getElementById("product-name")?.textContent,
-              price: document.getElementById("product-price")?.textContent,
-              image: document.getElementById("product-image")?.src,
-            };
-
-            this.addToCart(product, quantity, true);
-
-            // Show feedback
-            this.showAddedToCartFeedback(addButton, quantity);
-          }
-
-          // Reset click handled flag after a delay
-          setTimeout(() => {
-            this.clickHandled = false;
-          }, 100);
+        // Handle remove button
+        else if (target.closest(".cart__item-remove")) {
+          const productId = target.closest(".cart__item-remove").dataset.id;
+          this.removeAllOfProduct(productId);
         }
       });
     }
-  },
-
-  /**
-   * Show feedback when product is added to cart
-   * @param {HTMLElement} button - The button that was clicked
-   * @param {number} quantity - Quantity added
-   */
-  showAddedToCartFeedback: function (button, quantity) {
-    if (!button) return;
-
-    const originalText = button.innerHTML;
-    button.innerHTML = `Added ${quantity}! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
-    button.disabled = true;
-    button.style.backgroundColor = "#28bd6d";
-
-    setTimeout(() => {
-      button.innerHTML = originalText;
-      button.disabled = false;
-      button.style.backgroundColor = "";
-    }, 1500);
   },
 
   /**
@@ -199,7 +158,7 @@ window.framCart = {
 
     // Add product to cart array multiple times based on quantity
     for (let i = 0; i < quantity; i++) {
-      this.items.push(product);
+      this.items.push({ ...product }); // Use a copy to avoid reference issues
     }
 
     // Save cart to localStorage
@@ -216,7 +175,7 @@ window.framCart = {
       }
     }
 
-    // Dispatch custom event for other components to react
+    // Dispatch custom event with specific action details
     document.dispatchEvent(
       new CustomEvent("cart:updated", {
         detail: {
@@ -224,13 +183,15 @@ window.framCart = {
           action: "add",
           product: product,
           quantity: quantity,
+          itemCount: this.items.length,
+          total: this.calculateTotal(),
         },
       })
     );
   },
 
   /**
-   * Remove a product from the cart
+   * Remove a single instance of a product from the cart
    * @param {number} productId - ID of product to remove
    */
   removeFromCart: function (productId) {
@@ -257,6 +218,39 @@ window.framCart = {
             items: this.items,
             action: "remove",
             product: removedProduct,
+            itemCount: this.items.length,
+            total: this.calculateTotal(),
+          },
+        })
+      );
+    }
+  },
+
+  /**
+   * Remove all instances of a product from the cart
+   * @param {number} productId - ID of product to remove
+   */
+  removeAllOfProduct: function (productId) {
+    const numericId = parseInt(productId);
+    const countBefore = this.items.length;
+
+    // Filter out all instances of this product
+    this.items = this.items.filter((item) => parseInt(item.id) !== numericId);
+
+    // Only update if items were actually removed
+    if (countBefore !== this.items.length) {
+      this.saveCart();
+      this.renderCart();
+
+      // Dispatch custom event
+      document.dispatchEvent(
+        new CustomEvent("cart:updated", {
+          detail: {
+            items: this.items,
+            action: "remove_all",
+            productId: productId,
+            itemCount: this.items.length,
+            total: this.calculateTotal(),
           },
         })
       );
@@ -306,6 +300,8 @@ window.framCart = {
           action: "update",
           productId: productId,
           change: change,
+          itemCount: this.items.length,
+          total: this.calculateTotal(),
         },
       })
     );
@@ -438,28 +434,6 @@ window.framCart = {
       <div class="cart__item-subtotal">${item.subtotal} kr</div>
     `;
 
-    // Add event listeners for quantity buttons and remove button
-    const decreaseBtn = itemElement.querySelector(".decrease-btn");
-    const increaseBtn = itemElement.querySelector(".increase-btn");
-    const removeBtn = itemElement.querySelector(".cart__item-remove");
-
-    decreaseBtn.addEventListener("click", () => {
-      this.updateQuantity(item.id, -1);
-    });
-
-    increaseBtn.addEventListener("click", () => {
-      this.updateQuantity(item.id, 1);
-    });
-
-    removeBtn.addEventListener("click", () => {
-      // Remove all instances of this product
-      this.items = this.items.filter(
-        (cartItem) => parseInt(cartItem.id) !== parseInt(item.id)
-      );
-      this.saveCart();
-      this.renderCart();
-    });
-
     return itemElement;
   },
 
@@ -476,9 +450,30 @@ window.framCart = {
         detail: {
           items: this.items,
           action: "clear",
+          itemCount: 0,
+          total: 0,
         },
       })
     );
+  },
+
+  /**
+   * Public API methods for other components to use
+   */
+  getCartItems: function () {
+    return [...this.items]; // Return a copy to prevent direct mutation
+  },
+
+  getCartCount: function () {
+    return this.items.length;
+  },
+
+  getCartTotal: function () {
+    return this.calculateTotal();
+  },
+
+  getGroupedItems: function () {
+    return this.groupCartItems();
   },
 };
 

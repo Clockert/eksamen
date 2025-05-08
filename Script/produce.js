@@ -1,11 +1,17 @@
-// produce.js - Handles product listings and product detail functionality
+/**
+ * produce.js - Handles product listings and product detail functionality
+ */
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("Produce script initialized");
+
+  // Track initialization to prevent duplicate event handlers
+  let eventHandlersInitialized = false;
+
   // Common elements
   const productsGrid = document.getElementById("products-container");
   const productDetailContent = document.querySelector(
     ".product-detail__content"
   );
-  // New: Add loading indicator references
   const productsLoadingIndicator = document.getElementById("products-loading");
   const productLoadingIndicator = document.getElementById("product-loading");
   const productErrorElement = document.getElementById("product-error");
@@ -108,14 +114,29 @@ document.addEventListener("DOMContentLoaded", () => {
             const quantity = parseInt(quantityInput.value || 1);
 
             if (window.framCart && window.framCart.addToCart) {
+              // Use the framCart API
               window.framCart.addToCart(currentProduct, quantity, true);
-              window.framCart.showAddedToCartFeedback(
-                addToCartDetailButton,
-                quantity
-              );
+
+              // Show feedback
+              showAddedToCartFeedback(addToCartDetailButton, quantity);
             } else {
               // Fallback if framCart not available
               console.error("framCart not available");
+
+              // Legacy fallback
+              const cart = JSON.parse(localStorage.getItem("cart")) || [];
+              for (let i = 0; i < quantity; i++) {
+                cart.push(currentProduct);
+              }
+              localStorage.setItem("cart", JSON.stringify(cart));
+
+              // Update cart count
+              const cartButton = document.querySelector(".navbar__cart");
+              if (cartButton) {
+                cartButton.textContent = cart.length;
+              }
+
+              showAddedToCartFeedback(addToCartDetailButton, quantity);
             }
           });
         }
@@ -185,6 +206,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       container.appendChild(productCard);
     });
+
+    // Initialize product card event handlers if not already done
+    if (!eventHandlersInitialized && !window.integrationHandlersActive) {
+      setupProductCardEventHandlers();
+      eventHandlersInitialized = true;
+    }
   }
 
   // Display product details on detail page
@@ -429,67 +456,71 @@ document.addEventListener("DOMContentLoaded", () => {
       if (packageSizeElement) packageSizeElement.textContent = "";
     }
   }
-});
 
-// Set a flag to indicate that we have the produce event handler active
-// This will help cart.js know not to add duplicate handlers
-window.produceHandlerActive = true;
+  // Set up product card event handlers
+  function setupProductCardEventHandlers() {
+    // Add event delegation for product card buttons
+    document.addEventListener("click", (event) => {
+      const addButton = event.target.closest(".product-card__add-button");
+      if (!addButton) return;
 
-// Event delegation for dynamically created product cards
-document.addEventListener("click", (event) => {
-  // This event handler is kept for backward compatibility
-  // Most functionality has been moved to the framCart object
-  // But we keep this as a fallback for pages that might not have loaded the new cart.js
+      event.preventDefault();
 
-  const addButton = event.target.closest(
-    ".product-card__add-button, .product-detail__add-to-cart"
-  );
+      const productCard = addButton.closest(".product-card");
+      if (!productCard) return;
 
-  if (addButton && !window.framCart) {
-    event.preventDefault();
-
-    // Find the closest product card
-    const productCard = addButton.closest(".product-card");
-
-    if (productCard) {
-      // Get product data from card
       const product = {
-        id: productCard.dataset.id || addButton.dataset.id,
-        name:
-          productCard.dataset.name ||
-          addButton.dataset.name ||
-          productCard.querySelector(".product-card__name")?.textContent,
-        price:
-          productCard.dataset.price ||
-          addButton.dataset.price ||
-          productCard.querySelector(".product-card__price")?.textContent,
+        id: parseInt(productCard.dataset.id || addButton.dataset.id),
+        name: productCard.dataset.name || addButton.dataset.name,
+        price: productCard.dataset.price || addButton.dataset.price,
         image:
           productCard.dataset.image ||
           addButton.dataset.image ||
           productCard.querySelector("img")?.src,
       };
 
-      // Legacy fallback for adding to cart
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-      cart.push(product);
-      localStorage.setItem("cart", JSON.stringify(cart));
+      // Add to cart using framCart if available
+      if (window.framCart && window.framCart.addToCart) {
+        window.framCart.addToCart(product, 1, false);
+        showAddedToCartFeedback(addButton);
+      } else {
+        // Legacy fallback
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        cart.push(product);
+        localStorage.setItem("cart", JSON.stringify(cart));
 
-      // Update cart count in navbar
-      const cartButton = document.querySelector(".navbar__cart");
-      if (cartButton) {
-        cartButton.textContent = cart.length;
+        // Update cart count
+        const cartButton = document.querySelector(".navbar__cart");
+        if (cartButton) {
+          cartButton.textContent = cart.length;
+        }
+
+        showAddedToCartFeedback(addButton);
       }
+    });
+  }
 
-      // Show feedback
-      const originalText = addButton.innerHTML;
-      addButton.innerHTML =
-        'Added! <span class="product-card__icon"><i class="fas fa-check"></i></span>';
-      addButton.style.backgroundColor = "#28bd6d";
+  // Show feedback when product is added to cart
+  function showAddedToCartFeedback(button, quantity = 1) {
+    if (!button) return;
 
-      setTimeout(() => {
-        addButton.innerHTML = originalText;
-        addButton.style.backgroundColor = "";
-      }, 1500);
-    }
+    const originalText = button.innerHTML;
+    button.innerHTML =
+      quantity === 1
+        ? `Added! <span class="product-card__icon"><i class="fas fa-check"></i></span>`
+        : `Added ${quantity}! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
+
+    button.disabled = true;
+    button.style.backgroundColor = "#28bd6d";
+
+    setTimeout(() => {
+      button.innerHTML = originalText;
+      button.disabled = false;
+      button.style.backgroundColor = "";
+    }, 1500);
   }
 });
+
+// Set a flag to indicate that we have the produce event handler active
+// This will help cart.js and integration.js know not to add duplicate handlers
+window.produceHandlerActive = true;

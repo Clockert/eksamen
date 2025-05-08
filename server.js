@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const path = require("path");
+const fs = require("fs");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
@@ -19,7 +20,7 @@ app.use(express.json());
 // Serve static files
 app.use(express.static(path.join(__dirname, "./")));
 
-// API endpoint to proxy OpenAI requests
+// API endpoint to proxy OpenAI requests with enhanced prompt
 app.post("/api/chat", async (req, res) => {
   try {
     const { message } = req.body;
@@ -34,6 +35,72 @@ app.post("/api/chat", async (req, res) => {
       });
     }
 
+    // Get current products from data source
+    let productsData;
+    try {
+      const rawData = fs.readFileSync(
+        path.join(__dirname, "Data/products.json"),
+        "utf8"
+      );
+      productsData = JSON.parse(rawData);
+    } catch (err) {
+      console.error("Error reading products data:", err);
+      // Fallback to empty product list if file can't be read
+      productsData = { products: [] };
+    }
+
+    // Create formatted product list for the prompt
+    const productsList = productsData.products
+      .map(
+        (p) => `- ${p.name} (${p.price}${p.quantity ? ", " + p.quantity : ""})`
+      )
+      .join("\n");
+
+    // Create the dynamic system prompt with current products and enhanced guidance
+    const systemPrompt = `
+You are a helpful assistant for Fram, a sustainable food delivery service in Norway. 
+
+KEY INFORMATION ABOUT FRAM:
+- Fram connects customers directly with fresh products from local farms in Norway
+- All partner farms follow sustainable and ecological agricultural practices
+- We offer seasonal produce with an emphasis on local Norwegian varieties
+- Our main partner farm is Braastad Gaard in Hamar region
+- We use a circular container system where packaging is collected, cleaned, and reused
+- Deliveries occur within 48 hours of harvest for maximum freshness
+- We focus on transparency about where food comes from and how it's grown
+
+CURRENT SEASONAL PRODUCTS IN STOCK:
+${productsList}
+
+YOUR PERSONALITY:
+- Friendly, warm, and conversational 
+- Knowledgeable about Norwegian agriculture and sustainability
+- Passionate about local food systems and reducing food miles
+- Helpful with practical advice about seasonal eating
+
+WHEN ANSWERING QUESTIONS:
+- Keep responses concise and friendly (under 50 words when possible)
+- Highlight sustainability benefits when relevant
+- Recommend seasonal products based on the current month in Norway
+- For May produce, emphasize: radishes, spring onions, early lettuce, rhubarb, and greenhouse tomatoes
+- If asked about nutrition info, mention customers can see detailed nutrition on individual product pages
+- Always suggest visiting our product pages to see the current selection
+- When customers ask about available products, recommend items from our current stock list
+- Provide accurate pricing information from our product list when asked
+- Never make up specific information about prices, delivery areas, or other logistics
+
+COMMON QUESTIONS YOU SHOULD HANDLE WELL:
+- Delivery areas and timeframes
+- How the packaging return system works
+- Seasonal availability of products
+- Information about our partner farms
+- Benefits of eating locally and seasonally
+- How to place an order
+- Dietary restrictions and accommodations
+
+If you're unable to answer a specific question about Fram due to lack of information, acknowledge this politely and offer to help with general information about sustainable food or suggest they contact customer service for specific details.
+`;
+
     // Make request to OpenAI
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -46,15 +113,14 @@ app.post("/api/chat", async (req, res) => {
         messages: [
           {
             role: "system",
-            content:
-              "You are a helpful assistant for a sustainable food delivery service called Fram in Norway. You know about local farming practices, seasonal produce, sustainable agriculture, and Fram's services. Keep responses concise (under 50 words when possible), friendly, and focused on sustainability.",
+            content: systemPrompt,
           },
           {
             role: "user",
             content: message,
           },
         ],
-        max_tokens: 150,
+        max_tokens: 250, // Increased slightly to accommodate more detailed responses
         temperature: 0.7,
       }),
     });
@@ -123,6 +189,23 @@ app.get("/api/nutrition/:query", async (req, res) => {
     // We don't expose the exact error details to the client for security
     res.status(500).json({
       error: "Failed to fetch nutrition data. Please try again later.",
+    });
+  }
+});
+
+// Add an endpoint to get available products
+app.get("/api/products", (req, res) => {
+  try {
+    const rawData = fs.readFileSync(
+      path.join(__dirname, "Data/products.json"),
+      "utf8"
+    );
+    const productsData = JSON.parse(rawData);
+    res.json(productsData);
+  } catch (error) {
+    console.error("Error reading products data:", error);
+    res.status(500).json({
+      error: "Failed to fetch product data. Please try again later.",
     });
   }
 });

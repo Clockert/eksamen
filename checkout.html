@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Complete your order of fresh, sustainable produce from local Norwegian farms with secure payment options and convenient delivery."
+    />
     <title>FRAM - Checkout</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -19,7 +24,7 @@
     <script src="Script/integration.js" defer></script>
 
     <main class="checkout">
-      <!-- Breadcrumb navigation -->
+      <!-- Breadcrumb navigation for better user orientation -->
       <nav aria-label="breadcrumb" class="breadcrumb">
         <ol>
           <li><a href="index.html">Home</a></li>
@@ -31,9 +36,18 @@
 
       <div class="checkout__content">
         <!-- Order Summary Section -->
-        <section class="checkout__summary">
-          <h2 class="checkout__section-title">Order Summary</h2>
-          <div class="checkout__cart-items" id="checkout-items">
+        <section
+          class="checkout__summary"
+          aria-labelledby="order-summary-title"
+        >
+          <h2 id="order-summary-title" class="checkout__section-title">
+            Order Summary
+          </h2>
+          <div
+            class="checkout__cart-items"
+            id="checkout-items"
+            aria-live="polite"
+          >
             <!-- Cart items will be dynamically loaded here -->
             <div class="checkout__loading">Loading your cart...</div>
           </div>
@@ -59,9 +73,15 @@
         </section>
 
         <!-- Customer Information Form -->
-        <section class="checkout__customer-info">
-          <h2 class="checkout__section-title">Delivery Information</h2>
-          <form id="checkout-form" class="checkout__form">
+        <section
+          class="checkout__customer-info"
+          aria-labelledby="delivery-info-title"
+        >
+          <h2 id="delivery-info-title" class="checkout__section-title">
+            Delivery Information
+          </h2>
+          <form id="checkout-form" class="checkout__form" novalidate>
+            <!-- Personal Information -->
             <div class="checkout__form-group">
               <label for="first-name">First Name</label>
               <input
@@ -70,7 +90,14 @@
                 name="first-name"
                 required
                 class="checkout__input"
+                autocomplete="given-name"
+                aria-required="true"
               />
+              <div
+                class="checkout__error-message"
+                id="first-name-error"
+                aria-live="assertive"
+              ></div>
             </div>
 
             <div class="checkout__form-group">
@@ -81,9 +108,17 @@
                 name="last-name"
                 required
                 class="checkout__input"
+                autocomplete="family-name"
+                aria-required="true"
               />
+              <div
+                class="checkout__error-message"
+                id="last-name-error"
+                aria-live="assertive"
+              ></div>
             </div>
 
+            <!-- Contact Information -->
             <div class="checkout__form-group">
               <label for="email">Email</label>
               <input
@@ -92,7 +127,15 @@
                 name="email"
                 required
                 class="checkout__input"
+                autocomplete="email"
+                aria-required="true"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
               />
+              <div
+                class="checkout__error-message"
+                id="email-error"
+                aria-live="assertive"
+              ></div>
             </div>
 
             <div class="checkout__form-group">
@@ -103,9 +146,19 @@
                 name="phone"
                 required
                 class="checkout__input"
+                autocomplete="tel"
+                aria-required="true"
+                pattern="[0-9+\s]{8,15}"
+                placeholder="e.g., +47 12345678"
               />
+              <div
+                class="checkout__error-message"
+                id="phone-error"
+                aria-live="assertive"
+              ></div>
             </div>
 
+            <!-- Address Information -->
             <div class="checkout__form-group">
               <label for="address">Address</label>
               <input
@@ -114,7 +167,14 @@
                 name="address"
                 required
                 class="checkout__input"
+                autocomplete="street-address"
+                aria-required="true"
               />
+              <div
+                class="checkout__error-message"
+                id="address-error"
+                aria-live="assertive"
+              ></div>
             </div>
 
             <div class="checkout__form-row">
@@ -126,7 +186,18 @@
                   name="postal-code"
                   required
                   class="checkout__input"
+                  autocomplete="postal-code"
+                  aria-required="true"
+                  pattern="[0-9]{4}"
+                  inputmode="numeric"
+                  maxlength="4"
+                  placeholder="4-digit code"
                 />
+                <div
+                  class="checkout__error-message"
+                  id="postal-code-error"
+                  aria-live="assertive"
+                ></div>
               </div>
 
               <div class="checkout__form-group">
@@ -137,7 +208,14 @@
                   name="city"
                   required
                   class="checkout__input"
+                  autocomplete="address-level2"
+                  aria-required="true"
                 />
+                <div
+                  class="checkout__error-message"
+                  id="city-error"
+                  aria-live="assertive"
+                ></div>
               </div>
             </div>
 
@@ -148,12 +226,15 @@
                 name="delivery-notes"
                 rows="3"
                 class="checkout__textarea"
-                placeholder="Special instructions for delivery"
+                placeholder="Special instructions for delivery (e.g., gate code, leave with neighbor)"
               ></textarea>
             </div>
 
+            <!-- Payment Method Section -->
             <h2 class="checkout__section-title">Payment Method</h2>
-            <div class="checkout__payment-methods">
+            <fieldset class="checkout__payment-methods">
+              <legend class="visually-hidden">Select a payment method</legend>
+
               <div class="checkout__payment-option">
                 <input
                   type="radio"
@@ -163,7 +244,8 @@
                   checked
                 />
                 <label for="payment-card">
-                  <i class="fas fa-credit-card"></i> Credit Card
+                  <i class="fas fa-credit-card" aria-hidden="true"></i> Credit
+                  Card
                 </label>
               </div>
 
@@ -175,7 +257,7 @@
                   value="vipps"
                 />
                 <label for="payment-vipps">
-                  <i class="fas fa-mobile-alt"></i> Vipps
+                  <i class="fas fa-mobile-alt" aria-hidden="true"></i> Vipps
                 </label>
               </div>
 
@@ -187,10 +269,10 @@
                   value="invoice"
                 />
                 <label for="payment-invoice">
-                  <i class="fas fa-file-invoice"></i> Invoice
+                  <i class="fas fa-file-invoice" aria-hidden="true"></i> Invoice
                 </label>
               </div>
-            </div>
+            </fieldset>
 
             <!-- Terms and conditions checkbox -->
             <div class="checkout__terms">
@@ -200,21 +282,29 @@
                 name="terms"
                 required
                 class="checkout__checkbox"
+                aria-required="true"
               />
-              <label for="terms"
-                >I agree to the
+              <label for="terms">
+                I agree to the
                 <a href="#" class="checkout__terms-link"
                   >Terms and Conditions</a
                 >
                 and
-                <a href="#" class="checkout__terms-link"
-                  >Privacy Policy</a
-                ></label
-              >
+                <a href="#" class="checkout__terms-link">Privacy Policy</a>
+              </label>
+              <div
+                class="checkout__error-message"
+                id="terms-error"
+                aria-live="assertive"
+              ></div>
             </div>
 
             <!-- Submit button -->
-            <button type="submit" class="checkout__submit-button">
+            <button
+              type="submit"
+              class="checkout__submit-button"
+              id="complete-order-button"
+            >
               Complete Order
             </button>
           </form>
@@ -223,12 +313,24 @@
     </main>
 
     <!-- Order confirmation modal -->
-    <div id="confirmation-modal" class="modal modal--hidden">
+    <div
+      id="confirmation-modal"
+      class="modal modal--hidden"
+      role="dialog"
+      aria-labelledby="confirmation-title"
+      aria-modal="true"
+    >
       <div class="modal__content">
-        <button class="modal__close" id="close-modal">&times;</button>
+        <button
+          class="modal__close"
+          id="close-modal"
+          aria-label="Close confirmation"
+        >
+          &times;
+        </button>
         <div class="modal__header">
-          <i class="fas fa-check-circle modal__icon"></i>
-          <h2 class="modal__title">Order Confirmed!</h2>
+          <i class="fas fa-check-circle modal__icon" aria-hidden="true"></i>
+          <h2 class="modal__title" id="confirmation-title">Order Confirmed!</h2>
         </div>
         <div class="modal__body">
           <p>

@@ -44,19 +44,28 @@
 
 /* ===== PRODUCT CARD COMPONENT ===== */
 .product-card {
-  /* Box model */
   width: calc((100% - 56px) / 3);
   max-width: 454px;
   min-width: 300px;
   margin-bottom: 28px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 15px;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.2);
+  padding-bottom: 15px;
+  border-radius: 16px;
 }
 
 /* Image container with positioned add-to-basket button */
 .product-card__image-container {
-  /* Positioning */
   position: relative;
-
-  /* Box model */
   width: 100%;
   height: 384px;
   padding: 16px 24px;
@@ -64,61 +73,42 @@
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
-
-  /* Visual */
   background-color: #ccc;
   border-radius: 16px;
   overflow: hidden;
 }
 
 .product-card__image {
-  /* Positioning */
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
-
-  /* Box model */
   width: 100%;
   height: 100%;
-
-  /* Visual */
   object-fit: cover;
 }
 
 .product-card__link {
-  /* Typography */
   color: var(--primary-text);
-
-  /* Miscellaneous */
   text-decoration: none;
 }
 
 /* Add to basket button */
 .product-card__add-button {
-  /* Positioning */
   position: relative;
   z-index: 2;
-
-  /* Box model */
   height: 40px;
   padding: 10px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-
-  /* Typography */
   font-family: var(--font-primary);
   font-size: var(--body-desktop);
   color: var(--truewhite);
-
-  /* Visual */
   background-color: var(--primary-text);
   border: none;
   border-radius: 44px;
-
-  /* Miscellaneous */
   cursor: pointer;
   text-decoration: none;
   transition: background-color 0.3s ease;
@@ -132,18 +122,26 @@
   font-size: 16px;
 }
 
+.product-card__add-button:focus,
+.product-card__link:focus {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
 /* Product information */
 .product-card__info {
-  /* Box model */
   width: 100%;
   padding: 0 12px;
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .product-card__header {
-  /* Box model */
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -151,7 +149,6 @@
 }
 
 .product-card__name {
-  /* Typography */
   font-family: var(--font-primary);
   font-size: 24px;
   font-weight: var(--font-regular);
@@ -159,10 +156,7 @@
 }
 
 .product-card__price {
-  /* Box model */
   padding: 10px;
-
-  /* Typography */
   font-family: var(--font-primary);
   font-size: 24px;
   font-weight: var(--font-regular);
@@ -170,10 +164,7 @@
 }
 
 .product-card__quantity {
-  /* Box model */
   width: 100%;
-
-  /* Typography */
   font-family: var(--font-primary);
   font-size: var(--body-large-desktop);
   color: rgba(11, 10, 8, 0.8);
@@ -181,11 +172,9 @@
 
 /* ===== ERROR MESSAGE ===== */
 .error-message {
-  /* Box model */
   width: 100%;
   padding: 48px;
 
-  /* Typography */
   font-family: var(--font-primary);
   font-size: var(--body-large-desktop);
   color: var(--red);
@@ -194,35 +183,26 @@
 
 /* ===== FARM MAP SECTION ===== */
 .farm-map {
-  /* Box model */
   display: flex;
   width: 100%;
   max-width: 100%;
   margin: 0;
   box-sizing: border-box;
-
-  /* Visual */
   border-top: 1px solid var(--primary-text);
   overflow: hidden;
 }
 
 .farm-map__title-container {
-  /* Box model */
   width: 33.33%;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  /* Visual */
   border-right: 1px solid var(--primary-text);
 }
 
 .farm-map__title {
-  /* Box model */
   width: 380px;
   margin: 0;
-
-  /* Typography */
   text-align: center;
   font-family: var(--font-primary);
   font-weight: var(--font-regular);
@@ -232,22 +212,17 @@
 }
 
 .farm-map__container {
-  /* Positioning */
   position: relative;
-
-  /* Box model */
   width: 66.67%;
   padding: 96px;
 }
 
 /* Map iframe styling */
 .farm-map__iframe {
-  /* Box model */
   width: 100%;
   height: 478px;
   display: block;
 
-  /* Visual */
   border: none;
   border-radius: 16px;
   overflow: hidden;

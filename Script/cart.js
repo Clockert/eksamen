@@ -1,390 +1,150 @@
 /**
- * cart.js - Handles cart management functionality for FRAM website
- * Responsible for:
- * - Cart data structure management
- * - Cart persistence with localStorage
- * - Cart UI rendering
- * - Cart-specific event listeners
+ * cart.js - Core cart data management
  */
-
-// Create a global cart object to manage cart functionality
 window.framCart = {
-  items: [], // Cart items
-  _initialized: false, // Track initialization state
+  items: [],
+  _initialized: false,
 
-  /**
-   * Initialize the cart system
-   */
   init: function () {
-    // Only initialize once
     if (this._initialized) return;
     this._initialized = true;
 
-    console.log("Initializing framCart");
-
-    // Load cart from localStorage
     this.loadCart();
+    this.setupCartUI();
 
-    // Initialize cart-specific event listeners
-    this.initCartEventListeners();
-
-    // Render cart items
-    this.renderCart();
-
-    // Signal that cart is ready
-    document.dispatchEvent(
-      new CustomEvent("cart:ready", {
-        detail: { itemCount: this.items.length },
-      })
-    );
+    console.log("Cart initialized with", this.items.length, "items");
   },
 
-  /**
-   * Load cart data from localStorage
-   */
   loadCart: function () {
     try {
       this.items = JSON.parse(localStorage.getItem("cart")) || [];
     } catch (error) {
-      console.error("Error loading cart from localStorage:", error);
+      console.error("Error loading cart:", error);
       this.items = [];
     }
-
-    // Update cart count in navbar
     this.updateCartCount();
   },
 
-  /**
-   * Save cart data to localStorage
-   */
   saveCart: function () {
     localStorage.setItem("cart", JSON.stringify(this.items));
-
-    // Update cart count in navbar
     this.updateCartCount();
 
-    // Dispatch global event for cart updates
-    document.dispatchEvent(
-      new CustomEvent("cart:updated", {
-        detail: {
-          items: this.items,
-          itemCount: this.items.length,
-          total: this.calculateTotal(),
-        },
-      })
-    );
+    // Simple event for other components
+    document.dispatchEvent(new CustomEvent("cart:updated"));
   },
 
-  /**
-   * Update the cart count in the navbar
-   */
-  updateCartCount: function () {
-    const cartButton = document.querySelector(".navbar__cart");
-    if (cartButton) {
-      cartButton.textContent = this.items.length;
+  addToCart: function (product, quantity = 1, showCart = false) {
+    if (!product || !product.id) return;
+
+    // Add multiple copies based on quantity
+    for (let i = 0; i < quantity; i++) {
+      this.items.push({ ...product });
+    }
+
+    this.saveCart();
+    this.renderCart();
+
+    if (showCart) {
+      const cartOverlay = document.getElementById("cart-overlay");
+      if (cartOverlay) cartOverlay.classList.remove("cart--hidden");
     }
   },
 
-  /**
-   * Initialize event listeners for cart overlay functionality
-   * (Only includes cart UI events, not product buttons)
-   */
-  initCartEventListeners: function () {
-    // Cart overlay elements
-    const cartOverlay = document.getElementById("cart-overlay");
-    const closeCartBtn = document.getElementById("close-cart");
-    const openCartBtn = document.querySelector(".navbar__cart");
+  removeFromCart: function (productId) {
+    const index = this.items.findIndex(
+      (item) => parseInt(item.id) === parseInt(productId)
+    );
+    if (index !== -1) {
+      this.items.splice(index, 1);
+      this.saveCart();
+      this.renderCart();
+    }
+  },
 
-    if (cartOverlay && openCartBtn) {
+  clearCart: function () {
+    this.items = [];
+    this.saveCart();
+    this.renderCart();
+  },
+
+  updateCartCount: function () {
+    const cartButton = document.querySelector(".navbar__cart");
+    if (cartButton) cartButton.textContent = this.items.length;
+  },
+
+  // Basic cart UI functions
+  setupCartUI: function () {
+    // Cart open/close listeners
+    const openCartBtn = document.querySelector(".navbar__cart");
+    const closeCartBtn = document.getElementById("close-cart");
+    const cartOverlay = document.getElementById("cart-overlay");
+
+    if (openCartBtn && cartOverlay) {
       openCartBtn.addEventListener("click", () => {
         cartOverlay.classList.remove("cart--hidden");
-        this.renderCart(); // Re-render cart when opened
+        this.renderCart();
       });
     }
 
-    if (cartOverlay && closeCartBtn) {
+    if (closeCartBtn && cartOverlay) {
       closeCartBtn.addEventListener("click", () => {
         cartOverlay.classList.add("cart--hidden");
       });
     }
 
-    // Event delegation for cart item quantity and remove buttons
-    const cartItemsContainer = document.getElementById("cart-items");
-    if (cartItemsContainer) {
-      cartItemsContainer.addEventListener("click", (event) => {
-        const target = event.target;
+    // Cart item event delegation
+    const cartItems = document.getElementById("cart-items");
+    if (cartItems) {
+      cartItems.addEventListener("click", (e) => {
+        const target = e.target;
 
-        // Handle decrease quantity button
         if (target.closest(".decrease-btn")) {
-          const productId = target.closest(".decrease-btn").dataset.id;
-          this.updateQuantity(productId, -1);
-        }
-
-        // Handle increase quantity button
-        else if (target.closest(".increase-btn")) {
+          this.removeFromCart(target.closest(".decrease-btn").dataset.id);
+        } else if (target.closest(".increase-btn")) {
           const productId = target.closest(".increase-btn").dataset.id;
-          this.updateQuantity(productId, 1);
-        }
-
-        // Handle remove button
-        else if (target.closest(".cart__item-remove")) {
+          const product = this.items.find(
+            (item) => parseInt(item.id) === parseInt(productId)
+          );
+          if (product) this.addToCart(product);
+        } else if (target.closest(".cart__item-remove")) {
           const productId = target.closest(".cart__item-remove").dataset.id;
-          this.removeAllOfProduct(productId);
+
+          // Remove all instances of this product
+          this.items = this.items.filter(
+            (item) => parseInt(item.id) !== parseInt(productId)
+          );
+
+          this.saveCart();
+          this.renderCart();
         }
       });
     }
   },
 
-  /**
-   * Add a product to the cart
-   * @param {Object} product - Product to add to cart
-   * @param {number} quantity - Quantity to add (default: 1)
-   * @param {boolean} showCart - Whether to show the cart overlay after adding (default: false)
-   */
-  addToCart: function (product, quantity = 1, showCart = false) {
-    if (!product || !product.id) {
-      console.error("Invalid product data:", product);
-      return;
-    }
-
-    // Ensure numeric properties
-    product.id = parseInt(product.id) || 0;
-
-    // Extract numeric price from string if needed (e.g., "45 kr / kg" -> 45)
-    if (typeof product.price === "string") {
-      const priceMatch = product.price.match(/(\d+)/);
-      product.priceValue = priceMatch ? parseFloat(priceMatch[0]) : 0;
-    }
-
-    // Add product to cart array multiple times based on quantity
-    for (let i = 0; i < quantity; i++) {
-      this.items.push({ ...product }); // Use a copy to avoid reference issues
-    }
-
-    // Save cart to localStorage
-    this.saveCart();
-
-    // Render cart items
-    this.renderCart();
-
-    // Show cart overlay if requested
-    if (showCart) {
-      const cartOverlay = document.getElementById("cart-overlay");
-      if (cartOverlay) {
-        cartOverlay.classList.remove("cart--hidden");
-      }
-    }
-
-    // Dispatch custom event with specific action details
-    document.dispatchEvent(
-      new CustomEvent("cart:updated", {
-        detail: {
-          items: this.items,
-          action: "add",
-          product: product,
-          quantity: quantity,
-          itemCount: this.items.length,
-          total: this.calculateTotal(),
-        },
-      })
-    );
-  },
-
-  /**
-   * Remove a single instance of a product from the cart
-   * @param {number} productId - ID of product to remove
-   */
-  removeFromCart: function (productId) {
-    // Find the index of the first occurrence of the product
-    const index = this.items.findIndex(
-      (item) => parseInt(item.id) === parseInt(productId)
-    );
-
-    // Remove the product if found
-    if (index !== -1) {
-      const removedProduct = this.items[index];
-      this.items.splice(index, 1);
-
-      // Save cart to localStorage
-      this.saveCart();
-
-      // Render cart items
-      this.renderCart();
-
-      // Dispatch custom event for other components to react
-      document.dispatchEvent(
-        new CustomEvent("cart:updated", {
-          detail: {
-            items: this.items,
-            action: "remove",
-            product: removedProduct,
-            itemCount: this.items.length,
-            total: this.calculateTotal(),
-          },
-        })
-      );
-    }
-  },
-
-  /**
-   * Remove all instances of a product from the cart
-   * @param {number} productId - ID of product to remove
-   */
-  removeAllOfProduct: function (productId) {
-    const numericId = parseInt(productId);
-    const countBefore = this.items.length;
-
-    // Filter out all instances of this product
-    this.items = this.items.filter((item) => parseInt(item.id) !== numericId);
-
-    // Only update if items were actually removed
-    if (countBefore !== this.items.length) {
-      this.saveCart();
-      this.renderCart();
-
-      // Dispatch custom event
-      document.dispatchEvent(
-        new CustomEvent("cart:updated", {
-          detail: {
-            items: this.items,
-            action: "remove_all",
-            productId: productId,
-            itemCount: this.items.length,
-            total: this.calculateTotal(),
-          },
-        })
-      );
-    }
-  },
-
-  /**
-   * Update quantity of a product in the cart
-   * @param {number} productId - ID of product to update
-   * @param {number} change - Amount to change quantity by (+1 or -1)
-   */
-  updateQuantity: function (productId, change) {
-    // Convert to number to ensure proper comparison
-    productId = parseInt(productId);
-
-    if (change > 0) {
-      // Find a product with the same ID
-      const productToAdd = this.items.find(
-        (item) => parseInt(item.id) === productId
-      );
-      if (productToAdd) {
-        // Add one more of this product
-        this.items.push({ ...productToAdd });
-      }
-    } else if (change < 0) {
-      // Find index of product to remove
-      const indexToRemove = this.items.findIndex(
-        (item) => parseInt(item.id) === productId
-      );
-      if (indexToRemove !== -1) {
-        // Remove one of this product
-        this.items.splice(indexToRemove, 1);
-      }
-    }
-
-    // Save cart to localStorage
-    this.saveCart();
-
-    // Render cart items
-    this.renderCart();
-
-    // Dispatch event
-    document.dispatchEvent(
-      new CustomEvent("cart:updated", {
-        detail: {
-          items: this.items,
-          action: "update",
-          productId: productId,
-          change: change,
-          itemCount: this.items.length,
-          total: this.calculateTotal(),
-        },
-      })
-    );
-  },
-
-  /**
-   * Group cart items by product ID
-   * @returns {Object} Grouped cart items with quantities and subtotals
-   */
-  groupCartItems: function () {
-    const groupedItems = {};
-
-    this.items.forEach((item) => {
-      // Make sure id is treated as a number
-      const itemId = parseInt(item.id);
-
-      // Extract numeric price from string (e.g., "45 kr / kg" -> 45)
-      let priceValue = item.priceValue; // Use cached priceValue if available
-
-      if (priceValue === undefined && typeof item.price === "string") {
-        const priceMatch = item.price.match(/(\d+)/);
-        priceValue = priceMatch ? parseFloat(priceMatch[0]) : 0;
-        // Cache for future use
-        item.priceValue = priceValue;
-      }
-
-      if (groupedItems[itemId]) {
-        // Increment quantity if item already exists
-        groupedItems[itemId].quantity += 1;
-        groupedItems[itemId].subtotal =
-          priceValue * groupedItems[itemId].quantity;
-      } else {
-        // Add new item to grouped items
-        groupedItems[itemId] = {
-          ...item,
-          quantity: 1,
-          priceValue: priceValue,
-          subtotal: priceValue,
-        };
-      }
-    });
-
-    return groupedItems;
-  },
-
-  /**
-   * Calculate the total price of all items in the cart
-   * @returns {number} Total price
-   */
-  calculateTotal: function () {
-    const groupedItems = this.groupCartItems();
-    let total = 0;
-
-    // Sum up subtotals of all items
-    Object.values(groupedItems).forEach((item) => {
-      total += item.subtotal;
-    });
-
-    return total;
-  },
-
-  /**
-   * Render cart items in the cart overlay
-   */
+  // Render cart UI
   renderCart: function () {
     const cartItemsContainer = document.getElementById("cart-items");
     const cartEmptyContainer = document.getElementById("cart-empty");
     const cartTotalElement = document.getElementById("cart-total");
     const cartSummary = document.querySelector(".cart__summary");
 
-    if (!cartItemsContainer || !cartEmptyContainer) {
-      console.error("Cart elements not found in the DOM");
-      return;
-    }
+    if (!cartItemsContainer || !cartEmptyContainer) return;
 
-    // Clear cart items container
-    cartItemsContainer.innerHTML = "";
+    // Group items by product ID
+    const groupedItems = {};
+    this.items.forEach((item) => {
+      const id = parseInt(item.id);
+      if (!groupedItems[id]) {
+        groupedItems[id] = { ...item, quantity: 1 };
+      } else {
+        groupedItems[id].quantity += 1;
+      }
+    });
 
-    // Get grouped cart items
-    const groupedItems = this.groupCartItems();
+    // Convert to array
     const itemsArray = Object.values(groupedItems);
 
-    // Show/hide empty cart message and summary
+    // Show/hide empty cart message
     if (itemsArray.length === 0) {
       cartEmptyContainer.style.display = "flex";
       cartItemsContainer.style.display = "none";
@@ -394,96 +154,54 @@ window.framCart = {
       cartItemsContainer.style.display = "flex";
       if (cartSummary) cartSummary.style.display = "block";
 
-      // Render each cart item
+      // Clear container
+      cartItemsContainer.innerHTML = "";
+
+      // Render items
       itemsArray.forEach((item) => {
-        const itemElement = this.createCartItemElement(item);
-        cartItemsContainer.appendChild(itemElement);
+        // Calculate subtotal
+        const price = parseInt(item.price) || 0;
+        const subtotal = price * item.quantity;
+
+        // Create item element
+        const itemEl = document.createElement("div");
+        itemEl.className = "cart__item";
+        itemEl.dataset.id = item.id;
+
+        itemEl.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" class="cart__item-image">
+          <div class="cart__item-details">
+            <h3 class="cart__item-name">${item.name}</h3>
+            <p class="cart__item-price">${item.price}</p>
+            <div class="cart__item-quantity">
+              <button class="cart__item-quantity-btn decrease-btn" data-id="${item.id}">-</button>
+              <span class="cart__item-quantity-value">${item.quantity}</span>
+              <button class="cart__item-quantity-btn increase-btn" data-id="${item.id}">+</button>
+              <button class="cart__item-remove" data-id="${item.id}">Remove</button>
+            </div>
+          </div>
+          <div class="cart__item-subtotal">${subtotal} kr</div>
+        `;
+
+        cartItemsContainer.appendChild(itemEl);
       });
+
+      // Update total
+      if (cartTotalElement) {
+        const total = itemsArray.reduce((sum, item) => {
+          const price = parseInt(item.price) || 0;
+          return sum + price * item.quantity;
+        }, 0);
+
+        cartTotalElement.textContent = `${total} kr`;
+      }
     }
-
-    // Update total price
-    if (cartTotalElement) {
-      const total = this.calculateTotal();
-      cartTotalElement.textContent = `${total} kr`;
-    }
-  },
-
-  /**
-   * Create a DOM element for a cart item
-   * @param {Object} item - Cart item object with quantity and subtotal
-   * @returns {HTMLElement} Cart item DOM element
-   */
-  createCartItemElement: function (item) {
-    const itemElement = document.createElement("div");
-    itemElement.className = "cart__item";
-    itemElement.dataset.id = item.id;
-
-    // Create item HTML structure
-    itemElement.innerHTML = `
-      <img src="${item.image}" alt="${item.name}" class="cart__item-image">
-      <div class="cart__item-details">
-        <h3 class="cart__item-name">${item.name}</h3>
-        <p class="cart__item-price">${item.price}</p>
-        <div class="cart__item-quantity">
-          <button class="cart__item-quantity-btn decrease-btn" data-id="${item.id}" aria-label="Decrease quantity">-</button>
-          <span class="cart__item-quantity-value">${item.quantity}</span>
-          <button class="cart__item-quantity-btn increase-btn" data-id="${item.id}" aria-label="Increase quantity">+</button>
-          <button class="cart__item-remove" data-id="${item.id}">Remove</button>
-        </div>
-      </div>
-      <div class="cart__item-subtotal">${item.subtotal} kr</div>
-    `;
-
-    return itemElement;
-  },
-
-  /**
-   * Clear the entire cart
-   */
-  clearCart: function () {
-    this.items = [];
-    this.saveCart();
-    this.renderCart();
-
-    document.dispatchEvent(
-      new CustomEvent("cart:updated", {
-        detail: {
-          items: this.items,
-          action: "clear",
-          itemCount: 0,
-          total: 0,
-        },
-      })
-    );
-  },
-
-  /**
-   * Public API methods for other components to use
-   */
-  getCartItems: function () {
-    return [...this.items]; // Return a copy to prevent direct mutation
-  },
-
-  getCartCount: function () {
-    return this.items.length;
-  },
-
-  getCartTotal: function () {
-    return this.calculateTotal();
-  },
-
-  getGroupedItems: function () {
-    return this.groupCartItems();
   },
 };
 
-// Initialize cart when DOM is loaded
+// Initialize cart
 document.addEventListener("DOMContentLoaded", () => {
-  // Use a short timeout to ensure we initialize only once,
-  // and to let any other scripts load first
-  setTimeout(() => {
-    if (window.framCart && !window.framCart._initialized) {
-      window.framCart.init();
-    }
-  }, 50);
+  if (!window.framCart._initialized) {
+    window.framCart.init();
+  }
 });

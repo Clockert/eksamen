@@ -25,7 +25,21 @@ window.loadPopularProduce = function (containerId) {
     })
     .then((data) => {
       const popularProducts = data.products.filter((p) => p.popular);
-      displayPopularProducts(popularProducts);
+
+      // Use the productRenderer to display products
+      const grid = document.getElementById("popular-products-grid");
+      if (grid && window.productRenderer) {
+        window.productRenderer.displayProducts(popularProducts, grid);
+      } else {
+        console.error(
+          "productRenderer not available - make sure productRenderer.js is loaded"
+        );
+        grid.innerHTML = `
+          <div class="error-message">
+            <p>Sorry, we couldn't load the popular products.</p>
+          </div>
+        `;
+      }
     })
     .catch((error) => {
       console.error("Error loading popular products:", error);
@@ -35,48 +49,4 @@ window.loadPopularProduce = function (containerId) {
         </div>
       `;
     });
-
-  function displayPopularProducts(products) {
-    const grid = document.getElementById("popular-products-grid");
-    if (!grid) return;
-
-    grid.innerHTML = "";
-
-    products.forEach((product) => {
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.dataset.id = product.id;
-      card.dataset.name = product.name;
-      card.dataset.price = product.price;
-      card.dataset.image = product.image;
-
-      card.innerHTML = `
-        <div class="product-card__image-container">
-          <a href="product-detail.html?id=${product.id}" class="product-card__link">
-            <img src="${product.image}" alt="${product.name}" class="product-card__image">
-          </a>
-          <button class="product-card__add-button" 
-                  aria-label="Add ${product.name} to cart"
-                  data-id="${product.id}"
-                  data-name="${product.name}"
-                  data-price="${product.price}"
-                  data-image="${product.image}">
-            Add to basket
-            <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
-          </button>
-        </div>
-        <div class="product-card__info">
-          <div class="product-card__header">
-            <h3 class="product-card__name">
-              <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
-            </h3>
-            <div class="product-card__price">${product.price}</div>
-          </div>
-          <p class="product-card__quantity">${product.quantity}</p>
-        </div>
-      `;
-
-      grid.appendChild(card);
-    });
-  }
 };

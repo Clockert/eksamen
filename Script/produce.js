@@ -61,7 +61,15 @@ document.addEventListener("DOMContentLoaded", () => {
           productsLoadingIndicator.style.display = "none";
         }
 
-        displayProducts(data.products, productsGrid);
+        // Use the new productRenderer to display products
+        if (window.productRenderer) {
+          window.productRenderer.displayProducts(data.products, productsGrid);
+        } else {
+          console.error(
+            "productRenderer not available - make sure productRenderer.js is loaded"
+          );
+          showErrorMessage();
+        }
       }
 
       // For product detail page
@@ -121,7 +129,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Show feedback
-            showAddedToCartFeedback(addToCartDetailButton, quantity);
+            if (window.productRenderer) {
+              window.productRenderer.showAddedFeedback(
+                addToCartDetailButton,
+                quantity
+              );
+            } else {
+              showAddedToCartFeedback(addToCartDetailButton, quantity);
+            }
           });
         }
       }
@@ -147,48 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       showErrorMessage();
     });
-
-  // Display product cards
-  function displayProducts(products, container) {
-    container.innerHTML = "";
-
-    products.forEach((product) => {
-      const productCard = document.createElement("div");
-      productCard.className = "product-card";
-      productCard.dataset.id = product.id;
-      productCard.dataset.name = product.name;
-      productCard.dataset.price = product.price;
-      productCard.dataset.image = product.image;
-
-      productCard.innerHTML = `
-      <div class="product-card__image-container">
-        <a href="product-detail.html?id=${product.id}" class="product-card__link">
-          <img src="${product.image}" alt="${product.name}" class="product-card__image">
-        </a>
-        <button class="product-card__add-button" 
-                aria-label="Add ${product.name} to cart"
-                data-id="${product.id}"
-                data-name="${product.name}"
-                data-price="${product.price}"
-                data-image="${product.image}">
-          Add to basket
-          <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
-        </button>
-      </div>
-      <div class="product-card__info">
-        <div class="product-card__header">
-          <h3 class="product-card__name">
-            <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
-          </h3>
-          <div class="product-card__price">${product.price}</div>
-        </div>
-        <p class="product-card__quantity">${product.quantity}</p>
-      </div>
-    `;
-
-      container.appendChild(productCard);
-    });
-  }
 
   // Display product details on detail page
   function displayProductDetails(product) {

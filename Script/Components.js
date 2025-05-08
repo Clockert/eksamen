@@ -224,105 +224,30 @@ function loadPopularProduce(containerId) {
         (product) => product.popular
       );
 
-      // Display products in the grid
-      displayPopularProducts(popularProducts);
+      // Display products in the grid using the productRenderer
+      const grid = document.getElementById("popular-products-grid");
+      if (grid && window.productRenderer) {
+        window.productRenderer.displayProducts(popularProducts, grid);
+      } else {
+        console.error(
+          "productRenderer not available - make sure productRenderer.js is loaded"
+        );
+        document.getElementById("popular-products-grid").innerHTML = `
+        <div class="error-message">
+          <p>Sorry, we couldn't load the popular products. Please try again later.</p>
+        </div>
+      `;
+      }
     })
     .catch((error) => {
       // Handle any errors in fetching or displaying products
       console.error("Error loading popular products:", error);
       document.getElementById("popular-products-grid").innerHTML = `
-        <div class="error-message">
-          <p>Sorry, we couldn't load the popular products. Please try again later.</p>
-        </div>
-      `;
-    });
-}
-
-/**
- * Creates and displays product cards for popular products
- *
- * @param {Array} products - Array of product objects to display
- */
-function displayPopularProducts(products) {
-  // Get the grid container
-  const grid = document.getElementById("popular-products-grid");
-  if (!grid) {
-    console.error("Popular products grid element not found");
-    return;
-  }
-
-  // Clear the grid before adding new products
-  grid.innerHTML = "";
-
-  // Create and append a product card for each product
-  products.forEach((product) => {
-    const productCard = document.createElement("div");
-    productCard.className = "product-card";
-
-    // Create inner HTML structure for the product card
-    productCard.innerHTML = `
-      <div class="product-card__image-container">
-        <a href="product-detail.html?id=${product.id}" class="product-card__link">
-          <img src="${product.image}" alt="${product.name}" class="product-card__image">
-        </a>
-        <button class="product-card__add-button" 
-                aria-label="Add ${product.name} to cart"
-                data-id="${product.id}"
-                data-name="${product.name}"
-                data-price="${product.price}"
-                data-image="${product.image}"
-                data-quantity="${product.quantity}">
-          Add to basket
-          <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
-        </button>
-      </div>
-      <div class="product-card__info">
-        <div class="product-card__header">
-          <h3 class="product-card__name">
-            <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
-          </h3>
-          <div class="product-card__price">${product.price}</div>
-        </div>
-        <p class="product-card__quantity">${product.quantity}</p>
+      <div class="error-message">
+        <p>Sorry, we couldn't load the popular products. Please try again later.</p>
       </div>
     `;
-
-    // Add event listener to Add to Cart button
-    const addToCartBtn = productCard.querySelector(".product-card__add-button");
-    addToCartBtn.addEventListener("click", (e) => {
-      e.preventDefault(); // Prevent navigation if it's an anchor
-
-      // Add product to cart
-      const product = {
-        id: parseInt(addToCartBtn.dataset.id),
-        name: addToCartBtn.dataset.name,
-        price: addToCartBtn.dataset.price,
-        image: addToCartBtn.dataset.image,
-        quantity: addToCartBtn.dataset.quantity,
-      };
-
-      // Use the framCart global object if available, otherwise fallback
-      if (window.framCart && window.framCart.addToCart) {
-        window.framCart.addToCart(product);
-
-        // Show feedback
-        const originalText = addToCartBtn.textContent;
-        addToCartBtn.innerHTML = `Added! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
-        addToCartBtn.style.backgroundColor = "#28bd6d";
-
-        setTimeout(() => {
-          addToCartBtn.innerHTML = originalText;
-          addToCartBtn.style.backgroundColor = "";
-        }, 1500);
-      } else {
-        // Fallback to simple cart management
-        addProductToCart(product);
-      }
     });
-
-    // Add the product card to the grid
-    grid.appendChild(productCard);
-  });
 }
 
 /**

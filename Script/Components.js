@@ -51,7 +51,7 @@ function loadNavbar() {
           </li>
         </ul>
       </nav>
-      <a href="#checkout" class="menu__checkout">Checkout</a>
+      <a href="checkout.html" class="menu__checkout">Checkout</a>
     </div>
   </div>
 
@@ -74,7 +74,7 @@ function loadNavbar() {
           <span>Total:</span>
           <span id="cart-total">0 kr</span>
         </div>
-        <button class="cart__checkout-button">Proceed to Checkout</button>
+        <a href="checkout.html" class="cart__checkout-button">Proceed to Checkout</a>
       </div>
       
       <div class="cart__empty" id="cart-empty">

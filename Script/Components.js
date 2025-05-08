@@ -159,6 +159,7 @@ function loadFooter() {
             placeholder="First name"
             required
             class="footer__input"
+            autocomplete="given-name"
           />
 
           <label for="email" class="visually-hidden">Email Address</label>
@@ -169,6 +170,7 @@ function loadFooter() {
             placeholder="E-mail address"
             required
             class="footer__input"
+            autocomplete="email"
           />
 
           <button type="submit" class="footer__button">Send</button>

@@ -105,40 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
           addToCartDetailButton.dataset.name = currentProduct.name;
           addToCartDetailButton.dataset.price = currentProduct.price;
           addToCartDetailButton.dataset.image = currentProduct.image;
-
-          // Add event listener
-          addToCartDetailButton.addEventListener("click", () => {
-            // Parse the quantity, defaulting to 1 if invalid
-            const quantity = parseInt(quantityInput.value) || 1;
-
-            // Ensure quantity is positive
-            if (quantity <= 0) {
-              quantityInput.value = 1;
-              return;
-            }
-
-            // Use framCart if available
-            if (window.framCart) {
-              // Call addToCart with the current product and specified quantity
-              window.framCart.addToCart(currentProduct, quantity, true);
-
-              // Show feedback
-              if (window.productRenderer) {
-                window.productRenderer.showAddedFeedback(
-                  addToCartDetailButton,
-                  quantity
-                );
-              } else {
-                showAddedToCartFeedback(addToCartDetailButton, quantity);
-              }
-            } else {
-              // Fallback if framCart not available
-              console.error("framCart not available");
-              alert(
-                "Sorry, there was an issue with the cart. Please try again later."
-              );
-            }
-          });
         }
       }
     })
@@ -335,47 +301,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Set up quantity input controls (UPDATED)
+  // Set up quantity input controls
   function setupQuantityControls() {
     if (!quantityInput || !decreaseBtn || !increaseBtn) return;
+
+    // Remove any existing event listeners
+    const newDecreaseBtn = decreaseBtn.cloneNode(true);
+    const newIncreaseBtn = increaseBtn.cloneNode(true);
+    decreaseBtn.parentNode.replaceChild(newDecreaseBtn, decreaseBtn);
+    increaseBtn.parentNode.replaceChild(newIncreaseBtn, increaseBtn);
 
     // Ensure quantity is a valid number
     const validateQuantity = () => {
       let value = parseInt(quantityInput.value);
-
-      // If not a number or less than 1, reset to 1
       if (isNaN(value) || value < 1) {
         quantityInput.value = 1;
       } else {
-        // Ensure we have a clean integer
         quantityInput.value = value;
       }
     };
 
     // Ensure proper number entry on change
     quantityInput.addEventListener("change", validateQuantity);
-
-    // Also validate when the input loses focus
     quantityInput.addEventListener("blur", validateQuantity);
 
     // Prevent non-numeric entries
     quantityInput.addEventListener("keypress", (e) => {
-      // Allow only numbers (0-9)
       if (!/[0-9]/.test(e.key)) {
         e.preventDefault();
       }
     });
 
-    // Decrease quantity button - simple -1
-    decreaseBtn.addEventListener("click", () => {
+    // Decrease quantity button
+    newDecreaseBtn.addEventListener("click", () => {
       let currentValue = parseInt(quantityInput.value) || 1;
       if (currentValue > 1) {
         quantityInput.value = currentValue - 1;
       }
     });
 
-    // Increase quantity button - simple +1
-    increaseBtn.addEventListener("click", () => {
+    // Increase quantity button
+    newIncreaseBtn.addEventListener("click", () => {
       let currentValue = parseInt(quantityInput.value) || 1;
       quantityInput.value = currentValue + 1;
     });
@@ -397,30 +363,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (productPriceElement) productPriceElement.textContent = "";
       if (packageSizeElement) packageSizeElement.textContent = "";
     }
-  }
-
-  // Show added-to-cart feedback (UPDATED)
-  function showAddedToCartFeedback(button, quantity = 1) {
-    if (!button) return;
-
-    // Store the original button text
-    const originalText = button.textContent || "Add to basket";
-
-    // Set the success message with quantity
-    button.innerHTML =
-      quantity === 1
-        ? `Added! <i class="fas fa-check"></i>`
-        : `Added ${quantity}! <i class="fas fa-check"></i>`;
-
-    button.disabled = true;
-    button.style.backgroundColor = "#28bd6d";
-
-    setTimeout(() => {
-      // Restore original button HTML
-      button.innerHTML = originalText;
-      button.disabled = false;
-      button.style.backgroundColor = "";
-    }, 1500);
   }
 });
 

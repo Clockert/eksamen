@@ -138,17 +138,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (groupedItems[itemId]) {
-        // Increment quantity if item already exists
-        groupedItems[itemId].quantity += 1;
+        // Add to existing quantity instead of incrementing by 1
+        groupedItems[itemId].quantity += item.quantity || 1;
         groupedItems[itemId].subtotal =
           priceValue * groupedItems[itemId].quantity;
       } else {
-        // Add new item to grouped items
+        // Add new item to grouped items with its original quantity
         groupedItems[itemId] = {
           ...item,
-          quantity: 1,
+          quantity: item.quantity || 1,
           priceValue: priceValue,
-          subtotal: priceValue,
+          subtotal: priceValue * (item.quantity || 1),
         };
       }
     });

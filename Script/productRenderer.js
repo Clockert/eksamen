@@ -43,18 +43,6 @@ window.productRenderer = {
       </div>
     `;
 
-    // Add event listener to Add to Cart button
-    const addToCartBtn = productCard.querySelector(".product-card__add-button");
-    addToCartBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-
-      // Add product to cart
-      if (window.framCart && window.framCart.addToCart) {
-        window.framCart.addToCart(product);
-        this.showAddedFeedback(addToCartBtn);
-      }
-    });
-
     return productCard;
   },
 

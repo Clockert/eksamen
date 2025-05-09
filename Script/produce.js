@@ -108,34 +108,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Add event listener
           addToCartDetailButton.addEventListener("click", () => {
-            const quantity = parseInt(quantityInput.value || 1);
+            // Parse the quantity, defaulting to 1 if invalid
+            const quantity = parseInt(quantityInput.value) || 1;
+
+            // Ensure quantity is positive
+            if (quantity <= 0) {
+              quantityInput.value = 1;
+              return;
+            }
 
             // Use framCart if available
             if (window.framCart) {
+              // Call addToCart with the current product and specified quantity
               window.framCart.addToCart(currentProduct, quantity, true);
+
+              // Show feedback
+              if (window.productRenderer) {
+                window.productRenderer.showAddedFeedback(
+                  addToCartDetailButton,
+                  quantity
+                );
+              } else {
+                showAddedToCartFeedback(addToCartDetailButton, quantity);
+              }
             } else {
               // Fallback if framCart not available
-              const cart = JSON.parse(localStorage.getItem("cart")) || [];
-              for (let i = 0; i < quantity; i++) {
-                cart.push(currentProduct);
-              }
-              localStorage.setItem("cart", JSON.stringify(cart));
-
-              // Update cart count
-              const cartButton = document.querySelector(".navbar__cart");
-              if (cartButton) {
-                cartButton.textContent = cart.length;
-              }
-            }
-
-            // Show feedback
-            if (window.productRenderer) {
-              window.productRenderer.showAddedFeedback(
-                addToCartDetailButton,
-                quantity
+              console.error("framCart not available");
+              alert(
+                "Sorry, there was an issue with the cart. Please try again later."
               );
-            } else {
-              showAddedToCartFeedback(addToCartDetailButton, quantity);
             }
           });
         }
@@ -334,28 +335,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Set up quantity input controls
+  // Set up quantity input controls (UPDATED)
   function setupQuantityControls() {
     if (!quantityInput || !decreaseBtn || !increaseBtn) return;
 
-    // Ensure quantity is never less than 1
-    quantityInput.addEventListener("change", () => {
-      if (quantityInput.value < 1) {
+    // Ensure quantity is a valid number
+    const validateQuantity = () => {
+      let value = parseInt(quantityInput.value);
+
+      // If not a number or less than 1, reset to 1
+      if (isNaN(value) || value < 1) {
         quantityInput.value = 1;
+      } else {
+        // Ensure we have a clean integer
+        quantityInput.value = value;
+      }
+    };
+
+    // Ensure proper number entry on change
+    quantityInput.addEventListener("change", validateQuantity);
+
+    // Also validate when the input loses focus
+    quantityInput.addEventListener("blur", validateQuantity);
+
+    // Prevent non-numeric entries
+    quantityInput.addEventListener("keypress", (e) => {
+      // Allow only numbers (0-9)
+      if (!/[0-9]/.test(e.key)) {
+        e.preventDefault();
       }
     });
 
-    // Decrease quantity button
+    // Decrease quantity button - simple -1
     decreaseBtn.addEventListener("click", () => {
-      const currentValue = parseInt(quantityInput.value);
+      let currentValue = parseInt(quantityInput.value) || 1;
       if (currentValue > 1) {
         quantityInput.value = currentValue - 1;
       }
     });
 
-    // Increase quantity button
+    // Increase quantity button - simple +1
     increaseBtn.addEventListener("click", () => {
-      const currentValue = parseInt(quantityInput.value);
+      let currentValue = parseInt(quantityInput.value) || 1;
       quantityInput.value = currentValue + 1;
     });
   }
@@ -378,20 +399,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Show added-to-cart feedback
+  // Show added-to-cart feedback (UPDATED)
   function showAddedToCartFeedback(button, quantity = 1) {
     if (!button) return;
 
-    const originalText = button.innerHTML;
+    // Store the original button text
+    const originalText = button.textContent || "Add to basket";
+
+    // Set the success message with quantity
     button.innerHTML =
       quantity === 1
-        ? `Added! <span class="product-card__icon"><i class="fas fa-check"></i></span>`
-        : `Added ${quantity}! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
+        ? `Added! <i class="fas fa-check"></i>`
+        : `Added ${quantity}! <i class="fas fa-check"></i>`;
 
     button.disabled = true;
     button.style.backgroundColor = "#28bd6d";
 
     setTimeout(() => {
+      // Restore original button HTML
       button.innerHTML = originalText;
       button.disabled = false;
       button.style.backgroundColor = "";

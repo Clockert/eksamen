@@ -86,16 +86,20 @@ window.productRenderer = {
   showAddedFeedback: function (button, quantity = 1) {
     if (!button) return;
 
-    const originalText = button.innerHTML;
+    // Store the original button text
+    const originalText = button.textContent || "Add to basket";
+
+    // Set the success message with quantity
     button.innerHTML =
       quantity === 1
-        ? `Added! <span class="product-card__icon"><i class="fas fa-check"></i></span>`
-        : `Added ${quantity}! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
+        ? `Added! <i class="fas fa-check"></i>`
+        : `Added ${quantity}! <i class="fas fa-check"></i>`;
 
     button.disabled = true;
     button.style.backgroundColor = "#28bd6d";
 
     setTimeout(() => {
+      // Restore the button to its original state
       button.innerHTML = originalText;
       button.disabled = false;
       button.style.backgroundColor = "";

@@ -20,6 +20,7 @@ A modern, sustainable food delivery web application connecting customers directl
 - [Future Improvements](#-future-improvements)
 - [Technical Insights](#-technical-insights)
 - [AI as a Development Tool](#-ai-as-a-development-tool)
+- [Version Control Learnings](#-version-control-learnings)
 - [Troubleshooting](#-troubleshooting)
 - [Academic Context](#-academic-context)
 - [Contributors](#-contributors)
@@ -314,6 +315,42 @@ While this was an academic project, the experience reflects real-world considera
 - Team standards for AI use will likely become an important part of development workflows
 
 This experience has prepared me to work in environments where AI assistance is available while maintaining the critical thinking skills needed to use such tools responsibly and effectively.
+
+## 🔄 Version Control Learnings
+
+This project also served as a learning experience with Git and GitHub workflows. As someone relatively new to structured version control practices, I encountered several challenges:
+
+### My Experience with Git and GitHub
+
+1. **Initial Hesitation**: I found Git's branching model and pull request workflow intimidating at first
+2. **Fear of Breaking Things**: I was often concerned about potentially damaging the codebase with incorrect merge operations
+3. **Learning Through Practice**: Gradually became more comfortable with basic Git operations but still struggled with more complex scenarios
+4. **Room for Improvement**: I recognize that my approach to version control during this project wasn't optimal and represents an area for growth
+
+### What Worked
+
+- **Basic Commit Pattern**: Regular commits with descriptive messages helped track changes
+- **GitHub as a Backup**: Using GitHub as a remote repository ensured code was safely stored
+- **Documentation Access**: GitHub's README display made documentation accessible
+
+### Challenges Faced
+
+- **Branch Management**: I wasn't confident in creating and merging feature branches
+- **Resolving Conflicts**: Merge conflicts were particularly stressful to resolve
+- **Pull Request Workflow**: The formal pull request process felt overwhelming for a solo project
+- **Commit Granularity**: My commits were sometimes too large, encompassing multiple changes that ideally should have been separate
+
+### Future Improvements
+
+For future projects, I plan to:
+
+- Practice with branches in a low-stakes environment to build confidence
+- Follow a more structured Git workflow even for solo projects
+- Use more targeted, single-purpose commits
+- Potentially use Git GUI tools to better visualize the branching structure
+- Take advantage of GitHub's project management features
+
+This experience highlighted that effective version control is a skill that requires deliberate practice, and I'm committed to improving this aspect of my development workflow.
 
 ## 🔧 Troubleshooting
 

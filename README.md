@@ -19,6 +19,7 @@ A modern, sustainable food delivery web application connecting customers directl
 - [Security Considerations](#-security-considerations)
 - [Future Improvements](#-future-improvements)
 - [Technical Insights](#-technical-insights)
+- [AI as a Development Tool](#-ai-as-a-development-tool)
 - [Troubleshooting](#-troubleshooting)
 - [Academic Context](#-academic-context)
 - [Contributors](#-contributors)
@@ -275,6 +276,44 @@ As this project evolved, I learned several valuable lessons that might benefit o
 3. **Modular JavaScript**: Organizing JavaScript into component-based files with clear responsibilities made the codebase significantly more manageable as new features were added.
 
 4. **Ethical AI Implementation**: Designing the chatbot system taught me the importance of establishing clear boundaries for AI responses. The careful design of system prompts was crucial for ensuring accuracy and preventing potential misinformation.
+
+## 🤖 AI as a Development Tool
+
+Throughout this project, I explored the use of AI not just as a feature (the chatbot) but also as a development tool. This dual approach provided valuable insights into the current state of AI in web development:
+
+### My Experience Using AI During Development
+
+I began the project doing most of the coding myself but gradually incorporated AI assistance as the project's complexity grew. My approach evolved in these stages:
+
+1. **Initial Development**: Started with minimal AI help, building core structures and components independently
+2. **Growing Complexity**: As features multiplied, used AI for problem-solving discussions and code suggestions
+3. **Integration Challenges**: Sought AI guidance when connecting multiple systems (cart, nutrition API, OpenAI)
+4. **Final Refinement**: Required significant manual cleanup of AI-suggested code to ensure quality and consistency
+
+### Benefits Observed
+
+- **Accelerated Problem-Solving**: AI helped identify solutions to complex implementation challenges faster
+- **Learning Tool**: Exposed me to alternative approaches and patterns I might not have considered
+- **Documentation Assistance**: Improved code comments and documentation with more comprehensive explanations
+- **Reduced Development Time**: For some routine tasks, AI suggestions saved significant time
+
+### Limitations and Challenges
+
+- **Code Quality Issues**: AI sometimes produced code that looked functional but contained subtle bugs or inefficiencies
+- **Integration Problems**: Suggested code often didn't properly integrate with the existing codebase architecture
+- **Inconsistent Styling**: AI-generated code didn't always adhere to the project's established patterns and naming conventions
+- **Required Verification**: Every AI suggestion needed careful review and often substantial modification
+
+### Reflection on AI in Professional Development
+
+While this was an academic project, the experience reflects real-world considerations for using AI in professional development. I believe AI tools will become standard in professional environments, but with important caveats:
+
+- AI works best as a collaborative tool rather than a replacement for developer expertise
+- Critical review of AI-generated code is essential, not optional
+- Understanding fundamentals remains crucial to effectively evaluate and modify AI suggestions
+- Team standards for AI use will likely become an important part of development workflows
+
+This experience has prepared me to work in environments where AI assistance is available while maintaining the critical thinking skills needed to use such tools responsibly and effectively.
 
 ## 🔧 Troubleshooting
 

@@ -3,30 +3,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Chat with FRAM's AI assistant about our sustainable food delivery service, local produce, and farming practices in Norway."
+    />
+    <meta
+      name="keywords"
+      content="sustainable food, chatbot, customer service, local farms, Norway"
+    />
     <title>FRAM - Chat with Us</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="Styles/main.css" />
-    <!-- Components.js will only load the navbar now -->
+    <!-- Components.js will only load the navbar for this page, not the footer -->
     <script src="Script/Components.js" defer></script>
+    <script src="Script/productRenderer.js" defer></script>
+    <script src="Script/cart.js" defer></script>
+    <script src="Script/nutrition-cache.js" defer></script>
+    <script src="Script/integration.js" defer></script>
+    <script src="Script/PopularProducts.js" defer></script>
+    <script src="Script/produce.js" defer></script>
   </head>
   <body>
     <!-- Chatbot Section -->
-    <main class="chatbot">
+    <main class="chatbot" aria-labelledby="chatbot-heading">
       <div class="chatbot__container">
-        <ul class="chatbot__messages">
-          <div class="chatbot__messages-inner">
-            <!-- Chat messages will be dynamically inserted here by JavaScript -->
-          </div>
-        </ul>
+        <!-- Hidden heading for screen readers -->
+        <h1 id="chatbot-heading" class="visually-hidden">
+          Chat with FRAM Assistant
+        </h1>
 
-        <div class="chatbot__input-area">
+        <!-- Chat messages container -->
+        <div
+          class="chatbot__messages"
+          role="log"
+          aria-live="polite"
+          aria-label="Chat conversation"
+        >
+          <ul class="chatbot__messages-inner">
+            <!-- Chat messages will be dynamically inserted here by JavaScript -->
+            <!-- Each message will be added as an <li> element -->
+          </ul>
+        </div>
+
+        <!-- Chat input area -->
+        <form class="chatbot__input-area" id="chat-form">
+          <label for="user-input" class="visually-hidden"
+            >Type your message</label
+          >
           <textarea
-            placeholder="Enter message..."
+            placeholder="Ask about our seasonal produce, delivery areas, or sustainable farming..."
             id="user-input"
             class="chatbot__textarea"
+            required
+            aria-required="true"
+            rows="3"
           ></textarea>
           <button
             type="submit"
@@ -38,7 +72,7 @@
               ><i class="fas fa-arrow-up"></i
             ></span>
           </button>
-        </div>
+        </form>
       </div>
     </main>
 

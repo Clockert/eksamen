@@ -3,27 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FRAM</title>
+    <!-- Primary Meta Tags for SEO -->
+    <meta
+      name="description"
+      content="Fram connects you with fresh produce from local Norwegian farms, delivered directly to your door. Support sustainable agriculture with each order."
+    />
+    <meta
+      name="keywords"
+      content="sustainable food, local farms, Norway, organic produce, food delivery, farm to table"
+    />
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FRAM - Sustainable Food Delivery" />
+    <meta
+      property="og:description"
+      content="Fresh produce from local Norwegian farms, delivered to your door."
+    />
+    <meta property="og:image" content="assets/hero_img.webp" />
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+    <!-- Stylesheets -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
     <link rel="stylesheet" href="Styles/main.css" />
+    <title>FRAM - Sustainable Food Delivery from Local Farms</title>
   </head>
   <body>
-    <!-- The navbar will be dynamically injected here -->
+    <!-- The navbar component will be dynamically injected here by Components.js -->
     <script src="Script/Components.js" defer></script>
+    <script src="Script/productRenderer.js" defer></script>
+    <script src="Script/cart.js" defer></script>
+    <script src="Script/nutrition-cache.js" defer></script>
+    <script src="Script/integration.js" defer></script>
+    <script src="Script/PopularProducts.js" defer></script>
+    <script src="Script/produce.js" defer></script>
 
-    <section class="hero">
-      <div class="hero__logo">Fram</div>
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <h1 id="hero-heading" class="hero__logo">Fram</h1>
       <hr class="hero__divider" aria-hidden="true" />
       <p class="hero__text">Home delivery from your local farms</p>
     </section>
 
-    <! -- promo section -- >
-
+    <!-- Promotional Section: Highlights key services and features -->
     <div class="container">
-      <section class="promo">
+      <section class="promo" aria-label="Our Services">
+        <!-- First Promo Card: Seasonal Selection -->
         <div class="promo__card">
           <div class="promo__header">
             <h2 class="promo__title">Shop Our Seasonal Selection</h2>
@@ -31,18 +59,22 @@
           </div>
           <img
             src="assets/seasonal-produce.webp"
-            alt="Basket of fresh seasonal vegetables"
+            alt="Basket of fresh seasonal vegetables including carrots, lettuce, and tomatoes"
             class="promo__image"
           />
           <p class="promo__text">
             New produce is added continuously as time goes by and the seasons
             change.
           </p>
-          <a href="#" class="button button--red">Browse our selection</a>
+          <a href="produce.html" class="button button--red"
+            >Browse our selection</a
+          >
         </div>
 
+        <!-- Visual divider between promo cards -->
         <hr class="promo__divider" aria-hidden="true" />
 
+        <!-- Second Promo Card: Customer Support -->
         <div class="promo__card">
           <div class="promo__header">
             <h2 class="promo__title">Ask Us About Anything</h2>
@@ -50,78 +82,86 @@
           </div>
           <img
             src="assets/farmer.webp"
-            alt="Farmer in the field"
+            alt="Farmer in the field harvesting organic vegetables"
             class="promo__image"
           />
           <p class="promo__text">
             New produce is added continuously as time goes by and the seasons
           </p>
-          <a href="#" class="button button--red">Go to chat</a>
-        </div>
+          <a href="chatbot.html" class="button button--red">Go to chat</a>
         </div>
       </section>
     </div>
 
-    <!-- How it works section-->
-
-    <section class="how-it-works">
-  <div class="how-it-works__header">
-    <h2 class="how-it-works__title">This is how it works</h2>
-  </div>
-
-  <div class="how-it-works__steps">
-    <div class="how-it-works__step">
-      <h3 class="how-it-works__step-title">Order groceries</h3>
-      <div class="how-it-works__step-content">
-        <p class="how-it-works__step-description">
-          Fram is a circular service that ensures your kitchen is always
-          stocked with the essentials you need. Browse our seasonal
-          selection, choose your items, and place your order online.
-        </p>
-        <a href="#" class="how-it-works__step-link">See our stock here</a>
+    <!-- How It Works Section -->
+    <section class="how-it-works" aria-labelledby="how-it-works-title">
+      <div class="how-it-works__header">
+        <h2 id="how-it-works-title" class="how-it-works__title">
+          This is how it works
+        </h2>
       </div>
-    </div>
 
-    <div class="how-it-works__step">
-      <h3 class="how-it-works__step-title">Stock up</h3>
-      <div class="how-it-works__step-content">
-        <p class="how-it-works__step-description">
-          Once your order arrives, unpack the produce and store it however
-          it works best for you. Hold onto the containers—they're yours to
-          keep until your next order.
-        </p>
+      <div class="how-it-works__steps">
+        <!-- Step 1 -->
+        <div class="how-it-works__step">
+          <h3 class="how-it-works__step-title">Order groceries</h3>
+          <div class="how-it-works__step-content">
+            <p class="how-it-works__step-description">
+              Fram is a circular service that ensures your kitchen is always
+              stocked with the essentials you need. Browse our seasonal
+              selection, choose your items, and place your order online.
+            </p>
+            <a href="produce.html" class="how-it-works__step-link"
+              >See our stock here</a
+            >
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="how-it-works__step">
+          <h3 class="how-it-works__step-title">Stock up</h3>
+          <div class="how-it-works__step-content">
+            <p class="how-it-works__step-description">
+              Once your order arrives, unpack the produce and store it however
+              it works best for you. Hold onto the containers—they're yours to
+              keep until your next order.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="how-it-works__step">
+          <h3 class="how-it-works__step-title">Scan & reorder</h3>
+          <div class="how-it-works__step-content">
+            <p class="how-it-works__step-description">
+              Ready for a refill? Grab the containers from your last order and
+              scan the QR code with our app or your phone's camera. This
+              instantly adds the items back to your cart, making reordering a
+              breeze.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="how-it-works__step">
+          <h3 class="how-it-works__step-title">Swap & reuse</h3>
+          <div class="how-it-works__step-content">
+            <p class="how-it-works__step-description">
+              When we deliver your new order, simply leave your empty containers
+              outside. We'll pick them up, clean them thoroughly, and reuse them
+              for future deliveries.
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="how-it-works__step">
-      <h3 class="how-it-works__step-title">Scan & reorder</h3>
-      <div class="how-it-works__step-content">
-        <p class="how-it-works__step-description">
-          Ready for a refill? Grab the containers from your last order and
-          scan the QR code with our app or your phone's camera. This
-          instantly adds the items back to your cart, making reordering a
-          breeze.
-        </p>
-      </div>
-    </div>
+    <!-- Popular Products Section: Dynamically loaded from products.json -->
+    <section id="popular-produce-container" aria-label="Popular Products">
+      <!-- Content will be dynamically injected by the loadPopularProduce function -->
+    </section>
 
-    <div class="how-it-works__step">
-      <h3 class="how-it-works__step-title">Swap & reuse</h3>
-      <div class="how-it-works__step-content">
-        <p class="how-it-works__step-description">
-          When we deliver your new order, simply leave your empty containers
-          outside. We'll pick them up, clean them thoroughly, and reuse them
-          for future deliveries.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-    <!-- Popular Produce Component Container -->
-    <div id="popular-produce-container"></div>
-
-    <!-- The script to load the component -->
+    <!-- Script to load the popular products component -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         // Check if the function is available before calling it
@@ -132,6 +172,8 @@
         }
       });
     </script>
+
+    <!-- Script to load product data -->
     <script src="Script/produce.js" defer></script>
   </body>
 </html>

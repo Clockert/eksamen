@@ -1,16 +1,21 @@
-// produce.js - Handles product listings and product detail functionality
+/**
+ * produce.js - Handles product listings and product detail functionality
+ */
 document.addEventListener("DOMContentLoaded", () => {
   // Common elements
   const productsGrid = document.getElementById("products-container");
-  const popularProductsGrid = document.getElementById(
-    "popular-products-container"
+  const productDetailContent = document.querySelector(
+    ".product-detail__content"
   );
+  const productsLoadingIndicator = document.getElementById("products-loading");
+  const productLoadingIndicator = document.getElementById("product-loading");
+  const productErrorElement = document.getElementById("product-error");
 
   // Product detail page elements
   const productNameElement = document.getElementById("product-name");
   const productImageElement = document.getElementById("product-image");
   const productPriceElement = document.getElementById("product-price");
-  const productQuantityElement = document.getElementById("product-quantity");
+  const packageSizeElement = document.getElementById("package-size-value");
   const breadcrumbProductName = document.getElementById(
     "breadcrumb-product-name"
   );
@@ -25,6 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Get product ID if on detail page
   let productId = null;
+  let currentProduct = null;
+
   if (isProductDetailPage) {
     const urlParams = new URLSearchParams(window.location.search);
     productId = parseInt(urlParams.get("id"));
@@ -39,229 +46,139 @@ document.addEventListener("DOMContentLoaded", () => {
     setupQuantityControls();
   }
 
-  // Initialize cart
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  // Note: We no longer need to update cart count here as it's handled by Components.js
-
-  // Fetch nutrition data from our server API
-  async function fetchNutritionData(productName) {
-    console.log("Fetching nutrition data for:", productName);
-
-    try {
-      // Use the full URL with the correct port (3000)
-      const response = await fetch(
-        `http://localhost:3000/api/nutrition/${encodeURIComponent(productName)}`
-      );
-
-      // Check if the request was successful
-      if (!response.ok) {
-        console.error("Nutrition API error:", response.status);
-        throw new Error(
-          `Nutrition API responded with status: ${response.status}`
-        );
-      }
-
-      // Parse the JSON response
-      const data = await response.json();
-
-      // Log the received data to verify content
-      console.log("Nutrition data received:", data);
-      console.log("Total foods found:", data.foods?.length || 0);
-
-      // Return the data for further processing
-      return data;
-    } catch (error) {
-      console.error("Error fetching nutrition data:", error.message);
-      return null;
-    }
-  }
-
-  // Display nutrition information in the UI
-  function displayNutritionInfo(foodItem) {
-    const nutritionData = document.querySelector(".nutrition-data");
-    if (!nutritionData) return;
-
-    // Clear loading message
-    nutritionData.innerHTML = "";
-
-    // Create a table for the nutrition information
-    const table = document.createElement("table");
-    table.className = "product-detail__nutrition-table";
-
-    // Add table header
-    const headerRow = document.createElement("tr");
-    headerRow.innerHTML = "<th>Nutrient</th><th>Amount</th>";
-    table.appendChild(headerRow);
-
-    // Define the nutrients we want to display (in order of importance)
-    const keyNutrients = [
-      { name: "Energy", ids: [1008, 2048], unit: "kcal" },
-      { name: "Protein", ids: [1003], unit: "g" },
-      { name: "Carbohydrates", ids: [1005, 2000], unit: "g" },
-      { name: "Fat", ids: [1004], unit: "g" },
-      { name: "Fiber", ids: [1079, 2033], unit: "g" },
-      { name: "Sugar", ids: [2000, 1082], unit: "g" },
-      { name: "Sodium", ids: [1093, 1090], unit: "mg" },
-    ];
-
-    // Get all nutrients from the food item
-    const nutrients = foodItem.foodNutrients || [];
-
-    // For each key nutrient, try to find it in the API response
-    let nutrientsFound = 0;
-
-    keyNutrients.forEach((keyNutrient) => {
-      // Find the nutrient in the API response
-      const foundNutrient = nutrients.find((apiNutrient) => {
-        // Different API responses have different structures
-        const nutrientId = apiNutrient.nutrientId || apiNutrient.nutrient?.id;
-        return keyNutrient.ids.includes(nutrientId);
-      });
-
-      // If we found the nutrient, add it to the table
-      if (foundNutrient) {
-        nutrientsFound++;
-
-        // Extract the value and unit
-        const value = foundNutrient.value || foundNutrient.amount || 0;
-        const unit =
-          foundNutrient.unitName ||
-          foundNutrient.nutrient?.unitName ||
-          keyNutrient.unit;
-
-        // Create a row for this nutrient
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${keyNutrient.name}</td><td>${value} ${unit}</td>`;
-        table.appendChild(row);
-      }
-    });
-
-    // Display the table if we found any nutrients
-    if (nutrientsFound > 0) {
-      nutritionData.appendChild(table);
-
-      // Add source information
-      const source = document.createElement("p");
-      source.className = "product-detail__nutrition-source";
-      source.textContent = "Source: USDA Food Data Central";
-      nutritionData.appendChild(source);
-    } else {
-      // No nutrients found
-      nutritionData.innerHTML =
-        '<p class="product-detail__nutrition-error">Detailed nutrition information not available for this product.</p>';
-    }
-  }
-
   // Fetch products from JSON file
   fetch("data/products.json")
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Failed to fetch products: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
       // For product listing page
       if (productsGrid) {
-        displayProducts(data.products, productsGrid);
-      }
+        if (productsLoadingIndicator) {
+          productsLoadingIndicator.style.display = "none";
+        }
 
-      // For popular products section
-      if (popularProductsGrid) {
-        const popularProducts = data.products.filter(
-          (product) => product.popular
-        );
-        displayProducts(popularProducts, popularProductsGrid);
+        // Use the new productRenderer to display products
+        if (window.productRenderer) {
+          window.productRenderer.displayProducts(data.products, productsGrid);
+        } else {
+          console.error(
+            "productRenderer not available - make sure productRenderer.js is loaded"
+          );
+          showErrorMessage();
+        }
       }
 
       // For product detail page
       if (isProductDetailPage && productId) {
-        const product = data.products.find((p) => p.id === productId);
+        if (productLoadingIndicator) {
+          productLoadingIndicator.style.display = "none";
+        }
 
-        if (!product) {
-          window.location.href = "produce.html";
+        currentProduct = data.products.find((p) => p.id === productId);
+
+        if (!currentProduct) {
+          if (productErrorElement) {
+            productErrorElement.style.display = "block";
+          }
+
+          if (productDetailContent) {
+            productDetailContent.style.display = "none";
+          }
+
+          if (breadcrumbProductName) {
+            breadcrumbProductName.textContent = "Product not found";
+          }
+
           return;
         }
 
-        displayProductDetails(product);
+        displayProductDetails(currentProduct);
 
-        // Add to cart button handler
+        // Setup add to cart button
         if (addToCartDetailButton) {
-          addToCartDetailButton.addEventListener("click", () => {
-            const quantity = parseInt(quantityInput.value || 1);
-            addToCart(product, quantity);
-          });
+          // Set the data attributes on the button for easier access
+          addToCartDetailButton.dataset.id = currentProduct.id;
+          addToCartDetailButton.dataset.name = currentProduct.name;
+          addToCartDetailButton.dataset.price = currentProduct.price;
+          addToCartDetailButton.dataset.image = currentProduct.image;
         }
       }
     })
     .catch((error) => {
       console.error("Error loading products:", error);
+
+      if (productsLoadingIndicator) {
+        productsLoadingIndicator.style.display = "none";
+      }
+
+      if (productLoadingIndicator) {
+        productLoadingIndicator.style.display = "none";
+      }
+
+      if (isProductDetailPage && productErrorElement) {
+        productErrorElement.style.display = "block";
+
+        if (productDetailContent) {
+          productDetailContent.style.display = "none";
+        }
+      }
+
       showErrorMessage();
     });
-
-  // Display product cards with BEM class names
-  function displayProducts(products, container) {
-    container.innerHTML = "";
-
-    products.forEach((product) => {
-      const productCard = document.createElement("div");
-      productCard.className = "product-card";
-
-      productCard.innerHTML = `
-      <div class="product-card__image-container">
-        <a href="product-detail.html?id=${product.id}" class="product-card__link">
-          <img src="${product.image}" alt="${product.name}" class="product-card__image">
-        </a>
-        <a href="product-detail.html?id=${product.id}" class="product-card__add-button" aria-label="View details of ${product.name}">
-          Add to basket
-          <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
-        </a>
-      </div>
-      <div class="product-card__info">
-        <div class="product-card__header">
-          <h3 class="product-card__name">
-            <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
-          </h3>
-          <div class="product-card__price">${product.price}</div>
-        </div>
-        <p class="product-card__quantity">${product.quantity}</p>
-      </div>
-    `;
-
-      container.appendChild(productCard);
-    });
-  }
 
   // Display product details on detail page
   function displayProductDetails(product) {
     if (!productNameElement) return;
 
     document.title = `FRAM - ${product.name}`;
-    productNameElement.textContent = product.name;
-    productImageElement.src = product.image;
-    productImageElement.alt = product.name;
-    productPriceElement.textContent = product.price;
 
-    // Update package size
-    const packageSizeValue = document.getElementById("package-size-value");
-    if (packageSizeValue) {
-      packageSizeValue.textContent = product.quantity;
+    if (productNameElement) productNameElement.textContent = product.name;
+    if (productImageElement) {
+      productImageElement.src = product.image;
+      productImageElement.alt = product.name;
     }
+    if (productPriceElement) productPriceElement.textContent = product.price;
+    if (packageSizeElement) packageSizeElement.textContent = product.quantity;
+    if (breadcrumbProductName) breadcrumbProductName.textContent = product.name;
 
-    if (breadcrumbProductName) {
-      breadcrumbProductName.textContent = product.name;
-    }
+    // Populate description, farm, and cultivation
+    const productDescriptionElement = document.getElementById(
+      "product-description"
+    );
+    const productFarmElement = document.getElementById("product-farm");
+    const productCultivationElement = document.getElementById(
+      "product-cultivation"
+    );
 
-    // Create a placeholder for nutrition information with loading state
-    // Check if a nutrition section already exists
+    if (productDescriptionElement)
+      productDescriptionElement.textContent = product.description;
+    if (productFarmElement) productFarmElement.textContent = product.farm;
+    if (productCultivationElement)
+      productCultivationElement.textContent = product.cultivation;
+
+    // Create nutrition section if it doesn't exist
+    createNutritionSection(product);
+  }
+
+  // Create and display nutrition section
+  function createNutritionSection(product) {
+    if (!isProductDetailPage || !productDetailContent) return;
+
     let nutritionSection = document.querySelector(".product-detail__nutrition");
     if (!nutritionSection) {
       nutritionSection = document.createElement("div");
       nutritionSection.className = "product-detail__nutrition";
       nutritionSection.innerHTML = `
-      <h2>Nutrition Information</h2>
-      <div class="nutrition-data">
-        <p class="product-detail__loading-text">Loading nutrition data...</p>
-      </div>
-    `;
+        <h2>Nutrition Information</h2>
+        <div class="nutrition-data">
+          <p class="product-detail__loading-text">Loading nutrition data...</p>
+        </div>
+      `;
 
-      // Insert nutrition section after the product image container
       const productImageContainer = document.querySelector(
         ".product-detail__image-container"
       );
@@ -273,97 +190,161 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // Fetch nutrition data for this product
-    console.log("Starting nutrition data fetch process for:", product.name);
-    fetchNutritionData(product.name)
-      .then((data) => {
-        console.log("Processing nutrition data for display");
-        if (data && data.foods && data.foods.length > 0) {
-          console.log("First food item:", data.foods[0].description);
-          console.log(
-            "Number of nutrients:",
-            data.foods[0].foodNutrients?.length || 0
-          );
+    // Fetch nutrition data
+    fetchNutritionData(product.name);
+  }
 
-          // Display nutrition data in the UI
-          displayNutritionInfo(data.foods[0]);
-        } else {
-          console.log("No nutrition data found for this product");
-          const nutritionData = document.querySelector(".nutrition-data");
-          if (nutritionData) {
-            nutritionData.innerHTML =
-              '<p class="product-detail__nutrition-error">No nutrition information found for this product.</p>';
-          }
+  // Fetch nutrition data from cache or API
+  async function fetchNutritionData(productName) {
+    try {
+      let nutritionData;
+
+      // Use cache if available
+      if (
+        window.nutritionCache &&
+        typeof window.nutritionCache.getNutrition === "function"
+      ) {
+        nutritionData = await window.nutritionCache.getNutrition(productName);
+      } else {
+        // Direct API call fallback
+        const response = await fetch(
+          `http://localhost:3000/api/nutrition/${encodeURIComponent(
+            productName
+          )}`
+        );
+        if (!response.ok) {
+          throw new Error(`Nutrition API error: ${response.status}`);
         }
-      })
-      .catch((error) => {
-        console.error("Failed to process nutrition data:", error);
-        const nutritionData = document.querySelector(".nutrition-data");
-        if (nutritionData) {
-          nutritionData.innerHTML =
-            '<p class="product-detail__nutrition-error">Failed to load nutrition information. Please try again later.</p>';
+        nutritionData = await response.json();
+      }
+
+      // Display nutrition data
+      if (nutritionData?.foods?.length > 0) {
+        displayNutritionInfo(nutritionData.foods[0]);
+      } else {
+        const container = document.querySelector(".nutrition-data");
+        if (container) {
+          container.innerHTML =
+            '<p class="product-detail__nutrition-error">No nutrition information found.</p>';
         }
+      }
+    } catch (error) {
+      console.error("Nutrition data error:", error);
+      const container = document.querySelector(".nutrition-data");
+      if (container) {
+        container.innerHTML =
+          '<p class="product-detail__nutrition-error">Failed to load nutrition information.</p>';
+      }
+    }
+  }
+
+  // Display nutrition information
+  function displayNutritionInfo(foodItem) {
+    const nutritionData = document.querySelector(".nutrition-data");
+    if (!nutritionData) return;
+
+    nutritionData.innerHTML = "";
+
+    // Create table
+    const table = document.createElement("table");
+    table.className = "product-detail__nutrition-table";
+
+    // Add header
+    const headerRow = document.createElement("tr");
+    headerRow.innerHTML = "<th>Nutrient</th><th>Amount</th>";
+    table.appendChild(headerRow);
+
+    // Define key nutrients
+    const keyNutrients = [
+      { name: "Energy", ids: [1008, 2048], unit: "kcal" },
+      { name: "Protein", ids: [1003], unit: "g" },
+      { name: "Carbohydrates", ids: [1005, 2000], unit: "g" },
+      { name: "Fat", ids: [1004], unit: "g" },
+      { name: "Fiber", ids: [1079, 2033], unit: "g" },
+      { name: "Sugar", ids: [2000, 1082], unit: "g" },
+      { name: "Sodium", ids: [1093, 1090], unit: "mg" },
+    ];
+
+    // Get nutrients
+    const nutrients = foodItem.foodNutrients || [];
+    let nutrientsFound = 0;
+
+    keyNutrients.forEach((keyNutrient) => {
+      const foundNutrient = nutrients.find((apiNutrient) => {
+        const nutrientId = apiNutrient.nutrientId || apiNutrient.nutrient?.id;
+        return keyNutrient.ids.includes(nutrientId);
       });
+
+      if (foundNutrient) {
+        nutrientsFound++;
+        const value = foundNutrient.value || foundNutrient.amount || 0;
+        const unit =
+          foundNutrient.unitName ||
+          foundNutrient.nutrient?.unitName ||
+          keyNutrient.unit;
+
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${keyNutrient.name}</td><td>${value} ${unit}</td>`;
+        table.appendChild(row);
+      }
+    });
+
+    if (nutrientsFound > 0) {
+      nutritionData.appendChild(table);
+      const source = document.createElement("p");
+      source.className = "product-detail__nutrition-source";
+      source.textContent = "Source: USDA Food Data Central";
+      nutritionData.appendChild(source);
+    } else {
+      nutritionData.innerHTML =
+        '<p class="product-detail__nutrition-error">Nutrition information not available.</p>';
+    }
   }
 
   // Set up quantity input controls
   function setupQuantityControls() {
     if (!quantityInput || !decreaseBtn || !increaseBtn) return;
 
-    // Ensure quantity is never less than 1
-    quantityInput.addEventListener("change", () => {
-      if (quantityInput.value < 1) {
+    // Remove any existing event listeners
+    const newDecreaseBtn = decreaseBtn.cloneNode(true);
+    const newIncreaseBtn = increaseBtn.cloneNode(true);
+    decreaseBtn.parentNode.replaceChild(newDecreaseBtn, decreaseBtn);
+    increaseBtn.parentNode.replaceChild(newIncreaseBtn, increaseBtn);
+
+    // Ensure quantity is a valid number
+    const validateQuantity = () => {
+      let value = parseInt(quantityInput.value);
+      if (isNaN(value) || value < 1) {
         quantityInput.value = 1;
+      } else {
+        quantityInput.value = value;
+      }
+    };
+
+    // Ensure proper number entry on change
+    quantityInput.addEventListener("change", validateQuantity);
+    quantityInput.addEventListener("blur", validateQuantity);
+
+    // Prevent non-numeric entries
+    quantityInput.addEventListener("keypress", (e) => {
+      if (!/[0-9]/.test(e.key)) {
+        e.preventDefault();
       }
     });
 
     // Decrease quantity button
-    decreaseBtn.addEventListener("click", () => {
-      const currentValue = parseInt(quantityInput.value);
+    newDecreaseBtn.addEventListener("click", () => {
+      let currentValue = parseInt(quantityInput.value) || 1;
       if (currentValue > 1) {
         quantityInput.value = currentValue - 1;
       }
     });
 
     // Increase quantity button
-    increaseBtn.addEventListener("click", () => {
-      const currentValue = parseInt(quantityInput.value);
+    newIncreaseBtn.addEventListener("click", () => {
+      let currentValue = parseInt(quantityInput.value) || 1;
       quantityInput.value = currentValue + 1;
     });
-  }
-
-  // Add product to cart
-  function addToCart(product, quantity) {
-    // Add product to cart multiple times based on quantity
-    for (let i = 0; i < quantity; i++) {
-      cart.push(product);
-    }
-
-    // Use the global updateCart function from Components.js
-    if (window.updateCart) {
-      window.updateCart(cart);
-    } else {
-      // Fallback if updateCart function isn't available
-      localStorage.setItem("cart", JSON.stringify(cart));
-      console.warn("window.updateCart function not found");
-    }
-
-    // Show feedback
-    showAddedToCartFeedback(quantity);
-  }
-
-  // Show feedback when products are added to cart
-  function showAddedToCartFeedback(quantity) {
-    const originalText = addToCartDetailButton.innerHTML;
-    addToCartDetailButton.innerHTML = `Added ${quantity}! <span class="product-card__icon"><i class="fas fa-check"></i></span>`;
-    addToCartDetailButton.disabled = true;
-    addToCartDetailButton.style.backgroundColor = "#28bd6d";
-
-    setTimeout(() => {
-      addToCartDetailButton.innerHTML = originalText;
-      addToCartDetailButton.disabled = false;
-      addToCartDetailButton.style.backgroundColor = "";
-    }, 1500);
   }
 
   // Show error messages when products can't be loaded
@@ -376,19 +357,14 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
     }
 
-    if (popularProductsGrid) {
-      popularProductsGrid.innerHTML = `
-        <div class="error-message">
-          <p>Sorry, we couldn't load the popular products. Please try again later.</p>
-        </div>
-      `;
-    }
-
     if (isProductDetailPage && productNameElement) {
       productNameElement.textContent = "Product not found";
       if (productImageElement) productImageElement.src = "";
       if (productPriceElement) productPriceElement.textContent = "";
-      if (productQuantityElement) productQuantityElement.textContent = "";
+      if (packageSizeElement) packageSizeElement.textContent = "";
     }
   }
 });
+
+// Set a flag to indicate that produce.js is handling product events
+window.produceHandlerActive = true;

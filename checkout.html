@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Complete your order of fresh, sustainable produce from local Norwegian farms with secure payment options and convenient delivery."
+    />
+    <title>FRAM - Checkout</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="Styles/main.css" />
+    <link rel="stylesheet" href="Styles/checkout.css" />
+  </head>
+  <body>
+    <!-- Navbar injected by Components.js -->
+    <script src="Script/Components.js" defer></script>
+    <script src="Script/productRenderer.js" defer></script>
+    <script src="Script/cart.js" defer></script>
+    <script src="Script/nutrition-cache.js" defer></script>
+    <script src="Script/integration.js" defer></script>
+    <script src="Script/PopularProducts.js" defer></script>
+    <script src="Script/produce.js" defer></script>
+
+    <main class="checkout">
+      <!-- Breadcrumb navigation for better user orientation -->
+      <nav aria-label="breadcrumb" class="breadcrumb">
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li aria-current="page">Checkout</li>
+        </ol>
+      </nav>
+
+      <h1 class="checkout__title">Checkout</h1>
+
+      <div class="checkout__content">
+        <!-- Order Summary Section -->
+        <section
+          class="checkout__summary"
+          aria-labelledby="order-summary-title"
+        >
+          <h2 id="order-summary-title" class="checkout__section-title">
+            Order Summary
+          </h2>
+          <div
+            class="checkout__cart-items"
+            id="checkout-items"
+            aria-live="polite"
+          >
+            <!-- Cart items will be dynamically loaded here -->
+            <div class="checkout__loading">Loading your cart...</div>
+          </div>
+
+          <div class="checkout__totals">
+            <div class="checkout__subtotal">
+              <span>Subtotal:</span>
+              <span id="subtotal-amount">0 kr</span>
+            </div>
+            <div class="checkout__delivery">
+              <span>Delivery:</span>
+              <span id="delivery-amount">49 kr</span>
+            </div>
+            <div class="checkout__total">
+              <span>Total:</span>
+              <span id="total-amount">0 kr</span>
+            </div>
+          </div>
+
+          <a href="produce.html" class="checkout__continue-shopping"
+            >Continue Shopping</a
+          >
+        </section>
+
+        <!-- Customer Information Form -->
+        <section
+          class="checkout__customer-info"
+          aria-labelledby="delivery-info-title"
+        >
+          <h2 id="delivery-info-title" class="checkout__section-title">
+            Delivery Information
+          </h2>
+          <form id="checkout-form" class="checkout__form" novalidate>
+            <!-- Personal Information -->
+            <div class="checkout__form-group">
+              <label for="first-name">First Name</label>
+              <input
+                type="text"
+                id="first-name"
+                name="first-name"
+                required
+                class="checkout__input"
+                autocomplete="given-name"
+                aria-required="true"
+              />
+              <div
+                class="checkout__error-message"
+                id="first-name-error"
+                aria-live="assertive"
+              ></div>
+            </div>
+
+            <div class="checkout__form-group">
+              <label for="last-name">Last Name</label>
+              <input
+                type="text"
+                id="last-name"
+                name="last-name"
+                required
+                class="checkout__input"
+                autocomplete="family-name"
+                aria-required="true"
+              />
+              <div
+                class="checkout__error-message"
+                id="last-name-error"
+                aria-live="assertive"
+              ></div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="checkout__form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                class="checkout__input"
+                autocomplete="email"
+                aria-required="true"
+                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+              />
+              <div
+                class="checkout__error-message"
+                id="email-error"
+                aria-live="assertive"
+              ></div>
+            </div>
+
+            <div class="checkout__form-group">
+              <label for="phone">Phone</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                required
+                class="checkout__input"
+                autocomplete="tel"
+                aria-required="true"
+                pattern="[0-9+\s]{8,15}"
+                placeholder="e.g., +47 12345678"
+              />
+              <div
+                class="checkout__error-message"
+                id="phone-error"
+                aria-live="assertive"
+              ></div>
+            </div>
+
+            <!-- Address Information -->
+            <div class="checkout__form-group">
+              <label for="address">Address</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                required
+                class="checkout__input"
+                autocomplete="street-address"
+                aria-required="true"
+              />
+              <div
+                class="checkout__error-message"
+                id="address-error"
+                aria-live="assertive"
+              ></div>
+            </div>
+
+            <div class="checkout__form-row">
+              <div class="checkout__form-group">
+                <label for="postal-code">Postal Code</label>
+                <input
+                  type="text"
+                  id="postal-code"
+                  name="postal-code"
+                  required
+                  class="checkout__input"
+                  autocomplete="postal-code"
+                  aria-required="true"
+                  pattern="[0-9]{4}"
+                  inputmode="numeric"
+                  maxlength="4"
+                  placeholder="4-digit code"
+                />
+                <div
+                  class="checkout__error-message"
+                  id="postal-code-error"
+                  aria-live="assertive"
+                ></div>
+              </div>
+
+              <div class="checkout__form-group">
+                <label for="city">City</label>
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  required
+                  class="checkout__input"
+                  autocomplete="address-level2"
+                  aria-required="true"
+                />
+                <div
+                  class="checkout__error-message"
+                  id="city-error"
+                  aria-live="assertive"
+                ></div>
+              </div>
+            </div>
+
+            <div class="checkout__form-group">
+              <label for="delivery-notes">Delivery Notes (Optional)</label>
+              <textarea
+                id="delivery-notes"
+                name="delivery-notes"
+                rows="3"
+                class="checkout__textarea"
+                placeholder="Special instructions for delivery (e.g., gate code, leave with neighbor)"
+              ></textarea>
+            </div>
+
+            <!-- Payment Method Section -->
+            <h2 class="checkout__section-title">Payment Method</h2>
+            <fieldset class="checkout__payment-methods">
+              <legend class="visually-hidden">Select a payment method</legend>
+
+              <div class="checkout__payment-option">
+                <input
+                  type="radio"
+                  id="payment-card"
+                  name="payment-method"
+                  value="card"
+                  checked
+                />
+                <label for="payment-card">
+                  <i class="fas fa-credit-card" aria-hidden="true"></i> Credit
+                  Card
+                </label>
+              </div>
+
+              <div class="checkout__payment-option">
+                <input
+                  type="radio"
+                  id="payment-vipps"
+                  name="payment-method"
+                  value="vipps"
+                />
+                <label for="payment-vipps">
+                  <i class="fas fa-mobile-alt" aria-hidden="true"></i> Vipps
+                </label>
+              </div>
+
+              <div class="checkout__payment-option">
+                <input
+                  type="radio"
+                  id="payment-invoice"
+                  name="payment-method"
+                  value="invoice"
+                />
+                <label for="payment-invoice">
+                  <i class="fas fa-file-invoice" aria-hidden="true"></i> Invoice
+                </label>
+              </div>
+            </fieldset>
+
+            <!-- Terms and conditions checkbox -->
+            <div class="checkout__terms">
+              <input
+                type="checkbox"
+                id="terms"
+                name="terms"
+                required
+                class="checkout__checkbox"
+                aria-required="true"
+              />
+              <label for="terms">
+                I agree to the
+                <a href="#" class="checkout__terms-link"
+                  >Terms and Conditions</a
+                >
+                and
+                <a href="#" class="checkout__terms-link">Privacy Policy</a>
+              </label>
+              <div
+                class="checkout__error-message"
+                id="terms-error"
+                aria-live="assertive"
+              ></div>
+            </div>
+
+            <!-- Submit button -->
+            <button
+              type="submit"
+              class="checkout__submit-button"
+              id="complete-order-button"
+            >
+              Complete Order
+            </button>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <!-- Order confirmation modal -->
+    <div
+      id="confirmation-modal"
+      class="modal modal--hidden"
+      role="dialog"
+      aria-labelledby="confirmation-title"
+      aria-modal="true"
+    >
+      <div class="modal__content">
+        <button
+          class="modal__close"
+          id="close-modal"
+          aria-label="Close confirmation"
+        >
+          &times;
+        </button>
+        <div class="modal__header">
+          <i class="fas fa-check-circle modal__icon" aria-hidden="true"></i>
+          <h2 class="modal__title" id="confirmation-title">Order Confirmed!</h2>
+        </div>
+        <div class="modal__body">
+          <p>
+            Thank you for your order. Your order number is:
+            <span id="order-number">FR-12345</span>
+          </p>
+          <p>
+            We've sent a confirmation email to
+            <span id="confirmation-email">your email</span>.
+          </p>
+          <p>
+            Your delivery will arrive on:
+            <span id="delivery-date">May 10, 2025</span>
+          </p>
+        </div>
+        <div class="modal__footer">
+          <a href="index.html" class="modal__button">Return to Home</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer injected by Components.js -->
+    <script src="Script/checkout.js"></script>
+  </body>
+</html>

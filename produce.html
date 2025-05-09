@@ -3,7 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Browse our selection of fresh, seasonal produce sourced directly from local Norwegian farms. Support sustainable agriculture with every purchase."
+    />
+    <meta
+      name="keywords"
+      content="organic produce, local farms, Norway, sustainable agriculture, fresh vegetables, fruits"
+    />
     <title>FRAM - Our Produce</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -13,8 +22,15 @@
   <body>
     <!-- Navbar injected by Components.js -->
     <script src="Script/Components.js" defer></script>
+    <script src="Script/productRenderer.js" defer></script>
+    <script src="Script/cart.js" defer></script>
+    <script src="Script/nutrition-cache.js" defer></script>
+    <script src="Script/integration.js" defer></script>
+    <script src="Script/PopularProducts.js" defer></script>
+    <script src="Script/produce.js" defer></script>
 
     <main class="products">
+      <!-- Product Listing Header -->
       <div class="products__header">
         <h1 class="products__title">Produce</h1>
         <p class="products__description">
@@ -25,18 +41,39 @@
         </p>
       </div>
 
-      <!-- Product grid populated by JavaScript -->
-      <div id="products-container" class="products__grid"></div>
+      <!-- Product Grid Section -->
+      <section
+        class="products__grid-container"
+        aria-labelledby="products-heading"
+      >
+        <h2 id="products-heading" class="visually-hidden">Our Products</h2>
+
+        <!-- Loading indicator - shown until products are loaded -->
+        <div id="products-loading" class="products__loading" aria-live="polite">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          <p>Loading our fresh produce...</p>
+        </div>
+
+        <!-- Product grid populated by JavaScript -->
+        <div id="products-container" class="products__grid" aria-live="polite">
+          <!-- Products will be inserted here by JavaScript -->
+          <p class="products__empty-message">
+            Please wait while we load our selection of fresh produce...
+          </p>
+        </div>
+      </section>
     </main>
 
     <!-- Farm Map Section - Full width section -->
-    <section class="farm-map">
+    <section class="farm-map" aria-labelledby="farm-map-heading">
       <div class="farm-map__title-container">
-        <h1 class="farm-map__title">See our partnering farms</h1>
+        <h2 id="farm-map-heading" class="farm-map__title">
+          See our partnering farms
+        </h2>
       </div>
 
       <div class="farm-map__container">
-        <!-- Google Maps Embed iframe -->
+        <!-- Google Maps Embed iframe with proper accessibility attributes -->
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31625.00880328937!2d10.594623368300118!3d60.30375313264543!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4641a30c3be67c59%3A0x94dbad789ad47bba!2sBraastad%20Gaard!5e0!3m2!1sno!2sno!4v1745560866962!5m2!1sno!2sno"
           class="farm-map__iframe"

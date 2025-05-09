@@ -2,7 +2,7 @@
  * Components.js
  *
  * This module provides reusable UI components for the Fram website.
- * It handles dynamic component loading, navigation, cart management,
+ * It handles dynamic component loading, navigation,
  * and other shared UI elements across pages.
  *
  * @author Your Name
@@ -11,7 +11,7 @@
 
 /**
  * Loads the navbar component and initializes its functionality
- * The navbar includes the main navigation, logo, and cart button
+ * The navbar includes the main navigation and logo
  */
 function loadNavbar() {
   // Define navbar HTML structure with BEM class naming
@@ -27,7 +27,7 @@ function loadNavbar() {
       <a href="index.html" class="navbar__logo">Fram</a>
 
       <!-- Cart Button -->
-      <button class="navbar__cart">0</button>
+      <button class="navbar__cart" id="open-cart" aria-label="Open cart">0</button>
     </nav>
   </header>
 
@@ -51,7 +51,7 @@ function loadNavbar() {
           </li>
         </ul>
       </nav>
-      <a href="#checkout" class="menu__checkout">Checkout</a>
+      <a href="checkout.html" class="menu__checkout">Checkout</a>
     </div>
   </div>
 `;
@@ -73,9 +73,6 @@ function loadNavbar() {
   closeMenuBtn.addEventListener("click", () => {
     menuOverlay.classList.add("menu--hidden");
   });
-
-  // Initialize cart count from localStorage
-  initializeCartCount();
 }
 
 /**
@@ -117,6 +114,7 @@ function loadFooter() {
             placeholder="First name"
             required
             class="footer__input"
+            autocomplete="given-name"
           />
 
           <label for="email" class="visually-hidden">Email Address</label>
@@ -127,6 +125,7 @@ function loadFooter() {
             placeholder="E-mail address"
             required
             class="footer__input"
+            autocomplete="email"
           />
 
           <button type="submit" class="footer__button">Send</button>
@@ -182,116 +181,31 @@ function loadPopularProduce(containerId) {
         (product) => product.popular
       );
 
-      // Display products in the grid
-      displayPopularProducts(popularProducts);
+      // Display products in the grid using the productRenderer
+      const grid = document.getElementById("popular-products-grid");
+      if (grid && window.productRenderer) {
+        window.productRenderer.displayProducts(popularProducts, grid);
+      } else {
+        console.error(
+          "productRenderer not available - make sure productRenderer.js is loaded"
+        );
+        document.getElementById("popular-products-grid").innerHTML = `
+        <div class="error-message">
+          <p>Sorry, we couldn't load the popular products. Please try again later.</p>
+        </div>
+      `;
+      }
     })
     .catch((error) => {
       // Handle any errors in fetching or displaying products
       console.error("Error loading popular products:", error);
       document.getElementById("popular-products-grid").innerHTML = `
-        <div class="error-message">
-          <p>Sorry, we couldn't load the popular products. Please try again later.</p>
-        </div>
-      `;
-    });
-}
-
-/**
- * Creates and displays product cards for popular products
- *
- * @param {Array} products - Array of product objects to display
- */
-function displayPopularProducts(products) {
-  // Get the grid container
-  const grid = document.getElementById("popular-products-grid");
-  if (!grid) {
-    console.error("Popular products grid element not found");
-    return;
-  }
-
-  // Clear the grid before adding new products
-  grid.innerHTML = "";
-
-  // Create and append a product card for each product
-  products.forEach((product) => {
-    const productCard = document.createElement("div");
-    productCard.className = "product-card";
-
-    // Create inner HTML structure for the product card
-    productCard.innerHTML = `
-      <div class="product-card__image-container">
-        <a href="product-detail.html?id=${product.id}" class="product-card__link">
-          <img src="${product.image}" alt="${product.name}" class="product-card__image">
-        </a>
-        <a href="product-detail.html?id=${product.id}" class="product-card__add-button" aria-label="View details of ${product.name}">
-          Add to basket
-          <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
-        </a>
-      </div>
-      <div class="product-card__info">
-        <div class="product-card__header">
-          <h3 class="product-card__name">
-            <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
-          </h3>
-          <div class="product-card__price">${product.price}</div>
-        </div>
-        <p class="product-card__quantity">${product.quantity}</p>
+      <div class="error-message">
+        <p>Sorry, we couldn't load the popular products. Please try again later.</p>
       </div>
     `;
-
-    // Add the product card to the grid
-    grid.appendChild(productCard);
-  });
+    });
 }
-
-/**
- * Updates the cart count in the navbar
- *
- * @param {number} count - The number of items in the cart
- */
-function updateCartCount(count) {
-  const cartButton = document.querySelector(".navbar__cart");
-  if (cartButton) {
-    cartButton.textContent = count;
-  }
-}
-
-/**
- * Initialize cart count from localStorage when page loads
- * This ensures the cart counter is always up to date
- */
-function initializeCartCount() {
-  try {
-    // Get cart from localStorage
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    // Update cart counter
-    updateCartCount(cart.length);
-  } catch (error) {
-    console.error("Error initializing cart count:", error);
-    updateCartCount(0); // Default to 0 if there's an error
-  }
-}
-
-/**
- * Updates the cart with new items and persists to localStorage
- * This function is exposed globally for use by other scripts
- *
- * @param {Array} cart - The updated cart array containing product objects
- */
-window.updateCart = function (cart) {
-  // Save cart to localStorage
-  localStorage.setItem("cart", JSON.stringify(cart));
-
-  // Update cart counter
-  updateCartCount(cart.length);
-};
-
-/**
- * Expose the loadPopularProduce function globally
- * This allows pages to load the component when needed
- */
-window.loadPopularProduce = loadPopularProduce;
 
 /**
  * Initialize components based on data attributes in the HTML

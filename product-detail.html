@@ -3,7 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="View detailed information about our sustainably sourced produce, including nutrition facts, farm origin, and cultivation methods."
+    />
+    <meta
+      name="keywords"
+      content="organic produce, product details, sustainable farming, local food, Norway"
+    />
     <title>FRAM - Product Details</title>
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -13,6 +22,12 @@
   <body>
     <!-- Navbar injected by Components.js -->
     <script src="Script/Components.js" defer></script>
+    <script src="Script/productRenderer.js" defer></script>
+    <script src="Script/cart.js" defer></script>
+    <script src="Script/nutrition-cache.js" defer></script>
+    <script src="Script/integration.js" defer></script>
+    <script src="Script/PopularProducts.js" defer></script>
+    <script src="Script/produce.js" defer></script>
 
     <main class="product-detail">
       <!-- Breadcrumb navigation -->
@@ -20,53 +35,108 @@
         <ol>
           <li><a href="index.html">Home</a></li>
           <li><a href="produce.html">Produce</a></li>
-          <li aria-current="page" id="breadcrumb-product-name">Product Name</li>
+          <li aria-current="page" id="breadcrumb-product-name">
+            Loading product...
+          </li>
         </ol>
       </nav>
 
-      <!-- Product details section with updated structure -->
-      <div class="product-detail__content">
+      <!-- Loading indicator - shown until product data is loaded -->
+      <div
+        id="product-loading"
+        class="product-detail__loading"
+        aria-live="polite"
+      >
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <p>Loading product details...</p>
+      </div>
+
+      <!-- Product details section with improved structure -->
+      <div
+        class="product-detail__content"
+        itemscope
+        itemtype="https://schema.org/Product"
+      >
         <div class="product-detail__image-container">
-          <img id="product-image" src="" alt="" class="product-detail__image" />
+          <img
+            id="product-image"
+            src=""
+            alt="Product image loading"
+            class="product-detail__image"
+            itemprop="image"
+          />
         </div>
 
         <!-- Nutrition section will be dynamically inserted here by JavaScript -->
+        <div id="nutrition-section" class="product-detail__nutrition">
+          <h2>Nutrition Information</h2>
+          <div class="nutrition-data">
+            <p class="product-detail__loading-text">
+              Loading nutrition data...
+            </p>
+          </div>
+        </div>
 
         <div class="product-detail__info">
-          <h1 id="product-name" class="product-detail__title"></h1>
+          <h1 id="product-name" class="product-detail__title" itemprop="name">
+            Loading product information...
+          </h1>
 
-          <p id="product-quantity" class="product-detail__base-quantity"></p>
+          <p
+            id="product-quantity"
+            class="product-detail__base-quantity"
+            itemprop="weight"
+          ></p>
 
-          <div class="product-detail__description">
-            <p>
-              Our selection of seasonal produce is sourced directly from local
-              farms to ensure peak freshness and quality. We support sustainable
-              farming practices that benefit both the environment and the
-              community.
-            </p>
+          <div class="product-detail__description" itemprop="description">
+            <p id="product-description">Loading product description...</p>
           </div>
 
           <div class="product-detail__farm">
-            <p><strong>Farm:</strong> Braastad Gaard, Hamar</p>
-            <p><strong>Cultivation:</strong> Organic</p>
-            <p id="product-price" class="product-detail__price"></p>
+            <p>
+              <strong>Farm:</strong>
+              <span id="product-farm" itemprop="brand"></span>
+            </p>
+            <p>
+              <strong>Cultivation:</strong>
+              <span id="product-cultivation"></span>
+            </p>
+            <p
+              id="product-price"
+              class="product-detail__price"
+              itemprop="offers"
+              itemscope
+              itemtype="https://schema.org/Offer"
+            >
+              <meta itemprop="priceCurrency" content="NOK" />
+              <span itemprop="price"></span>
+            </p>
             <p id="detail-package-size" class="product-detail__package-size">
               Package size: <span id="package-size-value"></span>
             </p>
           </div>
 
+          <!-- Quantity selector with improved accessibility -->
           <div class="product-detail__quantity-section">
             <label for="quantity" class="product-detail__quantity-label"
               >Quantity:</label
             >
-            <div class="product-detail__quantity-controls">
+            <div
+              class="product-detail__quantity-controls"
+              role="group"
+              aria-labelledby="quantity-controls-label"
+            >
+              <span id="quantity-controls-label" class="visually-hidden"
+                >Adjust quantity</span
+              >
               <button
                 type="button"
                 class="product-detail__quantity-btn"
                 id="decrease-quantity"
-                aria-label="Decrease quantity"
+                aria-label="Decrease quantity by one"
+                aria-controls="quantity"
               >
-                <i class="fas fa-minus"></i>
+                <i class="fas fa-minus" aria-hidden="true"></i>
               </button>
               <input
                 type="number"
@@ -76,34 +146,54 @@
                 value="1"
                 class="product-detail__quantity-input"
                 aria-label="Product quantity"
+                inputmode="numeric"
               />
               <button
                 type="button"
                 class="product-detail__quantity-btn"
                 id="increase-quantity"
-                aria-label="Increase quantity"
+                aria-label="Increase quantity by one"
+                aria-controls="quantity"
               >
-                <i class="fas fa-plus"></i>
+                <i class="fas fa-plus" aria-hidden="true"></i>
               </button>
             </div>
           </div>
 
+          <!-- Add to cart button with improved accessibility -->
           <button
             id="add-to-cart-detail"
             class="product-detail__add-to-cart"
             data-id=""
+            aria-label="Add to basket"
           >
             Add to basket
-            <span class="product-detail__arrow-up-icon"
-              ><i class="fas fa-arrow-up"></i
-            ></span>
+            <span class="product-detail__arrow-up-icon">
+              <i class="fas fa-arrow-up" aria-hidden="true"></i>
+            </span>
           </button>
         </div>
+      </div>
+
+      <!-- Error message for failed product loading - hidden by default -->
+      <div
+        id="product-error"
+        class="product-detail__error"
+        style="display: none"
+        aria-live="assertive"
+      >
+        <p>
+          Sorry, we couldn't load this product. Please try again later or
+          <a href="produce.html">return to all products</a>.
+        </p>
       </div>
     </main>
 
     <!-- Popular Produce Component Container -->
-    <div id="popular-produce-container"></div>
+    <section
+      id="popular-produce-container"
+      aria-label="You might also like"
+    ></section>
 
     <!-- The script to load the component -->
     <script>

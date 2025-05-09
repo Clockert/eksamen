@@ -1,4 +1,4 @@
-/* Product detail page styles */
+/* ===== Product detail page styles ===== */
 
 /* Main container */
 .product-detail {
@@ -162,6 +162,7 @@
 .product-detail__quantity-input {
   flex: 1;
   height: 100%;
+  width: 100%;
   border: none;
   text-align: center;
   font-family: var(--font-primary);

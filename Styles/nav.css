@@ -3,7 +3,6 @@
   /* Positioning */
   position: relative;
 
-  /* Box model */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -33,7 +32,6 @@
 
 /* ===== HAMBURGER MENU BUTTON ===== */
 .navbar__hamburger {
-  /* Box model */
   padding: 0;
   border: none;
 
@@ -52,7 +50,6 @@
 
 /* ===== CART BUTTON ===== */
 .navbar__cart {
-  /* Box model */
   height: 36px;
   min-width: 47px;
   padding: 10px;
@@ -84,7 +81,6 @@
   left: 0;
   z-index: 100;
 
-  /* Box model */
   width: 475px;
   height: 100vh;
   display: flex;
@@ -114,7 +110,6 @@
   /* Positioning */
   position: relative;
 
-  /* Box model */
   height: 68px;
   padding: 16px 32px;
   display: flex;
@@ -125,7 +120,6 @@
 }
 
 .menu__close-button {
-  /* Box model */
   height: 24px;
   padding: 0;
   border: none;
@@ -159,14 +153,11 @@
   color: var(--primary-text);
   text-transform: uppercase;
   text-decoration: none;
-
-  /* Box model */
   display: none;
 }
 
 /* ===== MENU CONTENT ===== */
 .menu__content {
-  /* Box model */
   height: calc(100% - 68px);
   padding: 0 10px;
   display: flex;
@@ -176,14 +167,11 @@
 }
 
 .menu__nav {
-  /* Box model */
   width: 100%;
   margin-top: 180px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-
-  /* List styling */
   list-style: none;
 }
 
@@ -193,11 +181,8 @@
 }
 
 .menu__link {
-  /* Box model */
   width: 100%;
   display: block;
-
-  /* Typography */
   color: var(--primary-text);
   text-decoration: none;
   text-transform: uppercase;
@@ -207,11 +192,8 @@
 }
 
 .menu__checkout {
-  /* Box model */
   width: 100%;
   margin-bottom: 96px;
-
-  /* Typography */
   color: var(--primary-text);
   text-decoration: none;
   text-transform: uppercase;

@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Frank+Ruhl+Libre:wght@300&display=swap");
+
 /* Basic CSS Reset */
 * {
   margin: 0;
@@ -6,10 +7,19 @@
   box-sizing: border-box;
 }
 
+/* Base HTML element styles */
+html {
+  font-size: 16px; /* Base font size for rem calculations */
+  scroll-behavior: smooth; /* Enable smooth scrolling for anchor links */
+}
+
 body {
   overflow-x: hidden;
   width: 100%;
   background-color: var(--primary-background);
+  font-family: var(--font-primary);
+  color: var(--primary-text);
+  line-height: 1.5;
 }
 
 :root {
@@ -31,19 +41,19 @@ body {
   --font-light: 300;
   --font-regular: 400;
 
-  /* Desktop Typography */
-  --header-desktop: 36px;
-  --subheader-desktop: 20px;
-  --logo-desktop: 200px;
-  --accent-desktop: 20px;
-  --body-desktop: 16px;
-  --body-large-desktop: 20px;
+  /* Desktop Typography - converted to rem */
+  --header-desktop: 2.25rem; /* 36px */
+  --subheader-desktop: 1.25rem; /* 20px */
+  --logo-desktop: 12.5rem; /* 200px */
+  --accent-desktop: 1.25rem; /* 20px */
+  --body-desktop: 1rem; /* 16px */
+  --body-large-desktop: 1.25rem; /* 20px */
 
-  /* Mobile Typography */
-  --header-mobile: 24px;
-  --subheader-mobile: 18px;
-  --logo-mobile: 75px;
-  --accent-mobile: 16px;
-  --body-mobile: 16px;
-  --body-large-mobile: 18px;
+  /* Mobile Typography - converted to rem */
+  --header-mobile: 1.5rem; /* 24px */
+  --subheader-mobile: 1.125rem; /* 18px */
+  --logo-mobile: 4.6875rem; /* 75px */
+  --accent-mobile: 1rem; /* 16px */
+  --body-mobile: 1rem; /* 16px */
+  --body-large-mobile: 1.125rem; /* 18px */
 }

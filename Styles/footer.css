@@ -2,25 +2,16 @@
 .footer {
   /* Positioning */
   position: relative;
-
-  /* Box model */
   padding: 0;
-
-  /* Typography */
   text-align: left;
   color: var(--truewhite);
-
-  /* Visual */
   background-color: var(--red);
   overflow: hidden;
 }
 
 .footer__logo {
-  /* Box model */
   margin: 41px 0 24px 45px;
   display: inline-block;
-
-  /* Typography */
   font-size: 48px;
   font-family: var(--font-secondary);
   color: var(--truewhite);
@@ -28,24 +19,18 @@
   text-decoration: none;
 }
 
-/* Divider styling to match Figma Vector1000 */
+/* Divider styling */
 .footer__divider {
-  /* Box model */
   width: 100%;
   height: 1px;
   margin: 0 0 36px 28px;
-
-  /* Visual */
   border: none;
   background-color: white;
   opacity: 1;
 }
 
 .footer__heading {
-  /* Box model */
   margin: 0 0 27px 0;
-
-  /* Typography */
   font-size: 36px;
   color: var(--truewhite);
   font-family: var(--font-primary);
@@ -55,11 +40,8 @@
 }
 
 .footer__description {
-  /* Box model */
   width: 407px;
   margin: 0;
-
-  /* Typography */
   font-size: 24px;
   color: var(--truewhite);
   font-family: var(--font-secondary);
@@ -68,7 +50,6 @@
 }
 
 .footer__content {
-  /* Box model */
   display: flex;
   flex-direction: column;
   gap: 36px;
@@ -78,14 +59,12 @@
 }
 
 .footer__text {
-  /* Box model */
   display: flex;
   flex-direction: column;
   gap: 27px;
 }
 
 .footer__form {
-  /* Box model */
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -93,18 +72,13 @@
 }
 
 .footer__input {
-  /* Box model */
   width: 100%;
   height: 44px;
   padding: 10px 16px;
   border: none;
   border-radius: 4px;
-
-  /* Typography */
   font-size: var(--body-desktop);
   font-family: "Helvetica Neue", sans-serif;
-
-  /* Visual */
   background-color: var(--truewhite);
 }
 
@@ -113,7 +87,6 @@
 }
 
 .footer__button {
-  /* Box model */
   height: 44px;
   width: 100%;
   padding: 10px 16px;
@@ -121,12 +94,10 @@
   border: none;
   border-radius: 8px;
 
-  /* Typography */
   font-size: var(--body-desktop);
   color: var(--primary-text);
   font-family: var(--font-primary);
 
-  /* Visual */
   background-color: var(--blue);
 
   /* Miscellaneous */

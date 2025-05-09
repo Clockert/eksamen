@@ -6,6 +6,24 @@ A modern, sustainable food delivery web application connecting customers directl
 
 ![Fram Food Delivery](assets/hero_img.webp)
 
+## 📋 Table of Contents
+
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Technologies Used](#-technologies-used)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [AI Chatbot Implementation](#-ai-chatbot-implementation)
+- [Nutrition API Integration](#-nutrition-api-integration)
+- [Responsive Design](#-responsive-design)
+- [Security Considerations](#-security-considerations)
+- [Future Improvements](#-future-improvements)
+- [Technical Insights](#-technical-insights)
+- [Troubleshooting](#-troubleshooting)
+- [Academic Context](#-academic-context)
+- [Contributors](#-contributors)
+- [Acknowledgments](#-acknowledgments)
+
 ## 🌱 Overview
 
 Fram is a circular service that ensures your kitchen is always stocked with fresh, locally sourced produce from partner farms in Norway. This web application provides a seamless shopping experience with features like product browsing, detailed nutrition information, shopping cart functionality, and an AI-powered chatbot for customer assistance.

@@ -120,7 +120,7 @@ If you're unable to answer a specific question about Fram due to lack of informa
             content: message,
           },
         ],
-        max_tokens: 250, // Increased slightly to accommodate more detailed responses
+        max_tokens: 250,
         temperature: 0.7,
       }),
     });

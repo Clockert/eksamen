@@ -266,7 +266,24 @@ As this project evolved, I learned several valuable lessons that might benefit o
 
    This experience reinforced the importance of adopting a structured CSS methodology early in development, even for seemingly small projects.
 
-2. **Progressive Enhancement for APIs**: Implementing fallback mechanisms for API calls proved essential. The nutrition data caching system not only improved performance but also provided resilience when:
+2. **Component-Based Architecture**: Drawing from my prior experience with website builders like Elementor, Squarespace, and Divi, I implemented reusable components for navigation, footer, and product displays. This approach:
+
+   - Improved consistency across pages
+   - Made the codebase more maintainable
+   - Reflected real-world development practices
+
+   While this wasn't explicitly required by the course, it helped create a more professional and scalable application.
+
+3. **JSON for Data Management**: I chose to store product data in a separate JSON file rather than hardcoding it in HTML. Though not as robust as a full database (which was beyond the scope of this project), this approach:
+
+   - Created a clear separation between data and presentation
+   - Enabled dynamic rendering of products
+   - Centralized product information management
+   - Simulated interaction with a backend API
+
+   This structure made the application more maintainable and closer to a production-ready system.
+
+4. **Progressive Enhancement for APIs**: Implementing fallback mechanisms for API calls proved essential. The nutrition data caching system not only improved performance but also provided resilience when:
 
    - API services were unavailable
    - Rate limits were reached
@@ -274,9 +291,9 @@ As this project evolved, I learned several valuable lessons that might benefit o
 
    This approach ensured a good user experience even when external dependencies failed.
 
-3. **Modular JavaScript**: Organizing JavaScript into component-based files with clear responsibilities made the codebase significantly more manageable as new features were added.
+5. **Modular JavaScript**: Organizing JavaScript into component-based files with clear responsibilities made the codebase significantly more manageable as new features were added.
 
-4. **Ethical AI Implementation**: Designing the chatbot system taught me the importance of establishing clear boundaries for AI responses. The careful design of system prompts was crucial for ensuring accuracy and preventing potential misinformation.
+6. **Ethical AI Implementation**: Designing the chatbot system taught me the importance of establishing clear boundaries for AI responses. The careful design of system prompts was crucial for ensuring accuracy and preventing potential misinformation.
 
 ## 🤖 AI as a Development Tool
 

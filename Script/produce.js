@@ -178,7 +178,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (productNameElement) productNameElement.textContent = product.name;
     if (productImageElement) {
       productImageElement.src = product.image;
-      productImageElement.alt = product.name;
+
+      // Create a consistent alt text format for all products
+      // Format: "Product name from Farm, cultivated with Cultivation method"
+      const altText = `${product.name} from ${product.farm}, cultivated with ${product.cultivation}`;
+
+      productImageElement.alt = altText;
     }
     if (productPriceElement) productPriceElement.textContent = product.price;
     if (packageSizeElement) packageSizeElement.textContent = product.quantity;

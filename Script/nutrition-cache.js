@@ -1,12 +1,36 @@
 /**
  * Nutrition API cache system
- * This module handles caching of nutrition data to reduce API calls
+ *
+ * This module implements an intelligent caching system for the USDA Food Data Central API.
+ * It reduces API calls by storing nutrition data in localStorage with timestamps
+ * and implements efficient cache management including expiration and pruning.
+ *
+ * Key features:
+ * - Automatic cache expiration (24 hours)
+ * - Intelligent pruning when storage limits are reached
+ * - Fallback to expired cache when API is unavailable
+ * - Normalized keys for consistent lookups
+ *
+ * @author Clockert
  */
 
 // Create a global nutrition cache object
 window.nutritionCache = {
   /**
+   * @type {Object} Cache storage with product names as keys and cached data as values
+   */
+  cache: {},
+
+  /**
+   * @type {number} Cache expiration time in milliseconds (24 hours)
+   */
+  expirationTime: 24 * 60 * 60 * 1000,
+
+  /**
    * Initialize the cache system
+   * Loads existing cache from localStorage or creates a new empty cache
+   *
+   * @returns {void}
    */
   init: function () {
     // Load cache from localStorage if it exists
@@ -16,13 +40,14 @@ window.nutritionCache = {
       console.error("Error loading nutrition cache:", error);
       this.cache = {};
     }
-
-    // Set cache expiration time (24 hours in milliseconds)
-    this.expirationTime = 24 * 60 * 60 * 1000;
   },
 
   /**
    * Save the cache to localStorage
+   * Handles exceptions and triggers pruning if storage is full
+   *
+   * @returns {void}
+   * @throws {Error} If localStorage is unavailable or fails
    */
   saveCache: function () {
     try {
@@ -39,6 +64,9 @@ window.nutritionCache = {
 
   /**
    * Remove old or excessive entries if cache gets too large
+   * Removes the oldest 50% of entries based on timestamp
+   *
+   * @returns {void}
    */
   pruneCache: function () {
     const now = Date.now();
@@ -60,8 +88,9 @@ window.nutritionCache = {
    * Get nutrition data for a product
    * Returns cached data if available, otherwise fetches from API
    *
-   * @param {string} productName - Name of the product
-   * @returns {Promise<Object>} Nutrition data
+   * @param {string} productName - Name of the product to get nutrition data for
+   * @returns {Promise<Object|null>} Nutrition data object or null if unavailable
+   * @throws {Error} If API request fails and no cached data is available
    */
   getNutrition: async function (productName) {
     // Normalize product name for consistent cache keys
@@ -120,6 +149,9 @@ window.nutritionCache = {
 
   /**
    * Clear the entire cache
+   * Removes all cached nutrition data from memory and localStorage
+   *
+   * @returns {void}
    */
   clearCache: function () {
     this.cache = {};

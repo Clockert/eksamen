@@ -161,18 +161,6 @@
       <!-- Content will be dynamically injected by the loadPopularProduce function -->
     </section>
 
-    <!-- Script to load the popular products component -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Check if the function is available before calling it
-        if (typeof window.loadPopularProduce === "function") {
-          window.loadPopularProduce("popular-produce-container");
-        } else {
-          console.error("loadPopularProduce function not found");
-        }
-      });
-    </script>
-
     <!-- Script to load product data -->
     <script src="Script/produce.js" defer></script>
   </body>

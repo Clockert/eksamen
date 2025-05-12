@@ -2,16 +2,24 @@
  * Components.js
  *
  * This module provides reusable UI components for the Fram website.
- * It handles dynamic component loading, navigation,
- * and other shared UI elements across pages.
+ * It handles dynamic component loading, navigation, and other shared UI elements.
  *
- * @author Your Name
- * @version 1.0
+ * Key features:
+ * - Dynamically injects common components (navbar, footer)
+ * - Sets up event listeners for interactive elements
+ * - Conditionally loads components based on page configuration
+ * - Provides helper functions for popular product displays
+ *
+ * @author Clockert
  */
 
 /**
  * Loads the navbar component and initializes its functionality
- * The navbar includes the main navigation and logo
+ *
+ * Creates the navigation bar with hamburger menu, logo, and cart button
+ * Sets up event handlers for menu opening/closing
+ *
+ * @returns {void}
  */
 function loadNavbar() {
   // Define navbar HTML structure with BEM class naming
@@ -77,7 +85,10 @@ function loadNavbar() {
 
 /**
  * Loads the footer component
- * The footer includes logo, divider, newsletter signup, and legal information
+ *
+ * Creates the site footer with logo, divider, newsletter signup, and legal information
+ *
+ * @returns {void}
  */
 function loadFooter() {
   // Define footer HTML structure with BEM class naming
@@ -140,10 +151,12 @@ function loadFooter() {
 
 /**
  * Loads the Popular Produce component and populates it with products
- * This component displays a selection of featured products in a grid layout
- * that turns into a horizontal scrollable carousel on mobile devices
  *
- * @param {string} containerId - ID of the container to place the component
+ * Creates a section displaying featured products in a grid/carousel layout
+ * Fetches product data from JSON and filters for popular items
+ *
+ * @param {string} containerId - ID of the container element to insert the component
+ * @returns {void}
  */
 function loadPopularProduce(containerId) {
   // Create the component HTML structure
@@ -210,10 +223,20 @@ function loadPopularProduce(containerId) {
 /**
  * Initialize components based on data attributes in the HTML
  * This allows pages to control which components to load
+ *
+ * @returns {void}
  */
 document.addEventListener("DOMContentLoaded", () => {
   // Get page configuration from html tag
   const htmlElement = document.documentElement;
+
+  /**
+   * @typedef {Object} PageConfig - Configuration for component loading
+   * @property {boolean} navbar - Whether to load the navbar component
+   * @property {boolean} footer - Whether to load the footer component
+   */
+
+  /** @type {PageConfig} */
   const pageConfig = {
     navbar: htmlElement.getAttribute("data-load-navbar") !== "false", // Default to true
     footer: htmlElement.getAttribute("data-load-footer") !== "false", // Default to true

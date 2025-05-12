@@ -1,14 +1,19 @@
 /**
- * cart.js
+ * cart.js - Shopping cart system for Fram Food Delivery
  *
- * This module handles all cart-related functionality for the Fram website.
- * It manages the cart overlay, cart items, and cart state.
+ * This module handles all cart-related functionality including:
+ * - Adding and removing products
+ * - Updating quantities
+ * - Calculating totals
+ * - Persisting cart data between sessions
+ * - Rendering cart UI elements
  *
- * @author Your Name
- * @version 1.0
+ * The cart uses localStorage for persistence and custom events for cross-component communication.
+ *
+ * @author Clockert
  */
 
-// Cart overlay HTML structure
+// Cart overlay HTML structure - defines the cart UI that will be injected into the DOM
 const cartOverlayHTML = `
   <div id="cart-overlay" class="cart cart--hidden">
     <div class="cart__header">
@@ -40,12 +45,22 @@ const cartOverlayHTML = `
 `;
 
 /**
- * cart.js - Core cart data management
+ * Main cart object - manages cart data and operations
+ * Exposes methods for cart manipulation and uses localStorage for persistence
  */
 window.framCart = {
+  /** @type {Array<Object>} Contains all cart items */
   items: [],
+
+  /** @type {boolean} Tracks initialization state to prevent duplicate setup */
   _initialized: false,
 
+  /**
+   * Initializes the cart system
+   * Loads saved cart data from localStorage and sets up event listeners
+   *
+   * @returns {void}
+   */
   init: function () {
     if (this._initialized) return;
     this._initialized = true;
@@ -58,6 +73,12 @@ window.framCart = {
     console.log("Cart initialized with", this.items.length, "items");
   },
 
+  /**
+   * Loads cart data from localStorage
+   * Falls back to empty array if no data exists or if parsing fails
+   *
+   * @returns {void}
+   */
   loadCart: function () {
     try {
       this.items = JSON.parse(localStorage.getItem("cart")) || [];
@@ -68,6 +89,13 @@ window.framCart = {
     this.updateCartCount();
   },
 
+  /**
+   * Saves current cart state to localStorage
+   * Updates cart count indicator and triggers cart:updated event
+   *
+   * @returns {void}
+   * @fires cart:updated Custom event notifying that cart data has changed
+   */
   saveCart: function () {
     try {
       localStorage.setItem("cart", JSON.stringify(this.items));
@@ -78,6 +106,13 @@ window.framCart = {
     }
   },
 
+  /**
+   * Parses price strings into numeric values
+   * Handles both number input and string formats like "45 kr"
+   *
+   * @param {string|number} price - The price to parse
+   * @returns {number} The numeric price value
+   */
   parsePrice: function (price) {
     if (typeof price === "number") return price;
     if (typeof price === "string") {
@@ -88,6 +123,19 @@ window.framCart = {
     return 0;
   },
 
+  /**
+   * Adds a product to the cart
+   * If product already exists in cart, increases quantity instead
+   *
+   * @param {Object} product - Product object with id, name, price, and image
+   * @param {number|string} product.id - Unique product identifier
+   * @param {string} product.name - Product name
+   * @param {string|number} product.price - Product price (can be formatted string)
+   * @param {string} product.image - URL to product image
+   * @param {number} [quantity=1] - Quantity to add, defaults to 1
+   * @param {boolean} [showCart=false] - Whether to open cart after adding, defaults to false
+   * @returns {void}
+   */
   addToCart: function (product, quantity = 1, showCart = false) {
     if (!product || !product.id) {
       console.error("Invalid product data");
@@ -124,6 +172,12 @@ window.framCart = {
     }
   },
 
+  /**
+   * Removes a product from the cart completely
+   *
+   * @param {string|number} productId - ID of the product to remove
+   * @returns {void}
+   */
   removeFromCart: function (productId) {
     const index = this.items.findIndex(
       (item) => parseInt(item.id) === parseInt(productId)
@@ -137,6 +191,11 @@ window.framCart = {
     }
   },
 
+  /**
+   * Empties the entire cart
+   *
+   * @returns {void}
+   */
   clearCart: function () {
     this.items = [];
     this.saveCart();
@@ -144,6 +203,12 @@ window.framCart = {
     this.showFeedback("Cart cleared");
   },
 
+  /**
+   * Updates the cart count indicator in the navbar
+   * Sums up quantities of all items
+   *
+   * @returns {void}
+   */
   updateCartCount: function () {
     const cartButton = document.querySelector(".navbar__cart");
     if (cartButton) {
@@ -155,6 +220,12 @@ window.framCart = {
     }
   },
 
+  /**
+   * Renders the current cart state to the UI
+   * Shows/hides elements based on whether cart is empty
+   *
+   * @returns {void}
+   */
   renderCart: function () {
     const cartOverlay = document.getElementById("cart-overlay");
     if (!cartOverlay) return;
@@ -206,6 +277,12 @@ window.framCart = {
     cartTotal.textContent = `${total} kr`;
   },
 
+  /**
+   * Sets up the cart UI elements and event listeners
+   * Injects cart overlay HTML if not already present
+   *
+   * @returns {void}
+   */
   setupCartUI: function () {
     // Insert cart overlay into the DOM if it doesn't exist
     if (!document.getElementById("cart-overlay")) {
@@ -244,6 +321,12 @@ window.framCart = {
     }
   },
 
+  /**
+   * Sets up event listeners for product "Add to cart" buttons
+   * Uses event delegation for better performance
+   *
+   * @returns {void}
+   */
   setupProductButtons: function () {
     // Remove any existing event listeners
     const oldHandler = document.querySelector(".product-card__add-button");
@@ -306,6 +389,12 @@ window.framCart = {
     }
   },
 
+  /**
+   * Shows feedback message to users
+   *
+   * @param {string} message - The message to display
+   * @returns {void}
+   */
   showFeedback: function (message) {
     // Create feedback element if it doesn't exist
     let feedback = document.getElementById("cart-feedback");
@@ -326,6 +415,14 @@ window.framCart = {
     }, 2000);
   },
 
+  /**
+   * Shows visual feedback when item is added to cart
+   * Temporarily changes button appearance
+   *
+   * @param {HTMLElement} button - The button element that was clicked
+   * @param {number} [quantity=1] - Quantity that was added, defaults to 1
+   * @returns {void}
+   */
   showAddedFeedback: function (button, quantity = 1) {
     if (!button) return;
 
@@ -347,6 +444,20 @@ window.framCart = {
       button.disabled = false;
       button.style.backgroundColor = "";
     }, 1500);
+  },
+
+  /**
+   * Opens the cart overlay
+   * Public method that can be called from other components
+   *
+   * @returns {void}
+   */
+  openCart: function () {
+    const cartOverlay = document.getElementById("cart-overlay");
+    if (cartOverlay) {
+      cartOverlay.classList.remove("cart--hidden");
+      this.renderCart();
+    }
   },
 };
 

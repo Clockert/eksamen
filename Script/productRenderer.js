@@ -29,7 +29,6 @@ window.productRenderer = {
    * @param {string} product.price - Formatted price (e.g. "45 kr / kg")
    * @param {string} product.quantity - Package size (e.g. "1kg")
    * @param {string} product.image - Path to product image
-   *
    * @returns {HTMLElement} The created product card element
    */
   createProductCard: function (product) {
@@ -76,8 +75,9 @@ window.productRenderer = {
    * created from the provided product data array. Used for both the main
    * product listing page and the popular products section.
    *
-   * @param {Array} products - Array of product objects
+   * @param {Array<Object>} products - Array of product objects
    * @param {HTMLElement} container - Container element for the products grid
+   * @returns {void}
    */
   displayProducts: function (products, container) {
     if (!container) return;
@@ -98,8 +98,9 @@ window.productRenderer = {
    * Temporarily changes the button's appearance and text to indicate
    * successful addition to cart, then reverts after a delay.
    *
-   * @param {HTMLElement} button - The button that was clicked
-   * @param {number} quantity - Quantity added to cart, defaults to 1
+   * @param {HTMLElement} button - The button element that was clicked
+   * @param {number} [quantity=1] - Quantity added to cart, defaults to 1
+   * @returns {void}
    */
   showAddedFeedback: function (button, quantity = 1) {
     if (!button) return;

@@ -37,6 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Initialize the checkout page
    * Sets up event listeners and loads cart data
+   *
+   * @returns {void}
    */
   function init() {
     console.log("Initializing checkout page");
@@ -66,6 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Load cart items and display them in the checkout summary
    * Gets cart data from framCart or localStorage and renders items
+   *
+   * @returns {void}
    */
   function loadCheckoutItems() {
     console.log("Loading checkout items");
@@ -189,6 +193,11 @@ document.addEventListener("DOMContentLoaded", () => {
    * Create a DOM element for a checkout item
    *
    * @param {Object} item - Cart item with quantity and subtotal
+   * @param {string} item.name - Product name
+   * @param {string} item.image - URL to product image
+   * @param {string} item.price - Formatted price string
+   * @param {number} item.quantity - Product quantity
+   * @param {number} item.subtotal - Total price for this item
    * @returns {HTMLElement} Checkout item DOM element
    */
   function createCheckoutItemElement(item) {
@@ -214,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Calculate the subtotal of all items
    *
-   * @param {Array} items - Array of cart items with subtotals
+   * @param {Array<Object>} items - Array of cart items with subtotals
    * @returns {number} Subtotal
    */
   function calculateSubtotal(items) {
@@ -225,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * Update the totals display in the checkout summary
    *
    * @param {number} subtotal - Subtotal amount
+   * @returns {void}
    */
   function updateTotals(subtotal) {
     const total = subtotal + DELIVERY_FEE;
@@ -247,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * Validates form data and shows confirmation on success
    *
    * @param {Event} event - Form submission event
+   * @returns {void}
    */
   function handleSubmitOrder(event) {
     event.preventDefault();
@@ -303,6 +314,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * Performs basic validation for required fields and formats
    *
    * @param {Object} data - Form data object
+   * @param {string} data.email - Customer email
+   * @param {string} data.terms - Whether terms were accepted
    * @returns {boolean} Whether the form is valid
    */
   function validateForm(data) {
@@ -344,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * Generate a random order number
    * Creates a random number with a prefix for order references
    *
-   * @returns {string} Order number
+   * @returns {string} Order number in format "FR-XXXXX"
    */
   function generateOrderNumber() {
     const prefix = "FR-";
@@ -373,6 +386,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Clear the cart after successful order
    * Removes all items from cart storage
+   *
+   * @returns {void}
    */
   function clearCart() {
     // Clear cart using framCart if available

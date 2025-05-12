@@ -10,8 +10,7 @@
  * The server keeps API keys secure and enhances requests with additional context
  * before forwarding them to third-party services.
  *
- * @author Your Name
- * @version 1.0
+ * @author Clockert
  */
 
 const express = require("express");
@@ -38,6 +37,11 @@ app.use(express.static(path.join(__dirname, "./")));
 /**
  * API endpoint to proxy OpenAI requests with enhanced system prompt
  * Creates a dynamic system prompt that includes current product information
+ *
+ * @route POST /api/chat
+ * @param {Object} req.body.message - User message to send to OpenAI
+ * @returns {Object} OpenAI API response
+ * @throws {Error} If API key is missing or API call fails
  */
 app.post("/api/chat", async (req, res) => {
   try {
@@ -158,8 +162,9 @@ If you're unable to answer a specific question about Fram due to lack of informa
  * Proxies requests to the USDA Food Data Central API
  *
  * @route GET /api/nutrition/:query
- * @param {string} query - The product name to search for nutrition data
+ * @param {string} req.params.query - The product name to search for nutrition data
  * @returns {Object} Nutrition data from USDA Food Data Central API
+ * @throws {Error} If API key is missing or API call fails
  */
 app.get("/api/nutrition/:query", async (req, res) => {
   try {
@@ -224,6 +229,7 @@ app.get("/api/nutrition/:query", async (req, res) => {
  *
  * @route GET /api/products
  * @returns {Object} JSON object containing all product data
+ * @throws {Error} If file reading fails
  */
 app.get("/api/products", (req, res) => {
   try {
@@ -241,7 +247,10 @@ app.get("/api/products", (req, res) => {
   }
 });
 
-// Start the server
+/**
+ * Start the server and listen on the specified port
+ * Logs a message when the server is ready
+ */
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

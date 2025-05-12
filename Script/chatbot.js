@@ -21,7 +21,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const buttonIcon = document.getElementById("button-icon");
   const chatbox = document.querySelector(".chatbot__messages");
 
-  // Chat state object - tracks current status of chat system
+  /**
+   * @typedef {Object} ChatState - Tracks the current state of the chat interface
+   * @property {boolean} isConnected - Whether a connection to the API is established
+   * @property {boolean} isLoading - Whether a request is currently in progress
+   */
+
+  /**
+   * Current state of the chat system
+   *
+   * @type {ChatState}
+   */
   const chatState = {
     isConnected: true, // Connection to API is established
     isLoading: false, // Waiting for a response
@@ -112,6 +122,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Updates the send button appearance based on current chat state
    * Changes icon and styles depending on loading/connection status
+   *
+   * @returns {void}
    */
   function updateButtonState() {
     sendButton.classList.toggle("loading", chatState.isLoading);
@@ -216,6 +228,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Scrolls the chat to the most recent message
    * Uses smooth scrolling for better UX
+   *
+   * @returns {void}
    */
   function scrollToBottom() {
     const lastElement = chatboxInner.lastElementChild;

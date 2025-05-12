@@ -18,6 +18,8 @@
  *
  * Creates the navigation bar with hamburger menu, logo, and cart button
  * Sets up event handlers for menu opening/closing
+ *
+ * @returns {void}
  */
 function loadNavbar() {
   // Define navbar HTML structure with BEM class naming
@@ -85,6 +87,8 @@ function loadNavbar() {
  * Loads the footer component
  *
  * Creates the site footer with logo, divider, newsletter signup, and legal information
+ *
+ * @returns {void}
  */
 function loadFooter() {
   // Define footer HTML structure with BEM class naming
@@ -151,7 +155,8 @@ function loadFooter() {
  * Creates a section displaying featured products in a grid/carousel layout
  * Fetches product data from JSON and filters for popular items
  *
- * @param {string} containerId - ID of the container to place the component
+ * @param {string} containerId - ID of the container element to insert the component
+ * @returns {void}
  */
 function loadPopularProduce(containerId) {
   // Create the component HTML structure
@@ -218,10 +223,20 @@ function loadPopularProduce(containerId) {
 /**
  * Initialize components based on data attributes in the HTML
  * This allows pages to control which components to load
+ *
+ * @returns {void}
  */
 document.addEventListener("DOMContentLoaded", () => {
   // Get page configuration from html tag
   const htmlElement = document.documentElement;
+
+  /**
+   * @typedef {Object} PageConfig - Configuration for component loading
+   * @property {boolean} navbar - Whether to load the navbar component
+   * @property {boolean} footer - Whether to load the footer component
+   */
+
+  /** @type {PageConfig} */
   const pageConfig = {
     navbar: htmlElement.getAttribute("data-load-navbar") !== "false", // Default to true
     footer: htmlElement.getAttribute("data-load-footer") !== "false", // Default to true

@@ -11,7 +11,6 @@
  * The cart uses localStorage for persistence and custom events for cross-component communication.
  *
  * @author Clockert
-
  */
 
 // Cart overlay HTML structure - defines the cart UI that will be injected into the DOM
@@ -50,7 +49,7 @@ const cartOverlayHTML = `
  * Exposes methods for cart manipulation and uses localStorage for persistence
  */
 window.framCart = {
-  /** @type {Array} Contains all cart items */
+  /** @type {Array<Object>} Contains all cart items */
   items: [],
 
   /** @type {boolean} Tracks initialization state to prevent duplicate setup */
@@ -59,6 +58,8 @@ window.framCart = {
   /**
    * Initializes the cart system
    * Loads saved cart data from localStorage and sets up event listeners
+   *
+   * @returns {void}
    */
   init: function () {
     if (this._initialized) return;
@@ -75,6 +76,8 @@ window.framCart = {
   /**
    * Loads cart data from localStorage
    * Falls back to empty array if no data exists or if parsing fails
+   *
+   * @returns {void}
    */
   loadCart: function () {
     try {
@@ -89,6 +92,9 @@ window.framCart = {
   /**
    * Saves current cart state to localStorage
    * Updates cart count indicator and triggers cart:updated event
+   *
+   * @returns {void}
+   * @fires cart:updated Custom event notifying that cart data has changed
    */
   saveCart: function () {
     try {
@@ -122,8 +128,13 @@ window.framCart = {
    * If product already exists in cart, increases quantity instead
    *
    * @param {Object} product - Product object with id, name, price, and image
-   * @param {number} quantity - Quantity to add, defaults to 1
-   * @param {boolean} showCart - Whether to open cart after adding, defaults to false
+   * @param {number|string} product.id - Unique product identifier
+   * @param {string} product.name - Product name
+   * @param {string|number} product.price - Product price (can be formatted string)
+   * @param {string} product.image - URL to product image
+   * @param {number} [quantity=1] - Quantity to add, defaults to 1
+   * @param {boolean} [showCart=false] - Whether to open cart after adding, defaults to false
+   * @returns {void}
    */
   addToCart: function (product, quantity = 1, showCart = false) {
     if (!product || !product.id) {
@@ -165,6 +176,7 @@ window.framCart = {
    * Removes a product from the cart completely
    *
    * @param {string|number} productId - ID of the product to remove
+   * @returns {void}
    */
   removeFromCart: function (productId) {
     const index = this.items.findIndex(
@@ -181,6 +193,8 @@ window.framCart = {
 
   /**
    * Empties the entire cart
+   *
+   * @returns {void}
    */
   clearCart: function () {
     this.items = [];
@@ -192,6 +206,8 @@ window.framCart = {
   /**
    * Updates the cart count indicator in the navbar
    * Sums up quantities of all items
+   *
+   * @returns {void}
    */
   updateCartCount: function () {
     const cartButton = document.querySelector(".navbar__cart");
@@ -207,6 +223,8 @@ window.framCart = {
   /**
    * Renders the current cart state to the UI
    * Shows/hides elements based on whether cart is empty
+   *
+   * @returns {void}
    */
   renderCart: function () {
     const cartOverlay = document.getElementById("cart-overlay");
@@ -262,6 +280,8 @@ window.framCart = {
   /**
    * Sets up the cart UI elements and event listeners
    * Injects cart overlay HTML if not already present
+   *
+   * @returns {void}
    */
   setupCartUI: function () {
     // Insert cart overlay into the DOM if it doesn't exist
@@ -304,6 +324,8 @@ window.framCart = {
   /**
    * Sets up event listeners for product "Add to cart" buttons
    * Uses event delegation for better performance
+   *
+   * @returns {void}
    */
   setupProductButtons: function () {
     // Remove any existing event listeners
@@ -371,6 +393,7 @@ window.framCart = {
    * Shows feedback message to users
    *
    * @param {string} message - The message to display
+   * @returns {void}
    */
   showFeedback: function (message) {
     // Create feedback element if it doesn't exist
@@ -397,7 +420,8 @@ window.framCart = {
    * Temporarily changes button appearance
    *
    * @param {HTMLElement} button - The button element that was clicked
-   * @param {number} quantity - Quantity that was added, defaults to 1
+   * @param {number} [quantity=1] - Quantity that was added, defaults to 1
+   * @returns {void}
    */
   showAddedFeedback: function (button, quantity = 1) {
     if (!button) return;
@@ -425,6 +449,8 @@ window.framCart = {
   /**
    * Opens the cart overlay
    * Public method that can be called from other components
+   *
+   * @returns {void}
    */
   openCart: function () {
     const cartOverlay = document.getElementById("cart-overlay");

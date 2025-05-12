@@ -47,6 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Initialize product detail page if applicable
    * Gets product ID from URL parameters and sets up quantity controls
+   *
+   * @returns {void}
    */
   if (isProductDetailPage) {
     const urlParams = new URLSearchParams(window.location.search);
@@ -65,6 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Fetch products from JSON file
    * Loads product data and initializes the appropriate page functionality
+   *
+   * @returns {Promise<void>}
    */
   fetch("data/products.json")
     .then((response) => {
@@ -156,6 +160,15 @@ document.addEventListener("DOMContentLoaded", () => {
    * Populates all product information fields with data
    *
    * @param {Object} product - The product object to display
+   * @param {number} product.id - Unique product identifier
+   * @param {string} product.name - Product name
+   * @param {string} product.price - Product price (formatted)
+   * @param {string} product.quantity - Product quantity/weight
+   * @param {string} product.image - URL to product image
+   * @param {string} product.description - Detailed product description
+   * @param {string} product.farm - Farm where product was grown
+   * @param {string} product.cultivation - Cultivation method
+   * @returns {void}
    */
   function displayProductDetails(product) {
     if (!productNameElement) return;
@@ -195,6 +208,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * Creates the nutrition information section if it doesn't exist
    *
    * @param {Object} product - Product to fetch nutrition data for
+   * @param {string} product.name - Product name to look up nutrition data
+   * @returns {void}
    */
   function createNutritionSection(product) {
     if (!isProductDetailPage || !productDetailContent) return;
@@ -230,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * First tries to get data from cache, falls back to API if needed
    *
    * @param {string} productName - Name of product to fetch nutrition data for
+   * @returns {Promise<void>}
    */
   async function fetchNutritionData(productName) {
     try {
@@ -279,6 +295,8 @@ document.addEventListener("DOMContentLoaded", () => {
    * Creates and populates a table with nutrition facts
    *
    * @param {Object} foodItem - Food item data from nutrition API
+   * @param {Array} foodItem.foodNutrients - Array of nutrient objects
+   * @returns {void}
    */
   function displayNutritionInfo(foodItem) {
     const nutritionData = document.querySelector(".nutrition-data");
@@ -345,6 +363,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Set up quantity input controls
    * Handles incrementing, decrementing, and validating quantity input
+   *
+   * @returns {void}
    */
   function setupQuantityControls() {
     if (!quantityInput || !decreaseBtn || !increaseBtn) return;
@@ -355,7 +375,12 @@ document.addEventListener("DOMContentLoaded", () => {
     decreaseBtn.parentNode.replaceChild(newDecreaseBtn, decreaseBtn);
     increaseBtn.parentNode.replaceChild(newIncreaseBtn, increaseBtn);
 
-    // Ensure quantity is a valid number
+    /**
+     * Ensures quantity is a valid number
+     * Sets to 1 if invalid or less than 1
+     *
+     * @returns {void}
+     */
     const validateQuantity = () => {
       let value = parseInt(quantityInput.value);
       if (isNaN(value) || value < 1) {
@@ -394,6 +419,8 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Show error messages when products can't be loaded
    * Displays user-friendly error messages in appropriate containers
+   *
+   * @returns {void}
    */
   function showErrorMessage() {
     if (productsGrid) {

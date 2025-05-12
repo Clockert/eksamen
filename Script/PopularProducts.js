@@ -24,6 +24,7 @@
  * section, loads product data, and renders the filtered product list.
  *
  * @param {string} containerId - ID of the container element to insert the component
+ * @returns {void}
  */
 window.loadPopularProduce = function (containerId) {
   // Get the target container element
@@ -49,6 +50,8 @@ window.loadPopularProduce = function (containerId) {
   /**
    * Loads product data from JSON file
    * Fetches data, filters for popular products, and passes to renderer
+   *
+   * @returns {void}
    */
   function loadProductsData() {
     fetch("data/products.json")
@@ -81,6 +84,8 @@ window.loadPopularProduce = function (containerId) {
   /**
    * Shows error message when product data can't be loaded
    * Displays user-friendly error message in the grid container
+   *
+   * @returns {void}
    */
   function showErrorMessage() {
     document.getElementById("popular-products-grid").innerHTML = `
@@ -94,6 +99,8 @@ window.loadPopularProduce = function (containerId) {
 /**
  * Handles automated loading of the popular products component when
  * the dedicated container exists on the page
+ *
+ * @returns {void}
  */
 document.addEventListener("DOMContentLoaded", () => {
   // Check if a container with the standard ID exists

@@ -66,6 +66,49 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
+   * Checks if shopping cart has items
+   * @returns {boolean} True if cart is empty
+   */
+  function isCartEmpty() {
+    if (window.framCart && window.framCart.items) {
+      return window.framCart.items.length === 0;
+    }
+
+    try {
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      return cart.length === 0;
+    } catch (e) {
+      console.error("Error checking cart:", e);
+      return true;
+    }
+  }
+
+  /**
+   * Shows error message and scrolls into view
+   * @param {string} message - Error message to display
+   */
+  function showCheckoutError(message) {
+    let errorContainer = document.getElementById("checkout-error");
+    if (!errorContainer) {
+      errorContainer = document.createElement("div");
+      errorContainer.id = "checkout-error";
+      errorContainer.className =
+        "checkout__error-message checkout__error-container";
+      errorContainer.setAttribute("role", "alert");
+      checkoutForm.insertBefore(errorContainer, checkoutForm.firstChild);
+    }
+
+    errorContainer.textContent = message;
+    errorContainer.classList.add("visible");
+
+    errorContainer.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+      inline: "nearest",
+    });
+  }
+
+  /**
    * Load cart items and display them in the checkout summary
    * Gets cart data from framCart or localStorage and renders items
    *
@@ -73,6 +116,20 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   function loadCheckoutItems() {
     console.log("Loading checkout items");
+
+    if (isCartEmpty()) {
+      showCheckoutError(
+        "Your cart is empty. Please add items before checking out."
+      );
+      checkoutItems.innerHTML = `
+        <div class="checkout__empty-state">
+          <p>Your cart is empty</p>
+          <a href="produce.html" class="btn btn--primary">Browse Products</a>
+        </div>
+      `;
+      updateTotals(0);
+      return;
+    }
 
     // Get cart items - try different approaches
     let cartItems = [];
@@ -262,6 +319,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleSubmitOrder(event) {
     event.preventDefault();
 
+    if (isCartEmpty()) {
+      showCheckoutError(
+        "Your cart is empty. Please add items before checking out."
+      );
+      return;
+    }
+
     // Get form data
     const formData = new FormData(checkoutForm);
     const customerData = Object.fromEntries(formData.entries());
@@ -310,47 +374,86 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
-   * Validate the checkout form
-   * Performs basic validation for required fields and formats
+   * Validates checkout form data
+   * Checks format and required fields:
+   * - Email format
+   * - Norwegian phone number format
+   * - Norwegian postal code (4 digits)
+   * - Required personal details
+   * - Terms acceptance
    *
-   * @param {Object} data - Form data object
-   * @param {string} data.email - Customer email
-   * @param {string} data.terms - Whether terms were accepted
-   * @returns {boolean} Whether the form is valid
+   * @param {Object} data - Form data to validate
+   * @returns {boolean} True if valid, false otherwise
    */
   function validateForm(data) {
-    // Simple validation for required fields
-    const requiredFields = [
-      "first-name",
-      "last-name",
-      "email",
-      "phone",
-      "address",
-      "postal-code",
-      "city",
-    ];
+    // Reset all previous error messages
+    document.querySelectorAll(".checkout__error-message").forEach((el) => {
+      el.textContent = "";
+    });
 
-    for (const field of requiredFields) {
-      if (!data[field]?.trim()) {
-        alert(`Please fill in all required fields.`);
-        return false;
-      }
-    }
+    let isValid = true;
+    let firstErrorField = null;
 
-    // Validate email format
+    // Email validation using standard format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(data.email)) {
-      alert("Please enter a valid email address.");
-      return false;
+      const emailError = document.getElementById("email-error");
+      emailError.textContent = "Please enter a valid email address";
+      if (!firstErrorField) firstErrorField = emailError;
+      isValid = false;
     }
 
-    // Validate terms acceptance
+    // Phone validation for Norwegian format (+47 or 8 digits)
+    const phoneRegex = /^(\+47)?[2-9]\d{7}$/;
+    if (!phoneRegex.test(data.phone?.replace(/\s/g, ""))) {
+      const phoneError = document.getElementById("phone-error");
+      phoneError.textContent = "Please enter a valid Norwegian phone number";
+      if (!firstErrorField) firstErrorField = phoneError;
+      isValid = false;
+    }
+
+    // Norwegian postal code validation (4 digits)
+    if (!/^\d{4}$/.test(data["postal-code"])) {
+      const postalCodeError = document.getElementById("postal-code-error");
+      postalCodeError.textContent = "Please enter a valid 4-digit postal code";
+      if (!firstErrorField) firstErrorField = postalCodeError;
+      isValid = false;
+    }
+
+    // Required personal information fields
+    const requiredFields = [
+      { id: "first-name", label: "First name" },
+      { id: "last-name", label: "Last name" },
+      { id: "address", label: "Address" },
+      { id: "city", label: "City" },
+    ];
+
+    requiredFields.forEach((field) => {
+      const fieldError = document.getElementById(`${field.id}-error`);
+      if (!data[field.id]?.trim()) {
+        fieldError.textContent = `${field.label} is required`;
+        if (!firstErrorField) firstErrorField = fieldError;
+        isValid = false;
+      }
+    });
+
+    // Terms and conditions acceptance check
     if (!data.terms) {
-      alert("You must accept the Terms and Conditions to proceed.");
-      return false;
+      const termsError = document.getElementById("terms-error");
+      termsError.textContent = "You must accept the Terms and Conditions";
+      if (!firstErrorField) firstErrorField = termsError;
+      isValid = false;
     }
 
-    return true;
+    // Scroll to the first error field if any
+    if (firstErrorField) {
+      firstErrorField.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+
+    return isValid;
   }
 
   /**

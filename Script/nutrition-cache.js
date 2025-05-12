@@ -160,6 +160,94 @@ window.nutritionCache = {
   },
 };
 
+/**
+ * Fetches nutrition data for a product, with caching and fallback
+ * Uses a multi-layer approach:
+ * 1. Check cache
+ * 2. Call API
+ * 3. Use fallback data
+ *
+ * @param {string} productName - Name of the product to look up
+ * @returns {Promise<void>}
+ */
+async function fetchNutritionData(productName) {
+  try {
+    let nutritionData;
+    let usingFallback = false;
+
+    // Try cache first for performance optimization
+    if (
+      window.nutritionCache &&
+      typeof window.nutritionCache.getNutrition === "function"
+    ) {
+      try {
+        nutritionData = await window.nutritionCache.getNutrition(productName);
+      } catch (cacheError) {
+        console.error("Cache error:", cacheError);
+        // Continue to API call if cache fails
+      }
+    }
+
+    // If no cached data available, attempt API call
+    if (!nutritionData) {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/nutrition/${encodeURIComponent(
+            productName
+          )}`
+        );
+        if (!response.ok) {
+          throw new Error(`Nutrition API error: ${response.status}`);
+        }
+        nutritionData = await response.json();
+      } catch (apiError) {
+        console.error("API error:", apiError);
+        // Fall back to basic nutrition data when API fails
+        usingFallback = true;
+        nutritionData = getBasicNutritionFallback(productName);
+      }
+    }
+
+    // Display nutrition data with fallback warning if necessary
+    if (nutritionData) {
+      displayNutritionInfo(nutritionData.foods?.[0], usingFallback);
+    } else {
+      throw new Error("No nutrition data available");
+    }
+  } catch (error) {
+    console.error("Nutrition data error:", error);
+    const container = document.querySelector(".nutrition-data");
+    if (container) {
+      container.innerHTML =
+        '<p class="product-detail__nutrition-error">Failed to load nutrition information. Please try again later.</p>';
+    }
+  }
+}
+
+/**
+ * Provides basic fallback nutrition data for common foods
+ * Used when both cache and API calls fail
+ *
+ * @param {string} productName - Name of the product
+ * @returns {Object|null} Basic nutrition data or null if no match
+ */
+function getBasicNutritionFallback(productName) {
+  // Basic fallback data for common foods
+  if (productName.toLowerCase().includes("apple")) {
+    return {
+      foods: [
+        {
+          foodNutrients: [
+            { nutrientId: 1008, value: 52, unitName: "kcal" },
+            { nutrientId: 1003, value: 0.3, unitName: "g" },
+          ],
+        },
+      ],
+    };
+  }
+  return null;
+}
+
 // Initialize the cache when the page loads
 document.addEventListener("DOMContentLoaded", () => {
   window.nutritionCache.init();

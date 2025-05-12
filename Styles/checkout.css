@@ -308,6 +308,27 @@
   cursor: not-allowed;
 }
 
+/* Error container */
+.checkout__error-container {
+  padding: 16px;
+  margin-bottom: 20px;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid var(--red);
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.checkout__error-container.visible {
+  opacity: 1;
+}
+
+.checkout__error-message {
+  color: var(--red); /* Use your red color variable */
+  font-size: 14px;
+  margin-top: 4px;
+}
+
 /* Confirmation modal */
 .modal {
   position: fixed;

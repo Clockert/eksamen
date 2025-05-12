@@ -103,7 +103,6 @@ fram-food-delivery/
 │   ├── chatbot.js        # AI chatbot integration
 │   ├── checkout.js       # Checkout process handling
 │   ├── Components.js     # Reusable UI components
-│   ├── integration.js    # API integration helpers
 │   ├── nutrition-cache.js # Caching system for nutrition data
 │   ├── PopularProducts.js # Popular products component
 │   ├── produce.js        # Product listing and detail functionality

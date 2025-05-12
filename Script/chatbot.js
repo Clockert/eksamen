@@ -104,14 +104,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }),
       });
 
+      // Handle various HTTP error responses with specific user feedback
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `Server error: ${response.status}`);
+        // Handle rate limiting - occurs when too many requests are made
+        if (response.status === 429) {
+          throw new Error("Rate limit exceeded. Please try again in a moment.");
+          // Handle server-side errors (500+)
+        } else if (response.status >= 500) {
+          throw new Error(
+            "Server is currently unavailable. Please try again later."
+          );
+          // Handle all other error types with available error info
+        } else {
+          throw new Error(
+            errorData.error || `Server error: ${response.status}`
+          );
+        }
       }
 
       const data = await response.json();
       return data.choices[0].message.content.trim();
     } catch (error) {
+      // Log error for debugging but show user-friendly message
       console.error("Error calling API:", error);
       throw new Error("Failed to get a response. Please try again later.");
     }

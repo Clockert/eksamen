@@ -66,6 +66,7 @@ window.framCart = {
     this._initialized = true;
 
     this.loadCart();
+    this.validateCartItems(); // Validate cart items after loading
     this.setupCartUI();
     this.setupProductButtons();
     this.renderCart(); // Initial render
@@ -82,6 +83,7 @@ window.framCart = {
   loadCart: function () {
     try {
       this.items = JSON.parse(localStorage.getItem("cart")) || [];
+      this.validateCartItems(); // Validate cart items after loading
     } catch (error) {
       console.error("Error loading cart:", error);
       this.items = [];
@@ -458,6 +460,42 @@ window.framCart = {
       cartOverlay.classList.remove("cart--hidden");
       this.renderCart();
     }
+  },
+
+  /**
+   * Validates the cart items to ensure data integrity
+   * Removes invalid items and resets the cart if corrupted
+   *
+   * @returns {boolean} True if all items are valid, false otherwise
+   */
+  validateCartItems: function () {
+    if (!Array.isArray(this.items)) {
+      console.error("Cart data is corrupted, resetting");
+
+      this.items = [];
+      this.saveCart();
+      return false;
+    }
+
+    // Check for required properties in each item
+    let hasInvalidItems = false;
+    this.items = this.items.filter((item) => {
+      const isValid =
+        item &&
+        typeof item.id !== "undefined" &&
+        typeof item.name === "string" &&
+        item.name.trim() !== "";
+
+      if (!isValid) hasInvalidItems = true;
+      return isValid;
+    });
+
+    if (hasInvalidItems) {
+      console.warn("Some invalid items were removed from cart");
+      this.saveCart();
+    }
+
+    return true;
   },
 };
 

@@ -1,11 +1,16 @@
 /**
  * FRAM Chatbot - Handles user interactions with the AI chatbot
  *
- * This module manages the chat interface, including:
- * - Sending and receiving messages
- * - Loading states
- * - Error handling
- * - Message display
+ * This module manages the chat interface for Fram's AI assistant, including:
+ * - Sending and receiving messages between user and OpenAI API
+ * - Managing loading states and visual feedback
+ * - Handling error conditions gracefully
+ * - Formatting and displaying messages in the chat UI
+ *
+ * The chatbot connects to a server-side proxy that interfaces with OpenAI's API,
+ * protecting API keys and adding contextual system prompts about Fram's products.
+ *
+ * @author Clockert
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -16,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const buttonIcon = document.getElementById("button-icon");
   const chatbox = document.querySelector(".chatbot__messages");
 
-  // Chat state - tracks current chat status
+  // Chat state object - tracks current status of chat system
   const chatState = {
     isConnected: true, // Connection to API is established
     isLoading: false, // Waiting for a response
@@ -26,6 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Handles sending user messages and receiving bot responses
+   * Manages the entire message flow including UI updates and error handling
+   *
+   * @returns {Promise<void>}
    */
   async function handleUserInput() {
     const message = userInput.value.trim();
@@ -43,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadingBubble = addLoadingMessage();
 
     try {
-      // Send to API and get response (currently simulated)
+      // Send to API and get response
       const botResponse = await fetchBotResponse(message);
 
       // Show response
@@ -66,13 +74,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /**
-   * Gets response from OpenAI API
+   * Gets response from OpenAI API via our server proxy endpoint
+   *
    * @param {string} userMessage - The message from the user
    * @returns {Promise<string>} Bot's response
+   * @throws {Error} If API call fails
    */
   async function fetchBotResponse(userMessage) {
     try {
       // Call our server endpoint instead of OpenAI directly
+      // This keeps API keys secure and allows server-side prompt enhancement
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -100,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Updates the send button appearance based on current chat state
+   * Changes icon and styles depending on loading/connection status
    */
   function updateButtonState() {
     sendButton.classList.toggle("loading", chatState.isLoading);
@@ -113,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Adds a message to the chat display
+   *
    * @param {string} message - Text content of the message
    * @param {string} type - Message type: "incoming" (bot) or "outgoing" (user)
    * @returns {HTMLElement} The created message element
@@ -143,6 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Adds a loading indicator message
+   * Creates animated dots to show the bot is "thinking"
+   *
    * @returns {HTMLElement} The created loading message element
    */
   function addLoadingMessage() {
@@ -176,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Adds an error message for connection issues
+   *
    * @returns {HTMLElement} The created error message element
    */
   function addConnectionErrorMessage() {
@@ -199,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Scrolls the chat to the most recent message
+   * Uses smooth scrolling for better UX
    */
   function scrollToBottom() {
     const lastElement = chatboxInner.lastElementChild;

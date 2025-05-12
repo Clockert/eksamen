@@ -1,12 +1,24 @@
 /**
  * Nutrition API cache system
- * This module handles caching of nutrition data to reduce API calls
+ *
+ * This module implements an intelligent caching system for the USDA Food Data Central API.
+ * It reduces API calls by storing nutrition data in localStorage with timestamps
+ * and implements efficient cache management including expiration and pruning.
+ *
+ * Key features:
+ * - Automatic cache expiration (24 hours)
+ * - Intelligent pruning when storage limits are reached
+ * - Fallback to expired cache when API is unavailable
+ * - Normalized keys for consistent lookups
+ *
+ * @author Clockert
  */
 
 // Create a global nutrition cache object
 window.nutritionCache = {
   /**
    * Initialize the cache system
+   * Loads existing cache from localStorage or creates a new empty cache
    */
   init: function () {
     // Load cache from localStorage if it exists
@@ -23,6 +35,7 @@ window.nutritionCache = {
 
   /**
    * Save the cache to localStorage
+   * Handles exceptions and triggers pruning if storage is full
    */
   saveCache: function () {
     try {
@@ -39,6 +52,7 @@ window.nutritionCache = {
 
   /**
    * Remove old or excessive entries if cache gets too large
+   * Removes the oldest 50% of entries based on timestamp
    */
   pruneCache: function () {
     const now = Date.now();
@@ -60,8 +74,8 @@ window.nutritionCache = {
    * Get nutrition data for a product
    * Returns cached data if available, otherwise fetches from API
    *
-   * @param {string} productName - Name of the product
-   * @returns {Promise<Object>} Nutrition data
+   * @param {string} productName - Name of the product to get nutrition data for
+   * @returns {Promise<Object>} Nutrition data object
    */
   getNutrition: async function (productName) {
     // Normalize product name for consistent cache keys
@@ -120,6 +134,7 @@ window.nutritionCache = {
 
   /**
    * Clear the entire cache
+   * Removes all cached nutrition data from memory and localStorage
    */
   clearCache: function () {
     this.cache = {};

@@ -1,8 +1,20 @@
 /**
- * produce.js - Handles product listings and product detail functionality
+ * produce.js - Product listing and detail page functionality
+ *
+ * This module handles all product-related functionality including:
+ * - Loading and displaying products on the listing page
+ * - Rendering detailed product information on the product detail page
+ * - Fetching and displaying nutrition information
+ * - Managing product quantity selection
+ * - Error handling for product data
+ *
+ * The module detects which page it's loaded on (listing or detail) and
+ * performs the appropriate initialization and setup.
+ *
+ * @author Clockert
  */
 document.addEventListener("DOMContentLoaded", () => {
-  // Common elements
+  // Common elements that might exist on either page
   const productsGrid = document.getElementById("products-container");
   const productDetailContent = document.querySelector(
     ".product-detail__content"
@@ -24,14 +36,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const decreaseBtn = document.getElementById("decrease-quantity");
   const increaseBtn = document.getElementById("increase-quantity");
 
-  // Check if we're on the product detail page
+  // Check if we're on the product detail page by examining the URL
   const isProductDetailPage =
     window.location.pathname.includes("product-detail");
 
-  // Get product ID if on detail page
+  // Variables for tracking product data
   let productId = null;
   let currentProduct = null;
 
+  /**
+   * Initialize product detail page if applicable
+   * Gets product ID from URL parameters and sets up quantity controls
+   */
   if (isProductDetailPage) {
     const urlParams = new URLSearchParams(window.location.search);
     productId = parseInt(urlParams.get("id"));
@@ -46,7 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
     setupQuantityControls();
   }
 
-  // Fetch products from JSON file
+  /**
+   * Fetch products from JSON file
+   * Loads product data and initializes the appropriate page functionality
+   */
   fetch("data/products.json")
     .then((response) => {
       if (!response.ok) {
@@ -61,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
           productsLoadingIndicator.style.display = "none";
         }
 
-        // Use the new productRenderer to display products
+        // Use the productRenderer to display products
         if (window.productRenderer) {
           window.productRenderer.displayProducts(data.products, productsGrid);
         } else {
@@ -78,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
           productLoadingIndicator.style.display = "none";
         }
 
+        // Find the specific product by ID
         currentProduct = data.products.find((p) => p.id === productId);
 
         if (!currentProduct) {
@@ -96,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
+        // Display product details
         displayProductDetails(currentProduct);
 
         // Setup add to cart button
@@ -130,7 +151,12 @@ document.addEventListener("DOMContentLoaded", () => {
       showErrorMessage();
     });
 
-  // Display product details on detail page
+  /**
+   * Display product details on the detail page
+   * Populates all product information fields with data
+   *
+   * @param {Object} product - The product object to display
+   */
   function displayProductDetails(product) {
     if (!productNameElement) return;
 
@@ -164,7 +190,12 @@ document.addEventListener("DOMContentLoaded", () => {
     createNutritionSection(product);
   }
 
-  // Create and display nutrition section
+  /**
+   * Create and display nutrition section
+   * Creates the nutrition information section if it doesn't exist
+   *
+   * @param {Object} product - Product to fetch nutrition data for
+   */
   function createNutritionSection(product) {
     if (!isProductDetailPage || !productDetailContent) return;
 
@@ -194,7 +225,12 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchNutritionData(product.name);
   }
 
-  // Fetch nutrition data from cache or API
+  /**
+   * Fetch nutrition data from cache or API
+   * First tries to get data from cache, falls back to API if needed
+   *
+   * @param {string} productName - Name of product to fetch nutrition data for
+   */
   async function fetchNutritionData(productName) {
     try {
       let nutritionData;
@@ -238,7 +274,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Display nutrition information
+  /**
+   * Display nutrition information in the UI
+   * Creates and populates a table with nutrition facts
+   *
+   * @param {Object} foodItem - Food item data from nutrition API
+   */
   function displayNutritionInfo(foodItem) {
     const nutritionData = document.querySelector(".nutrition-data");
     if (!nutritionData) return;
@@ -301,7 +342,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Set up quantity input controls
+  /**
+   * Set up quantity input controls
+   * Handles incrementing, decrementing, and validating quantity input
+   */
   function setupQuantityControls() {
     if (!quantityInput || !decreaseBtn || !increaseBtn) return;
 
@@ -347,7 +391,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Show error messages when products can't be loaded
+  /**
+   * Show error messages when products can't be loaded
+   * Displays user-friendly error messages in appropriate containers
+   */
   function showErrorMessage() {
     if (productsGrid) {
       productsGrid.innerHTML = `

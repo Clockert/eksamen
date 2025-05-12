@@ -1,4 +1,19 @@
-// server.js
+/**
+ * Fram Food Delivery - Server
+ *
+ * This server provides backend functionality for the Fram Food Delivery website:
+ * 1. Proxies requests to the OpenAI API, adding system prompts with product information
+ * 2. Connects to the USDA Food Data Central API for nutrition information
+ * 3. Serves product data from local JSON
+ * 4. Serves static files for the frontend
+ *
+ * The server keeps API keys secure and enhances requests with additional context
+ * before forwarding them to third-party services.
+ *
+ * @author Your Name
+ * @version 1.0
+ */
+
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -7,20 +22,23 @@ const fs = require("fs");
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-// Load environment variables
+// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Enable CORS and JSON parsing
+// Enable CORS for all routes and parse JSON request bodies
 app.use(cors());
 app.use(express.json());
 
-// Serve static files
+// Serve static files from the current directory
 app.use(express.static(path.join(__dirname, "./")));
 
-// API endpoint to proxy OpenAI requests with enhanced prompt
+/**
+ * API endpoint to proxy OpenAI requests with enhanced system prompt
+ * Creates a dynamic system prompt that includes current product information
+ */
 app.post("/api/chat", async (req, res) => {
   try {
     const { message } = req.body;
@@ -135,7 +153,14 @@ If you're unable to answer a specific question about Fram due to lack of informa
   }
 });
 
-// This endpoint will be used to get nutrition information for products
+/**
+ * API endpoint to retrieve nutrition information for products
+ * Proxies requests to the USDA Food Data Central API
+ *
+ * @route GET /api/nutrition/:query
+ * @param {string} query - The product name to search for nutrition data
+ * @returns {Object} Nutrition data from USDA Food Data Central API
+ */
 app.get("/api/nutrition/:query", async (req, res) => {
   try {
     // Extract the food query parameter from the URL
@@ -193,7 +218,13 @@ app.get("/api/nutrition/:query", async (req, res) => {
   }
 });
 
-// Add an endpoint to get available products
+/**
+ * API endpoint to get available products
+ * Reads product data from the local JSON file
+ *
+ * @route GET /api/products
+ * @returns {Object} JSON object containing all product data
+ */
 app.get("/api/products", (req, res) => {
   try {
     const rawData = fs.readFileSync(

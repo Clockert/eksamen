@@ -1,12 +1,35 @@
 /**
  * productRenderer.js
- * Centralized module for rendering product cards consistently across the site
+ *
+ * A centralized module for creating and rendering product cards consistently
+ * across the entire Fram Food Delivery website.
+ *
+ * This module provides functions to:
+ * - Create standardized product card elements
+ * - Display collections of products in grid layouts
+ * - Show feedback when products are added to cart
+ *
+ * By using this shared renderer, we ensure consistent product presentation
+ * and behavior throughout the site while keeping code DRY.
+ *
+ * @author Clockert
  */
 window.productRenderer = {
   /**
    * Creates a product card element with consistent design and functionality
    *
-   * @param {Object} product - Product data object
+   * This method generates the full HTML structure for a product card including:
+   * - Product image with link to detail page
+   * - Add to cart button with data attributes
+   * - Product name, price and quantity information
+   *
+   * @param {Object} product - Product data object with all required properties
+   * @param {number} product.id - Unique identifier for the product
+   * @param {string} product.name - Product name
+   * @param {string} product.price - Formatted price (e.g. "45 kr / kg")
+   * @param {string} product.quantity - Package size (e.g. "1kg")
+   * @param {string} product.image - Path to product image
+   *
    * @returns {HTMLElement} The created product card element
    */
   createProductCard: function (product) {
@@ -49,6 +72,10 @@ window.productRenderer = {
   /**
    * Displays a grid of products in the specified container
    *
+   * This method clears the container and populates it with product cards
+   * created from the provided product data array. Used for both the main
+   * product listing page and the popular products section.
+   *
    * @param {Array} products - Array of product objects
    * @param {HTMLElement} container - Container element for the products grid
    */
@@ -68,8 +95,11 @@ window.productRenderer = {
   /**
    * Shows feedback when an item is added to cart
    *
+   * Temporarily changes the button's appearance and text to indicate
+   * successful addition to cart, then reverts after a delay.
+   *
    * @param {HTMLElement} button - The button that was clicked
-   * @param {number} quantity - Quantity added to cart
+   * @param {number} quantity - Quantity added to cart, defaults to 1
    */
   showAddedFeedback: function (button, quantity = 1) {
     if (!button) return;
@@ -86,8 +116,8 @@ window.productRenderer = {
     button.disabled = true;
     button.style.backgroundColor = "#28bd6d";
 
+    // Restore the button to its original state after 1.5 seconds
     setTimeout(() => {
-      // Restore the button to its original state
       button.innerHTML = originalText;
       button.disabled = false;
       button.style.backgroundColor = "";

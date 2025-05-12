@@ -1,16 +1,21 @@
 /**
- * Checkout.js - Handles the checkout process functionality
+ * Checkout.js - Manages the checkout process functionality
  *
- * This script manages the checkout page including:
- * - Loading cart items
- * - Calculating order totals
- * - Form validation
- * - Order submission
- * - Confirmation display
+ * This module handles all checkout-related functionality including:
+ * - Loading cart items in the order summary
+ * - Calculating subtotals, delivery costs, and order totals
+ * - Validating form inputs before submission
+ * - Handling order submission
+ * - Displaying confirmation messages
+ *
+ * The checkout process connects to the cart system, displays the current
+ * order, validates customer information, and simulates order submission.
+ *
+ * @author Clockert
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Elements
+  // DOM Elements
   const checkoutItems = document.getElementById("checkout-items");
   const subtotalElement = document.getElementById("subtotal-amount");
   const deliveryElement = document.getElementById("delivery-amount");
@@ -31,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Initialize the checkout page
+   * Sets up event listeners and loads cart data
    */
   function init() {
     console.log("Initializing checkout page");
@@ -59,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Load cart items and display them in the checkout summary
+   * Gets cart data from framCart or localStorage and renders items
    */
   function loadCheckoutItems() {
     console.log("Loading checkout items");
@@ -237,6 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Handle the form submission to complete an order
+   * Validates form data and shows confirmation on success
    *
    * @param {Event} event - Form submission event
    */
@@ -292,6 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Validate the checkout form
+   * Performs basic validation for required fields and formats
    *
    * @param {Object} data - Form data object
    * @returns {boolean} Whether the form is valid
@@ -333,6 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Generate a random order number
+   * Creates a random number with a prefix for order references
    *
    * @returns {string} Order number
    */
@@ -344,6 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Generate a delivery date (3 days from current date)
+   * Calculates expected delivery date based on current date
    *
    * @returns {string} Formatted delivery date
    */
@@ -361,6 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /**
    * Clear the cart after successful order
+   * Removes all items from cart storage
    */
   function clearCart() {
     // Clear cart using framCart if available

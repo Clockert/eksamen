@@ -21,6 +21,7 @@
  *
  * @returns {void}
  */
+
 function loadNavbar() {
   // Define navbar HTML structure with BEM class naming
   const navbarHTML = `

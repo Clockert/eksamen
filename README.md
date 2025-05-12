@@ -151,8 +151,8 @@ This structure reflects a modular, component-based approach to frontend developm
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/fram-food-delivery.git
-   cd fram-food-delivery
+   git clone https://github.com/Clockert/eksamen
+   cd eksamen
    ```
 
 2. Install dependencies:

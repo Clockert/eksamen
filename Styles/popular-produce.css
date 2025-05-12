@@ -22,7 +22,6 @@
 }
 
 .popular-produce__grid {
-  /* Box model */
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
@@ -38,14 +37,70 @@
   margin-bottom: 28px;
 }
 
+/* Media queries with consistent carousel style for both mobile and tablet */
+
 /* ===== MEDIA QUERIES ===== */
+/* Tablet view - scrollable carousel with larger dimensions */
 @media (max-width: 1200px) and (min-width: 769px) {
+  /* Grid container styles */
+  .popular-produce__grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    margin-left: -16px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .popular-produce__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Product card styles */
   .popular-produce__grid .product-card {
-    width: calc((100% - 28px) / 2);
+    /* Size - larger for tablet then mobile*/
+    flex: 0 0 350px;
+    width: 350px;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+    scroll-snap-align: start;
+  }
+
+  /* Card hover state */
+  .popular-produce__grid .product-card:hover {
+    z-index: 2;
+  }
+
+  /* Last card special handling */
+  .popular-produce__grid .product-card:last-child {
+    margin-right: 24px;
+  }
+
+  /* Card info container */
+  .popular-produce__grid .product-card__info {
+    width: 320px;
+  }
+
+  /* Image container */
+  .popular-produce__grid .product-card__image-container {
+    height: 400px;
+    border-radius: 16px;
+    padding: 20px;
   }
 }
 
+/* Mobile view - scrollable carousel with smaller dimensions */
 @media (max-width: 768px) {
+  /* Container styles */
   .popular-produce {
     padding: 40px 16px;
   }
@@ -54,41 +109,57 @@
     font-size: var(--header-mobile);
   }
 
+  /* Grid container styles */
   .popular-produce__grid {
-    /* Mobile carousel style */
     display: flex;
     flex-wrap: nowrap;
+    gap: 0;
     overflow-x: auto;
+    overflow-y: visible;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
     padding-bottom: 12px;
     margin-bottom: 20px;
-    scroll-snap-type: x mandatory;
+    margin-right: -10px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
-  /* Product card adjustments when in popular produce section */
-  .popular-produce__grid .product-card {
-    flex: 0 0 250px;
-    width: 250px;
-    margin-right: 16px;
-    margin-bottom: 0;
-    scroll-snap-align: start;
-  }
-
-  .popular-produce__grid .product-card:last-child {
-    margin-right: 0;
-  }
-
-  .popular-produce__grid .product-card__image-container {
-    height: 321px;
-  }
-
-  /* Hide scrollbar but maintain functionality */
   .popular-produce__grid::-webkit-scrollbar {
     display: none;
   }
 
-  .popular-produce__grid {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  /* Product card styles */
+  .popular-produce__grid .product-card {
+    flex: 0 0 250px;
+    width: 250px;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding: 16px;
+    position: relative;
+    z-index: 1;
+    scroll-snap-align: start;
+  }
+
+  /* Card hover state */
+  .popular-produce__grid .product-card:hover {
+    z-index: 2;
+  }
+
+  /* Last card special handling */
+  .popular-produce__grid .product-card:last-child {
+    margin-right: 16px;
+  }
+
+  /* Card info container */
+  .popular-produce__grid .product-card__info {
+    width: 280px;
+  }
+
+  /* Image container */
+  .popular-produce__grid .product-card__image-container {
+    height: 350px;
+    border-radius: 16px;
+    padding: 16px;
   }
 }

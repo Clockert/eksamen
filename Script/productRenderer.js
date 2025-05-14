@@ -1,27 +1,15 @@
 /**
- * productRenderer.js
+ * productRenderer.js - Product Card Generation Module
  *
  * A centralized module for creating and rendering product cards consistently
- * across the entire Fram Food Delivery website.
+ * across the entire Fram Food Delivery website. This refactored version
+ * uses HTML templates instead of generating HTML with template literals.
  *
- * This module provides functions to:
- * - Create standardized product card elements
- * - Display collections of products in grid layouts
- * - Show feedback when products are added to cart
- *
- * By using this shared renderer, we ensure consistent product presentation
- * and behavior throughout the site while keeping code DRY.
- *
- * @author Clockert
+ * @author Charlotte Lockert
  */
 window.productRenderer = {
   /**
-   * Creates a product card element with consistent design and functionality
-   *
-   * This method generates the full HTML structure for a product card including:
-   * - Product image with link to detail page
-   * - Add to cart button with data attributes
-   * - Product name, price and quantity information
+   * Creates a product card element using the product-card template
    *
    * @param {Object} product - Product data object with all required properties
    * @param {number} product.id - Unique identifier for the product
@@ -29,72 +17,87 @@ window.productRenderer = {
    * @param {string} product.price - Formatted price (e.g. "45 kr / kg")
    * @param {string} product.quantity - Package size (e.g. "1kg")
    * @param {string} product.image - Path to product image
-   * @returns {HTMLElement} The created product card element
+   * @returns {Promise<HTMLElement>} The created product card element
    */
-  createProductCard: function (product) {
-    const productCard = document.createElement("div");
-    productCard.className = "product-card";
-    productCard.dataset.id = product.id;
-    productCard.dataset.name = product.name;
-    productCard.dataset.price = product.price;
-    productCard.dataset.image = product.image;
+  createProductCard: async function (product) {
+    try {
+      // Use the template loader to create a product card
+      const productCardFragment =
+        await window.templateLoader.createFromTemplate("product-card", {
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: product.quantity || "",
+          image: product.image,
+        });
 
-    productCard.innerHTML = `
-      <div class="product-card__image-container">
-        <a href="product-detail.html?id=${product.id}" class="product-card__link">
-          <img src="${product.image}" alt="${product.name}" class="product-card__image">
-        </a>
-        <button class="product-card__add-button" 
-                aria-label="Add ${product.name} to cart"
-                data-id="${product.id}"
-                data-name="${product.name}"
-                data-price="${product.price}"
-                data-image="${product.image}">
-          Add to basket
-          <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
-        </button>
-      </div>
-      <div class="product-card__info">
-        <div class="product-card__header">
-          <h3 class="product-card__name">
-            <a href="product-detail.html?id=${product.id}" class="product-card__link">${product.name}</a>
-          </h3>
+      // Return the first element in the fragment
+      return productCardFragment.firstElementChild;
+    } catch (error) {
+      console.error(`Error creating product card for ${product.name}:`, error);
+
+      // Create a fallback product card if template loading fails
+      const fallbackCard = document.createElement("div");
+      fallbackCard.className = "product-card";
+      fallbackCard.dataset.id = product.id;
+      fallbackCard.dataset.name = product.name;
+      fallbackCard.dataset.price = product.price;
+      fallbackCard.dataset.image = product.image;
+
+      fallbackCard.innerHTML = `
+        <div class="product-card__info">
+          <h3 class="product-card__name">${product.name}</h3>
           <div class="product-card__price">${product.price}</div>
         </div>
-        <p class="product-card__quantity">${product.quantity}</p>
-      </div>
-    `;
-
-    return productCard;
+      `;
+      return fallbackCard;
+    }
   },
 
   /**
    * Displays a grid of products in the specified container
    *
-   * This method clears the container and populates it with product cards
-   * created from the provided product data array. Used for both the main
-   * product listing page and the popular products section.
-   *
    * @param {Array<Object>} products - Array of product objects
    * @param {HTMLElement} container - Container element for the products grid
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  displayProducts: function (products, container) {
+  displayProducts: async function (products, container) {
     if (!container) return;
 
     // Clear container
     container.innerHTML = "";
 
-    // Add product cards
-    products.forEach((product) => {
-      const productCard = this.createProductCard(product);
-      container.appendChild(productCard);
-    });
+    // Show loading indicator if there are many products
+    if (products.length > 5) {
+      const loadingIndicator = document.createElement("div");
+      loadingIndicator.className = "products__loading";
+      loadingIndicator.innerHTML = `
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <p>Loading products...</p>
+      `;
+      container.appendChild(loadingIndicator);
+    }
+
+    // Create a fragment for better performance
+    const fragment = document.createDocumentFragment();
+
+    // Add products to the fragment
+    for (const product of products) {
+      try {
+        const productCard = await this.createProductCard(product);
+        fragment.appendChild(productCard);
+      } catch (error) {
+        console.error(`Error displaying product ${product.name}:`, error);
+      }
+    }
+
+    // Clear container again (to remove loading indicator) and add products
+    container.innerHTML = "";
+    container.appendChild(fragment);
   },
 
   /**
    * Shows feedback when an item is added to cart
-   *
    * Temporarily changes the button's appearance and text to indicate
    * successful addition to cart, then reverts after a delay.
    *

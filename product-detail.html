@@ -20,13 +20,11 @@
     <link rel="stylesheet" href="Styles/main.css" />
   </head>
   <body>
-    <!-- Navbar injected by Components.js -->
-    <script src="Script/Components.js" defer></script>
-    <script src="Script/productRenderer.js" defer></script>
-    <script src="Script/cart.js" defer></script>
-    <script src="Script/nutrition-cache.js" defer></script>
-    <script src="Script/PopularProducts.js" defer></script>
-    <script src="Script/produce.js" defer></script>
+    <!-- Container for the navbar template -->
+    <div id="navbar-container"></div>
+
+    <!-- Container for the menu overlay template -->
+    <div id="menu-overlay-container"></div>
 
     <main id="main-content" class="product-detail">
       <!-- Breadcrumb navigation -->
@@ -194,7 +192,21 @@
       aria-label="You might also like"
     ></section>
 
-    <!-- Scripts -->
+    <!-- Container for the cart overlay template -->
+    <div id="cart-overlay-container"></div>
+
+    <!-- Container for the footer template -->
+    <div id="footer-container"></div>
+
+    <!-- Template loader script -->
+    <script src="Script/Templates.js"></script>
+
+    <!-- Other scripts -->
+    <script src="Script/Components.js"></script>
+    <script src="Script/productRenderer.js"></script>
+    <script src="Script/cart.js"></script>
+    <script src="Script/nutrition-cache.js"></script>
+    <script src="Script/PopularProducts.js"></script>
     <script src="Script/produce.js"></script>
   </body>
 </html>

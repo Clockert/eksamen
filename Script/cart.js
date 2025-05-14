@@ -1,48 +1,11 @@
 /**
- * cart.js - Shopping cart system for Fram Food Delivery
+ * cart.js - Refactored Shopping Cart System using Templates
  *
- * This module handles all cart-related functionality including:
- * - Adding and removing products
- * - Updating quantities
- * - Calculating totals
- * - Persisting cart data between sessions
- * - Rendering cart UI elements
+ * This refactored version maintains all cart functionality but uses
+ * the template system for HTML structure.
  *
- * The cart uses localStorage for persistence and custom events for cross-component communication.
- *
- * @author Clockert
+ * @author Charlotte Lockert
  */
-
-// Cart overlay HTML structure - defines the cart UI that will be injected into the DOM
-const cartOverlayHTML = `
-  <div id="cart-overlay" class="cart cart--hidden">
-    <div class="cart__header">
-      <h2 class="cart__title">Your Cart</h2>
-      <button id="close-cart" class="cart__close-button" aria-label="Close cart">
-        ✕
-      </button>
-    </div>
-
-    <div class="cart__content">
-      <div class="cart__items" id="cart-items">
-        <!-- Cart items will be dynamically added here -->
-      </div>
-      
-      <div class="cart__summary">
-        <div class="cart__total">
-          <span>Total:</span>
-          <span id="cart-total">0 kr</span>
-        </div>
-        <a href="checkout.html" class="cart__checkout-button">Proceed to Checkout</a>
-      </div>
-      
-      <div class="cart__empty" id="cart-empty">
-        <p>Your cart is empty</p>
-        <a href="produce.html" class="cart__browse-link">Browse Products</a>
-      </div>
-    </div>
-  </div>
-`;
 
 /**
  * Main cart object - manages cart data and operations
@@ -66,7 +29,7 @@ window.framCart = {
     this._initialized = true;
 
     this.loadCart();
-    this.validateCartItems(); // Validate cart items after loading
+    this.validateCartItems();
     this.setupCartUI();
     this.setupProductButtons();
     this.renderCart(); // Initial render
@@ -83,7 +46,7 @@ window.framCart = {
   loadCart: function () {
     try {
       this.items = JSON.parse(localStorage.getItem("cart")) || [];
-      this.validateCartItems(); // Validate cart items after loading
+      this.validateCartItems();
     } catch (error) {
       console.error("Error loading cart:", error);
       this.items = [];
@@ -223,12 +186,12 @@ window.framCart = {
   },
 
   /**
-   * Renders the current cart state to the UI
+   * Renders the current cart state to the UI using templates
    * Shows/hides elements based on whether cart is empty
    *
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  renderCart: function () {
+  renderCart: async function () {
     const cartOverlay = document.getElementById("cart-overlay");
     if (!cartOverlay) return;
 
@@ -239,6 +202,7 @@ window.framCart = {
 
     if (!cartItems || !cartEmpty || !cartSummary || !cartTotal) return;
 
+    // Handle empty cart state
     if (this.items.length === 0) {
       cartItems.style.display = "none";
       cartEmpty.style.display = "flex";
@@ -246,51 +210,56 @@ window.framCart = {
       return;
     }
 
+    // Show cart items and summary
     cartItems.style.display = "flex";
     cartEmpty.style.display = "none";
     cartSummary.style.display = "block";
 
-    cartItems.innerHTML = this.items
-      .map((item) => {
-        const priceValue = item.priceValue || this.parsePrice(item.price);
-        const subtotal = priceValue * item.quantity;
-        return `
-          <div class="cart__item" data-id="${item.id}">
-            <img src="${item.image}" alt="${item.name}" class="cart__item-image" />
-            <div class="cart__item-details">
-              <h3 class="cart__item-name">${item.name}</h3>
-              <p class="cart__item-price">${item.price}</p>
-              <p class="cart__item-quantity">Quantity: ${item.quantity}</p>
-              <p class="cart__item-subtotal">Subtotal: ${subtotal} kr</p>
-            </div>
-            <button class="cart__item-remove" data-id="${item.id}">
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        `;
-      })
-      .join("");
+    // Clear existing items
+    cartItems.innerHTML = "";
+
+    // Add each cart item using templates
+    for (const item of this.items) {
+      const priceValue = item.priceValue || this.parsePrice(item.price);
+      const subtotal = priceValue * item.quantity;
+
+      try {
+        // Create cart item from template
+        const cartItemElement = await window.templateLoader.createFromTemplate(
+          "cart-item",
+          {
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            image: item.image,
+            subtotal: subtotal,
+          }
+        );
+
+        // Add to cart items container
+        cartItems.appendChild(cartItemElement);
+      } catch (error) {
+        console.error(`Error creating cart item for ${item.name}:`, error);
+      }
+    }
 
     // Update total
     const total = this.items.reduce((sum, item) => {
       const priceValue = item.priceValue || this.parsePrice(item.price);
       return sum + priceValue * item.quantity;
     }, 0);
+
     cartTotal.textContent = `${total} kr`;
   },
 
   /**
    * Sets up the cart UI elements and event listeners
-   * Injects cart overlay HTML if not already present
+   * Connects to existing cart elements in HTML
    *
    * @returns {void}
    */
   setupCartUI: function () {
-    // Insert cart overlay into the DOM if it doesn't exist
-    if (!document.getElementById("cart-overlay")) {
-      document.body.insertAdjacentHTML("beforeend", cartOverlayHTML);
-    }
-
     // Cart open/close listeners
     const openCartBtn = document.querySelector(".navbar__cart");
     const closeCartBtn = document.getElementById("close-cart");
@@ -499,9 +468,20 @@ window.framCart = {
   },
 };
 
-// Initialize cart when the DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
+// Initialize cart when templates are loaded
+document.addEventListener("templates-loaded", () => {
   if (!window.framCart._initialized) {
     window.framCart.init();
   }
+});
+
+// Fallback initialization when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  // Wait a bit to ensure templates have a chance to load
+  setTimeout(() => {
+    if (!window.framCart._initialized) {
+      console.warn("Initializing cart without waiting for templates");
+      window.framCart.init();
+    }
+  }, 500);
 });

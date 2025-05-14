@@ -32,13 +32,9 @@
     <title>FRAM - Sustainable Food Delivery from Local Farms</title>
   </head>
   <body>
-    <!-- The navbar component will be dynamically injected here by Components.js -->
-    <script src="Script/Components.js" defer></script>
-    <script src="Script/productRenderer.js" defer></script>
-    <script src="Script/cart.js" defer></script>
-    <script src="Script/nutrition-cache.js" defer></script>
-    <script src="Script/PopularProducts.js" defer></script>
-    <script src="Script/produce.js" defer></script>
+    <!-- Template containers for common components -->
+    <div id="navbar-container"></div>
+    <div id="menu-overlay-container"></div>
 
     <!-- Hero Section -->
     <section class="hero" aria-labelledby="hero-heading">
@@ -158,11 +154,23 @@
     </main>
 
     <!-- Popular Products Section: Dynamically loaded from products.json -->
-    <section id="popular-produce-container" aria-label="Popular Products">
-      <!-- Content will be dynamically injected by the loadPopularProduce function -->
-    </section>
+    <section
+      id="popular-produce-container"
+      aria-label="Popular Products"
+    ></section>
 
-    <!-- Script to load product data -->
-    <script src="Script/produce.js" defer></script>
+    <!-- Template containers for footer and cart overlay -->
+    <div id="cart-overlay-container"></div>
+    <div id="footer-container"></div>
+
+    <!-- Template loader script must be first -->
+    <script src="Script/Templates.js"></script>
+    <!-- Other scripts -->
+    <script src="Script/Components.js"></script>
+    <script src="Script/productRenderer.js"></script>
+    <script src="Script/cart.js"></script>
+    <script src="Script/nutrition-cache.js"></script>
+    <script src="Script/PopularProducts.js"></script>
+    <script src="Script/produce.js"></script>
   </body>
 </html>

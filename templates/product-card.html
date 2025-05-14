@@ -1,0 +1,36 @@
+<!-- templates/product-card.html -->
+<div
+  class="product-card"
+  data-id="{{id}}"
+  data-name="{{name}}"
+  data-price="{{price}}"
+  data-image="{{image}}"
+>
+  <div class="product-card__image-container">
+    <a href="product-detail.html?id={{id}}" class="product-card__link">
+      <img src="{{image}}" alt="{{name}}" class="product-card__image" />
+    </a>
+    <button
+      class="product-card__add-button"
+      aria-label="Add {{name}} to cart"
+      data-id="{{id}}"
+      data-name="{{name}}"
+      data-price="{{price}}"
+      data-image="{{image}}"
+    >
+      Add to basket
+      <span class="product-card__icon"><i class="fas fa-arrow-up"></i></span>
+    </button>
+  </div>
+  <div class="product-card__info">
+    <div class="product-card__header">
+      <h3 class="product-card__name">
+        <a href="product-detail.html?id={{id}}" class="product-card__link"
+          >{{name}}</a
+        >
+      </h3>
+      <div class="product-card__price">{{price}}</div>
+    </div>
+    <p class="product-card__quantity">{{quantity}}</p>
+  </div>
+</div>

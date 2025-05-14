@@ -1,0 +1,30 @@
+<!-- templates/cart-overlay.html -->
+<div id="cart-overlay" class="cart cart--hidden">
+  <div class="cart__header">
+    <h2 class="cart__title">Your Cart</h2>
+    <button id="close-cart" class="cart__close-button" aria-label="Close cart">
+      ✕
+    </button>
+  </div>
+
+  <div class="cart__content">
+    <div class="cart__items" id="cart-items">
+      <!-- Cart items will be dynamically added here -->
+    </div>
+
+    <div class="cart__summary">
+      <div class="cart__total">
+        <span>Total:</span>
+        <span id="cart-total">0 kr</span>
+      </div>
+      <a href="checkout.html" class="cart__checkout-button"
+        >Proceed to Checkout</a
+      >
+    </div>
+
+    <div class="cart__empty" id="cart-empty">
+      <p>Your cart is empty</p>
+      <a href="produce.html" class="cart__browse-link">Browse Products</a>
+    </div>
+  </div>
+</div>

@@ -1,18 +1,13 @@
 /**
  * PopularProducts.js - Popular Products Component Manager
  *
- * This module creates and manages the "Popular Products" component
- * that appears on the homepage and product detail pages.
+ * This refactored module creates and manages the "Popular Products" component
+ * using HTML templates instead of generating HTML with template literals.
  *
  * It handles:
- * - Dynamically creating the component container and structure
  * - Loading products data from the JSON source
  * - Filtering for products marked as "popular"
- * - Rendering products using the productRenderer module
- * - Error handling for failed data fetching
- *
- * The component displays as a grid on desktop and transforms into
- * a horizontally scrollable carousel on mobile devices.
+ * - Rendering products using the productRenderer module and templates
  *
  * @author Clockert
  */
@@ -24,9 +19,9 @@
  * section, loads product data, and renders the filtered product list.
  *
  * @param {string} containerId - ID of the container element to insert the component
- * @returns {void}
+ * @returns {Promise<void>}
  */
-window.loadPopularProduce = function (containerId) {
+window.loadPopularProduce = async function (containerId) {
   // Get the target container element
   const container = document.getElementById(containerId);
   if (!container) {
@@ -34,67 +29,81 @@ window.loadPopularProduce = function (containerId) {
     return;
   }
 
-  // Create component structure with heading and grid container
-  container.innerHTML = `
-    <section class="popular-produce">
-      <div class="popular-produce__header">
-        <h2 class="popular-produce__title">Popular Produce</h2>
-      </div>
-      <div id="popular-products-grid" class="popular-produce__grid"></div>
-    </section>
-  `;
+  // Check if the container already has the structure
+  let gridContainer = container.querySelector(".popular-produce__grid");
+
+  // Create component structure if it doesn't exist
+  if (!gridContainer) {
+    container.innerHTML = `
+      <section class="popular-produce">
+        <div class="popular-produce__header">
+          <h2 class="popular-produce__title">Popular Produce</h2>
+        </div>
+        <div id="popular-products-grid" class="popular-produce__grid"></div>
+      </section>
+    `;
+
+    gridContainer = document.getElementById("popular-products-grid");
+  }
 
   // Load products data
-  loadProductsData();
-
-  /**
-   * Loads product data from JSON file
-   * Fetches data, filters for popular products, and passes to renderer
-   *
-   * @returns {void}
-   */
-  function loadProductsData() {
-    fetch("data/products.json")
-      .then((response) => {
-        if (!response.ok)
-          throw new Error(`Failed to fetch: ${response.status}`);
-        return response.json();
-      })
-      .then((data) => {
-        // Filter products to only show those marked as popular
-        const popularProducts = data.products.filter((p) => p.popular);
-
-        // Use the productRenderer to display products
-        const grid = document.getElementById("popular-products-grid");
-        if (grid && window.productRenderer) {
-          window.productRenderer.displayProducts(popularProducts, grid);
-        } else {
-          console.error(
-            "productRenderer not available - make sure productRenderer.js is loaded"
-          );
-          showErrorMessage();
-        }
-      })
-      .catch((error) => {
-        console.error("Error loading popular products:", error);
-        showErrorMessage();
-      });
-  }
-
-  /**
-   * Shows error message when product data can't be loaded
-   * Displays user-friendly error message in the grid container
-   *
-   * @returns {void}
-   */
-  function showErrorMessage() {
-    document.getElementById("popular-products-grid").innerHTML = `
-      <div class="error-message">
-        <p>Sorry, we couldn't load the popular products.</p>
-      </div>
-    `;
-  }
+  await loadProductsData(gridContainer);
 };
+
+/**
+ * Loads product data from JSON file
+ * Fetches data, filters for popular products, and passes to renderer
+ *
+ * @param {HTMLElement} gridContainer - Container to display products in
+ * @returns {Promise<void>}
+ */
+async function loadProductsData(gridContainer) {
+  try {
+    const response = await fetch("data/products.json");
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Filter products to only show those marked as popular
+    const popularProducts = data.products.filter((p) => p.popular);
+
+    // Use the productRenderer to display products
+    if (gridContainer && window.productRenderer) {
+      // Note the await - displayProducts is now async
+      await window.productRenderer.displayProducts(
+        popularProducts,
+        gridContainer
+      );
+    } else {
+      console.error(
+        "productRenderer not available - make sure productRenderer.js is loaded"
+      );
+      showErrorMessage(gridContainer);
+    }
+  } catch (error) {
+    console.error("Error loading popular products:", error);
+    showErrorMessage(gridContainer);
+  }
+}
+
+/**
+ * Shows error message when product data can't be loaded
+ * Displays user-friendly error message in the grid container
+ *
+ * @param {HTMLElement} container - The container to show the error in
+ * @returns {void}
+ */
+function showErrorMessage(container) {
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="error-message">
+      <p>Sorry, we couldn't load the popular products.</p>
+    </div>
+  `;
+}
 
 /**
  * Handles automated loading of the popular products component when

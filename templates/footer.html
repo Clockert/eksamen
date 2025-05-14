@@ -1,0 +1,51 @@
+<!-- templates/footer.html -->
+<footer class="footer">
+  <a href="index.html" class="footer__logo">Fram</a>
+
+  <hr class="footer__divider" aria-hidden="true" />
+
+  <div class="footer__content">
+    <div class="footer__text">
+      <h2 class="footer__heading">Stay updated</h2>
+      <p class="footer__description">
+        Sign up for our newsletter to be the first to know about new produce or
+        other exciting news!
+      </p>
+    </div>
+
+    <form
+      class="footer__form"
+      action="/subscribe"
+      method="post"
+      aria-labelledby="newsletter-heading"
+    >
+      <span id="newsletter-heading" class="visually-hidden">
+        Newsletter Signup
+      </span>
+
+      <label for="first-name" class="visually-hidden">First Name</label>
+      <input
+        type="text"
+        id="first-name"
+        name="first-name"
+        placeholder="First name"
+        required
+        class="footer__input"
+        autocomplete="given-name"
+      />
+
+      <label for="email" class="visually-hidden">Email Address</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="E-mail address"
+        required
+        class="footer__input"
+        autocomplete="email"
+      />
+
+      <button type="submit" class="footer__button">Send</button>
+    </form>
+  </div>
+</footer>

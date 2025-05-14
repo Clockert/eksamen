@@ -1,18 +1,88 @@
 /**
  * produce.js - Product listing and detail page functionality
  *
- * This module handles all product-related functionality including:
+ * This refactored module handles all product-related functionality including:
  * - Loading and displaying products on the listing page
  * - Rendering detailed product information on the product detail page
  * - Fetching and displaying nutrition information
- * - Managing product quantity selection
- * - Error handling for product data
  *
- * The module detects which page it's loaded on (listing or detail) and
- * performs the appropriate initialization and setup.
+ * Updated to work with the template-based system.
  *
  * @author Clockert
  */
+
+// Export the displayNutritionInfo function globally so nutrition-cache.js can use it
+window.displayNutritionInfo = function (foodItem, usingFallback = false) {
+  const nutritionData = document.querySelector(".nutrition-data");
+  if (!nutritionData) return;
+
+  nutritionData.innerHTML = "";
+
+  // Create table
+  const table = document.createElement("table");
+  table.className = "product-detail__nutrition-table";
+
+  // Add header
+  const headerRow = document.createElement("tr");
+  headerRow.innerHTML = "<th>Nutrient</th><th>Amount</th>";
+  table.appendChild(headerRow);
+
+  // Define key nutrients
+  const keyNutrients = [
+    { name: "Energy", ids: [1008, 2048], unit: "kcal" },
+    { name: "Protein", ids: [1003], unit: "g" },
+    { name: "Carbohydrates", ids: [1005, 2000], unit: "g" },
+    { name: "Fat", ids: [1004], unit: "g" },
+    { name: "Fiber", ids: [1079, 2033], unit: "g" },
+    { name: "Sugar", ids: [2000, 1082], unit: "g" },
+    { name: "Sodium", ids: [1093, 1090], unit: "mg" },
+  ];
+
+  // Get nutrients
+  const nutrients = foodItem?.foodNutrients || [];
+  let nutrientsFound = 0;
+
+  keyNutrients.forEach((keyNutrient) => {
+    const foundNutrient = nutrients.find((apiNutrient) => {
+      const nutrientId = apiNutrient.nutrientId || apiNutrient.nutrient?.id;
+      return keyNutrient.ids.includes(nutrientId);
+    });
+
+    if (foundNutrient) {
+      nutrientsFound++;
+      const value = foundNutrient.value || foundNutrient.amount || 0;
+      const unit =
+        foundNutrient.unitName ||
+        foundNutrient.nutrient?.unitName ||
+        keyNutrient.unit;
+
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${keyNutrient.name}</td><td>${value} ${unit}</td>`;
+      table.appendChild(row);
+    }
+  });
+
+  if (nutrientsFound > 0) {
+    nutritionData.appendChild(table);
+
+    // Add fallback notice if using fallback data
+    if (usingFallback) {
+      const fallbackNotice = document.createElement("p");
+      fallbackNotice.className = "product-detail__nutrition-notice";
+      fallbackNotice.textContent = "Using estimated nutrition values.";
+      nutritionData.appendChild(fallbackNotice);
+    } else {
+      const source = document.createElement("p");
+      source.className = "product-detail__nutrition-source";
+      source.textContent = "Source: USDA Food Data Central";
+      nutritionData.appendChild(source);
+    }
+  } else {
+    nutritionData.innerHTML =
+      '<p class="product-detail__nutrition-error">Nutrition information not available.</p>';
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   // Common elements that might exist on either page
   const productsGrid = document.getElementById("products-container");
@@ -77,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       return response.json();
     })
-    .then((data) => {
+    .then(async (data) => {
       // For product listing page
       if (productsGrid) {
         if (productsLoadingIndicator) {
@@ -86,7 +156,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Use the productRenderer to display products
         if (window.productRenderer) {
-          window.productRenderer.displayProducts(data.products, productsGrid);
+          // Note the await here since displayProducts is now async
+          await window.productRenderer.displayProducts(
+            data.products,
+            productsGrid
+          );
         } else {
           console.error(
             "productRenderer not available - make sure productRenderer.js is loaded"
@@ -160,14 +234,6 @@ document.addEventListener("DOMContentLoaded", () => {
    * Populates all product information fields with data
    *
    * @param {Object} product - The product object to display
-   * @param {number} product.id - Unique product identifier
-   * @param {string} product.name - Product name
-   * @param {string} product.price - Product price (formatted)
-   * @param {string} product.quantity - Product quantity/weight
-   * @param {string} product.image - URL to product image
-   * @param {string} product.description - Detailed product description
-   * @param {string} product.farm - Farm where product was grown
-   * @param {string} product.cultivation - Cultivation method
    * @returns {void}
    */
   function displayProductDetails(product) {
@@ -242,126 +308,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Fetch nutrition data
-    fetchNutritionData(product.name);
-  }
-
-  /**
-   * Fetch nutrition data from cache or API
-   * First tries to get data from cache, falls back to API if needed
-   *
-   * @param {string} productName - Name of product to fetch nutrition data for
-   * @returns {Promise<void>}
-   */
-  async function fetchNutritionData(productName) {
-    try {
-      let nutritionData;
-
-      // Use cache if available
-      if (
-        window.nutritionCache &&
-        typeof window.nutritionCache.getNutrition === "function"
-      ) {
-        nutritionData = await window.nutritionCache.getNutrition(productName);
-      } else {
-        // Direct API call fallback
-        const response = await fetch(
-          `http://localhost:3000/api/nutrition/${encodeURIComponent(
-            productName
-          )}`
-        );
-        if (!response.ok) {
-          throw new Error(`Nutrition API error: ${response.status}`);
-        }
-        nutritionData = await response.json();
-      }
-
-      // Display nutrition data
-      if (nutritionData?.foods?.length > 0) {
-        displayNutritionInfo(nutritionData.foods[0]);
-      } else {
-        const container = document.querySelector(".nutrition-data");
-        if (container) {
-          container.innerHTML =
-            '<p class="product-detail__nutrition-error">No nutrition information found.</p>';
-        }
-      }
-    } catch (error) {
-      console.error("Nutrition data error:", error);
-      const container = document.querySelector(".nutrition-data");
-      if (container) {
-        container.innerHTML =
-          '<p class="product-detail__nutrition-error">Failed to load nutrition information.</p>';
-      }
-    }
-  }
-
-  /**
-   * Display nutrition information in the UI
-   * Creates and populates a table with nutrition facts
-   *
-   * @param {Object} foodItem - Food item data from nutrition API
-   * @param {Array} foodItem.foodNutrients - Array of nutrient objects
-   * @returns {void}
-   */
-  function displayNutritionInfo(foodItem) {
-    const nutritionData = document.querySelector(".nutrition-data");
-    if (!nutritionData) return;
-
-    nutritionData.innerHTML = "";
-
-    // Create table
-    const table = document.createElement("table");
-    table.className = "product-detail__nutrition-table";
-
-    // Add header
-    const headerRow = document.createElement("tr");
-    headerRow.innerHTML = "<th>Nutrient</th><th>Amount</th>";
-    table.appendChild(headerRow);
-
-    // Define key nutrients
-    const keyNutrients = [
-      { name: "Energy", ids: [1008, 2048], unit: "kcal" },
-      { name: "Protein", ids: [1003], unit: "g" },
-      { name: "Carbohydrates", ids: [1005, 2000], unit: "g" },
-      { name: "Fat", ids: [1004], unit: "g" },
-      { name: "Fiber", ids: [1079, 2033], unit: "g" },
-      { name: "Sugar", ids: [2000, 1082], unit: "g" },
-      { name: "Sodium", ids: [1093, 1090], unit: "mg" },
-    ];
-
-    // Get nutrients
-    const nutrients = foodItem.foodNutrients || [];
-    let nutrientsFound = 0;
-
-    keyNutrients.forEach((keyNutrient) => {
-      const foundNutrient = nutrients.find((apiNutrient) => {
-        const nutrientId = apiNutrient.nutrientId || apiNutrient.nutrient?.id;
-        return keyNutrient.ids.includes(nutrientId);
-      });
-
-      if (foundNutrient) {
-        nutrientsFound++;
-        const value = foundNutrient.value || foundNutrient.amount || 0;
-        const unit =
-          foundNutrient.unitName ||
-          foundNutrient.nutrient?.unitName ||
-          keyNutrient.unit;
-
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${keyNutrient.name}</td><td>${value} ${unit}</td>`;
-        table.appendChild(row);
-      }
-    });
-
-    if (nutrientsFound > 0) {
-      nutritionData.appendChild(table);
-      const source = document.createElement("p");
-      source.className = "product-detail__nutrition-source";
-      source.textContent = "Source: USDA Food Data Central";
-      nutritionData.appendChild(source);
+    if (typeof fetchNutritionData === "function") {
+      fetchNutritionData(product.name);
     } else {
-      nutritionData.innerHTML =
-        '<p class="product-detail__nutrition-error">Nutrition information not available.</p>';
+      console.error("fetchNutritionData function not found");
     }
   }
 

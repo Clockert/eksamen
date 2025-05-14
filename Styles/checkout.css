@@ -434,14 +434,6 @@
   .checkout__content {
     grid-template-columns: 1fr;
   }
-
-  .checkout__summary {
-    order: 0;
-  }
-
-  .checkout__customer-info {
-    order: 1;
-  }
 }
 
 @media (max-width: 768px) {

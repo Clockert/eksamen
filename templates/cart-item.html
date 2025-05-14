@@ -1,0 +1,13 @@
+<!-- templates/cart-item.html -->
+<div class="cart__item" data-id="{{id}}">
+  <img src="{{image}}" alt="{{name}}" class="cart__item-image" />
+  <div class="cart__item-details">
+    <h3 class="cart__item-name">{{name}}</h3>
+    <p class="cart__item-price">{{price}}</p>
+    <p class="cart__item-quantity">Quantity: {{quantity}}</p>
+    <p class="cart__item-subtotal">Subtotal: {{subtotal}} kr</p>
+  </div>
+  <button class="cart__item-remove" data-id="{{id}}">
+    <i class="fas fa-trash"></i>
+  </button>
+</div>

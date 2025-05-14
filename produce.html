@@ -12,7 +12,9 @@
       content="organic produce, local farms, Norway, sustainable agriculture, fresh vegetables, fruits"
     />
     <title>FRAM - Our Produce</title>
+
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -20,12 +22,9 @@
     <link rel="stylesheet" href="Styles/main.css" />
   </head>
   <body>
-    <!-- Navbar injected by Components.js -->
-    <script src="Script/Components.js" defer></script>
-    <script src="Script/productRenderer.js" defer></script>
-    <script src="Script/cart.js" defer></script>
-    <script src="Script/nutrition-cache.js" defer></script>
-    <script src="Script/produce.js" defer></script>
+    <!-- Template containers for common components -->
+    <div id="navbar-container"></div>
+    <div id="menu-overlay-container"></div>
 
     <main id="main-content" class="products">
       <!-- Product Listing Header -->
@@ -84,8 +83,18 @@
         </iframe>
       </div>
     </section>
-    <!-- Footer injected by Components.js -->
 
+    <!-- Template containers for footer and cart overlay -->
+    <div id="cart-overlay-container"></div>
+    <div id="footer-container"></div>
+
+    <!-- Template loader script must be first -->
+    <script src="Script/Templates.js"></script>
+    <!-- Other scripts -->
+    <script src="Script/Components.js"></script>
+    <script src="Script/productRenderer.js"></script>
+    <script src="Script/cart.js"></script>
+    <script src="Script/nutrition-cache.js"></script>
     <script src="Script/produce.js"></script>
   </body>
 </html>

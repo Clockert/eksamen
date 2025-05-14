@@ -436,11 +436,11 @@
   }
 
   .checkout__summary {
-    order: 1;
+    order: 0;
   }
 
   .checkout__customer-info {
-    order: 0;
+    order: 1;
   }
 }
 

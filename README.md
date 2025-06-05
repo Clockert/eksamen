@@ -46,13 +46,14 @@ Fram is a circular service that ensures your kitchen is always stocked with fres
 - **Nutrition Information**: Access detailed nutritional data for all products via USDA Food Data Central API
 - **Farm Mapping**: See partner farm locations through embedded maps
 - **Local Storage**: Cart data persists between visits
-- **Circular Container System**: Learn about our packaging reuse program
+- **Template-Based Architecture**: Modular HTML template system for consistent component rendering and improved maintainability
 
 ## 🛠️ Technologies Used
 
 ### Frontend
 
 - **HTML5**: Semantic structure for accessibility and SEO
+- **Template System**: Custom template loader for modular component architecture
 - **CSS3 with BEM methodology**:
   - Initially started without a structured CSS approach
   - As the project grew, adopted BEM (Block Element Modifier) to:
@@ -60,7 +61,7 @@ Fram is a circular service that ensures your kitchen is always stocked with fres
     - Make CSS more predictable and maintainable
     - Clearly identify where changes were needed in the codebase
     - Create self-documenting class names that show relationships between elements
-- **JavaScript (ES6+)**: Modern JS with modular architecture
+- **JavaScript (ES6+)**: Modern JS with modular architecture and template-based components
 
 ### API Integrations
 
@@ -97,6 +98,14 @@ fram-food-delivery/
 │   ├── dotenv/           # Environment variables management
 │   ├── node-fetch/       # Fetch API for Node.js
 │   └── ...               # Many other dependencies
+│
+├── templates/            # HTML template files
+│   ├── navbar.html       # Navigation component template
+│   ├── footer.html       # Footer component template
+│   ├── menu-overlay.html # Mobile menu template
+│   ├── cart-overlay.html # Shopping cart overlay template
+│   ├── cart-item.html    # Individual cart item template
+│   └── product-card.html # Product card component template
 │
 ├── Script/               # JavaScript files
 │   ├── cart.js           # Shopping cart functionality
@@ -176,6 +185,8 @@ This structure reflects a modular, component-based approach to frontend developm
    ```
 
 5. Navigate to `http://localhost:3000` in your browser to view the application.
+
+**Note**: The application uses a custom template loading system. Common components (navbar, footer, cart, menu) are automatically loaded from the `templates/` folder when each page initializes.
 
 ## 🧠 AI Chatbot Implementation
 
@@ -293,6 +304,16 @@ As this project evolved, I learned several valuable lessons that might benefit o
 5. **Modular JavaScript**: Organizing JavaScript into component-based files with clear responsibilities made the codebase significantly more manageable as new features were added.
 
 6. **Ethical AI Implementation**: Designing the chatbot system taught me the importance of establishing clear boundaries for AI responses. The careful design of system prompts was crucial for ensuring accuracy and preventing potential misinformation.
+
+7. **Template-Based Component System**: I implemented a custom template loading system that:
+
+   - **Separates Structure from Logic**: HTML templates are stored in separate files, keeping component structure separate from JavaScript functionality
+   - **Enables Component Reusability**: Components like the navbar, footer, and product cards can be easily reused across pages
+   - **Improves Maintainability**: Changes to component structure only need to be made in one template file
+   - **Supports Dynamic Content**: Templates support placeholder replacement for dynamic data rendering
+   - **Enhances Performance**: Templates are cached after first load, reducing repeated fetch requests
+
+   This approach bridges the gap between vanilla JavaScript and modern frameworks, providing structure and reusability without the complexity of a full framework. The `Templates.js` module handles loading, caching, and instantiating templates, while individual component scripts focus purely on functionality.
 
 ## 🤖 AI as a Development Tool
 

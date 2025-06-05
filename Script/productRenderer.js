@@ -5,7 +5,7 @@
  * across the entire Fram Food Delivery website. This refactored version
  * uses HTML templates instead of generating HTML with template literals.
  *
- * @author Charlotte Lockert
+ * @author Clockert
  */
 window.productRenderer = {
   /**

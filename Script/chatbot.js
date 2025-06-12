@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Handles sending user messages and receiving bot responses
    * Manages the entire message flow including UI updates and error handling
-   *
+   * Just checking if PR works
    * @returns {Promise<void>}
    */
   async function handleUserInput() {
